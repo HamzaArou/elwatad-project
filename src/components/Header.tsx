@@ -110,9 +110,9 @@ const Header = () => {
           <button onClick={() => scrollToSection('hero')}>
             <img
               src={isScrolled 
-                ? "/lovable-uploads/7ea9b1a4-5e36-4f69-bed8-ed3e4e0e3862.png" 
-                : "/lovable-uploads/452d0f08-89bf-4863-9d95-46a23971500f.png"}
-              alt="مجموعة الفيصل العقارية"
+                ? "/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png" 
+                : "/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png"}
+              alt="وتد الكيان العقارية"
               className="w-[110px] h-[115px] object-contain transition-all duration-300"
             />
           </button>
