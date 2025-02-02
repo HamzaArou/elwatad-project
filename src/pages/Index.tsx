@@ -7,6 +7,7 @@ import Partners from "@/components/Partners";
 import ContactUs from "@/components/ContactUs";
 import FloatingContact from "@/components/FloatingContact";
 import NewsCarousel from "@/components/NewsCarousel";
+import MortgageCalculator from "@/components/MortgageCalculator";
 
 export default function Index() {
   return (
@@ -16,6 +17,7 @@ export default function Index() {
       <FeaturedProjects />
       <Services />
       <Stats />
+      <MortgageCalculator />
       <Partners />
       <AboutUs />
       <ContactUs />
