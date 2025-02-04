@@ -56,10 +56,10 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
       role="button"
       tabIndex={0}
     >
-      <Card className="overflow-hidden bg-white rounded-[20px] shadow-lg hover:shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] h-[360px] w-[448px] flex flex-col">
+      <Card className="overflow-hidden bg-white rounded-[20px] shadow-lg hover:shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] h-[448px] w-[360px] flex flex-col">
         <div className="relative h-[180px] bg-gray-100">
           <img
-            src="https://tdybblvmlsvxgkkwapei.supabase.co/storage/v1/object/public/project-images/project_f47ac10b-58cc-4372-a567-0e02b2c3d479/project1.png"
+            src={project.thumbnail_url}
             alt={project.name}
             className="w-full h-full object-cover"
             loading="lazy"
