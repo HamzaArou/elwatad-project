@@ -1,3 +1,4 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -94,7 +95,7 @@ export default function ProjectBasicInfo({ form, isLoading }: ProjectBasicInfoPr
         name="status"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>حالة المشروع</FormLabel>
+            <FormLabel>نوع الوحدة</FormLabel>
             <Select
               disabled={isLoading}
               onValueChange={field.onChange}
@@ -102,13 +103,14 @@ export default function ProjectBasicInfo({ form, isLoading }: ProjectBasicInfoPr
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="اختر حالة المشروع" />
+                  <SelectValue placeholder="اختر نوع الوحدة" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="بدأ البيع">بدأ البيع</SelectItem>
-                <SelectItem value="تم البيع بالكامل">تم البيع بالكامل</SelectItem>
-                <SelectItem value="قريباً">قريباً</SelectItem>
+                <SelectItem value="فيلا">فيلا</SelectItem>
+                <SelectItem value="شقة">شقة</SelectItem>
+                <SelectItem value="روف">روف</SelectItem>
+                <SelectItem value="أرض">أرض</SelectItem>
               </SelectContent>
             </Select>
             <FormMessage />
