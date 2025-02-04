@@ -1,5 +1,5 @@
 
-export type ProjectStatus = 'بدأ البيع' | 'تم البيع بالكامل' | 'قريباً';
+export type ProjectStatus = 'فيلا' | 'شقة' | 'روف' | 'أرض';
 
 export interface Project {
   id: string;

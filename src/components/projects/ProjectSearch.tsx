@@ -1,3 +1,4 @@
+
 import { useMemo } from "react";
 import {
   Select,
@@ -62,13 +63,14 @@ const ProjectSearch = ({ onFilterChange }: ProjectSearchProps) => {
 
         <Select onValueChange={handleStatusChange}>
           <SelectTrigger className="w-full md:w-[140px] bg-white rounded-2xl md:rounded-full h-[40px] border-none text-right">
-            <SelectValue placeholder="حالة المشروع" />
+            <SelectValue placeholder="نوع الوحدة" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">الكل</SelectItem>
-            <SelectItem value="بدأ البيع">بدأ البيع</SelectItem>
-            <SelectItem value="تم البيع بالكامل">تم البيع بالكامل</SelectItem>
-            <SelectItem value="قريباً">قريباً</SelectItem>
+            <SelectItem value="فيلا">فيلا</SelectItem>
+            <SelectItem value="شقة">شقة</SelectItem>
+            <SelectItem value="روف">روف</SelectItem>
+            <SelectItem value="أرض">أرض</SelectItem>
           </SelectContent>
         </Select>
       </div>

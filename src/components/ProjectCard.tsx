@@ -1,3 +1,4 @@
+
 import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { useCallback, memo } from "react";
@@ -22,12 +23,14 @@ interface ProjectCardProps {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "تم البيع بالكامل":
-      return "bg-gold text-white";
-    case "قريباً":
-      return "bg-newsGreen text-white";
-    case "بدأ البيع":
+    case "فيلا":
       return "bg-deepBlue text-white";
+    case "شقة":
+      return "bg-gold text-white";
+    case "روف":
+      return "bg-darkBlue text-white";
+    case "أرض":
+      return "bg-newsGreen text-white";
     default:
       return "bg-gray-500 text-white";
   }
@@ -56,7 +59,6 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
       tabIndex={0}
     >
       <Card className="overflow-hidden bg-white rounded-[20px] shadow-lg hover:shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] h-full flex flex-col">
-        {/* Image Section */}
         <div className="relative h-[320px] bg-gray-100">
           <img
             src={project.thumbnail_url}
@@ -73,9 +75,7 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           </Badge>
         </div>
 
-        {/* Content Section */}
         <div className="p-4 flex flex-col flex-grow">
-          {/* Title and Location */}
           <div className="text-right mb-3">
             <h3 className="text-lg font-bold text-darkBlue">
               {project.name}
@@ -85,7 +85,6 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
             </p>
           </div>
 
-          {/* Details Grid */}
           <div className="grid grid-cols-2 gap-2 mb-3">
             <div className="bg-gray-50 rounded-lg p-2 text-center">
               <p className="text-base font-bold text-darkBlue">{project.floors}</p>
@@ -97,7 +96,6 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
             </div>
           </div>
 
-          {/* Price Section */}
           <div className="mt-auto text-center">
             <p className="text-sm font-medium text-gray-600 mb-2">السعر</p>
             <div className="space-y-1 text-right">
