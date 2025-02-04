@@ -1,6 +1,13 @@
+
 import { Rotate3d } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+interface Project360View {
+  id: string;
+  title: string;
+  url: string;
+}
 
 interface Project360ViewsProps {
   projectId: string | undefined;
@@ -8,16 +15,17 @@ interface Project360ViewsProps {
 
 export default function Project360Views({ projectId }: Project360ViewsProps) {
   const { data: views, isLoading } = useQuery({
-    queryKey: ['project-360-views', projectId],
+    queryKey: ['project-views360', projectId],
     queryFn: async () => {
       if (!projectId) return [];
-      const { data, error } = await supabase
-        .from('project_360_views')
-        .select('*')
-        .eq('project_id', projectId);
+      const { data: projectDetails, error } = await supabase
+        .from('project_details')
+        .select('views360')
+        .eq('project_id', projectId)
+        .single();
 
       if (error) throw error;
-      return data || [];
+      return (projectDetails?.views360 || []) as Project360View[];
     },
     enabled: !!projectId,
   });
