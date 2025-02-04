@@ -1,3 +1,4 @@
+
 import { useState, useMemo, useCallback } from "react";
 import { Button } from "./ui/button";
 import ProjectSearch from "./projects/ProjectSearch";
@@ -68,12 +69,14 @@ const FeaturedProjects = () => {
             </h2>
           </div>
 
-          <div className="max-w-[960px] mx-auto">
+          <div className="max-w-[1200px] mx-auto">
             <ProjectSearch onFilterChange={handleFilterChange} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {displayedProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
+                <div key={project.id} className="flex justify-center">
+                  <ProjectCard project={project} />
+                </div>
               ))}
             </div>
 

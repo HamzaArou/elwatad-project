@@ -52,11 +52,11 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
   return (
     <div 
       onClick={handleClick} 
-      className="cursor-pointer group h-full"
+      className="cursor-pointer group w-[360px]"
       role="button"
       tabIndex={0}
     >
-      <Card className="overflow-hidden bg-white rounded-[20px] shadow-lg hover:shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] h-[448px] w-[360px] flex flex-col">
+      <Card className="overflow-hidden bg-white rounded-[20px] shadow-lg hover:shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] h-[448px] flex flex-col">
         <div className="relative h-[180px] bg-gray-100">
           <img
             src={project.thumbnail_url}
