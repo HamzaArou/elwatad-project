@@ -1,5 +1,4 @@
 
-import { Card } from "../ui/card";
 import { useNavigate } from "react-router-dom";
 import { useCallback, memo } from "react";
 import { Badge } from "../ui/badge";
@@ -57,66 +56,71 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
       role="button"
       tabIndex={0}
     >
-      <Card className="overflow-hidden bg-white rounded-[20px] shadow-lg hover:shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] h-[448px] flex flex-col">
-        <div className="relative h-[180px] bg-gray-100">
-          <img
-            src={project.thumbnail_url}
-            alt={project.name}
-            className="w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="high"
-            onError={(e) => {
-              console.error('Image failed to load:', project.thumbnail_url);
-              e.currentTarget.src = '/placeholder.svg';
-            }}
-          />
-          <Badge 
-            className={`absolute top-4 left-4 px-4 py-1 rounded-full text-sm font-medium ${getStatusColor(project.status)}`}
-          >
-            {project.status}
-          </Badge>
-        </div>
+      <div className="relative h-[448px] overflow-hidden rounded-[20px] shadow-lg hover:shadow-xl transition-all duration-300 transform group-hover:scale-[1.02]">
+        {/* Background Image */}
+        <img
+          src={project.thumbnail_url}
+          alt={project.name}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
+          fetchPriority="high"
+          onError={(e) => {
+            console.error('Image failed to load:', project.thumbnail_url);
+            e.currentTarget.src = '/placeholder.svg';
+          }}
+        />
+        
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/40 transition-opacity duration-300 group-hover:bg-black/60" />
 
-        <div className="p-6 flex flex-col flex-grow">
-          <div className="text-right mb-4">
-            <h3 className="text-xl font-bold text-darkBlue mb-2">
-              {project.name}
-            </h3>
-            <p className="text-lg font-bold text-gold">
+        {/* Status Badge */}
+        <Badge 
+          className={`absolute top-4 left-4 px-4 py-1 rounded-full text-sm font-medium ${getStatusColor(project.status)}`}
+        >
+          {project.status}
+        </Badge>
+
+        {/* Content Overlay */}
+        <div className="absolute inset-0 flex flex-col justify-between p-6 text-white">
+          {/* Always Visible Content */}
+          <div className="text-right">
+            <p className="text-2xl font-bold mb-2">
               {formatPrice(project.property_value)}
+            </p>
+            <p className="text-lg">
+              {project.city}
             </p>
           </div>
 
-          <div className="text-right mb-6">
-            <div className="flex flex-col gap-1">
-              <p className="text-sm text-gray-600">
-                <span className="font-medium ml-1">المدينة:</span>
-                {project.city}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-medium ml-1">المنطقة:</span>
-                {project.district}
-              </p>
+          {/* Content Revealed on Hover */}
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="text-right mb-6">
+              <div className="space-y-2">
+                <p className="text-sm">
+                  <span className="font-medium ml-1">المنطقة:</span>
+                  {project.district}
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-3 gap-4 mt-auto">
-            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-3">
-              <Home className="w-5 h-5 text-darkBlue mb-1" />
-              <p className="text-sm font-medium text-gray-600">{project.rooms} غرف</p>
-            </div>
-            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-3">
-              <Bath className="w-5 h-5 text-darkBlue mb-1" />
-              <p className="text-sm font-medium text-gray-600">{project.bathrooms} حمام</p>
-            </div>
-            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-3">
-              <Ruler className="w-5 h-5 text-darkBlue mb-1" />
-              <p className="text-sm font-medium text-gray-600">{project.area} م²</p>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm rounded-lg p-3">
+                <Home className="w-5 h-5 text-white mb-1" />
+                <p className="text-sm font-medium">{project.rooms} غرف</p>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm rounded-lg p-3">
+                <Bath className="w-5 h-5 text-white mb-1" />
+                <p className="text-sm font-medium">{project.bathrooms} حمام</p>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm rounded-lg p-3">
+                <Ruler className="w-5 h-5 text-white mb-1" />
+                <p className="text-sm font-medium">{project.area} م²</p>
+              </div>
             </div>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 });
