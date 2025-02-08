@@ -138,8 +138,12 @@ export type Database = {
       projects: {
         Row: {
           address: string | null
+          area: number | null
+          bathrooms: number | null
+          city: string | null
           created_at: string
           description: string | null
+          district: string | null
           features: string[] | null
           floors: number
           gallery_type: string | null
@@ -149,6 +153,8 @@ export type Database = {
           location: string
           name: string
           plans: string[] | null
+          property_value: number | null
+          rooms: number | null
           specifications: string[] | null
           status: string
           thumbnail_url: string | null
@@ -156,8 +162,12 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          area?: number | null
+          bathrooms?: number | null
+          city?: string | null
           created_at?: string
           description?: string | null
+          district?: string | null
           features?: string[] | null
           floors?: number
           gallery_type?: string | null
@@ -167,6 +177,8 @@ export type Database = {
           location: string
           name: string
           plans?: string[] | null
+          property_value?: number | null
+          rooms?: number | null
           specifications?: string[] | null
           status: string
           thumbnail_url?: string | null
@@ -174,8 +186,12 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          area?: number | null
+          bathrooms?: number | null
+          city?: string | null
           created_at?: string
           description?: string | null
+          district?: string | null
           features?: string[] | null
           floors?: number
           gallery_type?: string | null
@@ -185,6 +201,8 @@ export type Database = {
           location?: string
           name?: string
           plans?: string[] | null
+          property_value?: number | null
+          rooms?: number | null
           specifications?: string[] | null
           status?: string
           thumbnail_url?: string | null

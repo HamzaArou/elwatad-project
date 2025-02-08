@@ -17,11 +17,7 @@ const FeaturedProjects = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('projects')
-        .select(`
-          *,
-          project_units(count),
-          project_details(*)
-        `);
+        .select('*');
 
       if (error) throw error;
       return data || [];
@@ -33,7 +29,7 @@ const FeaturedProjects = () => {
       if (selectedNeighborhood === "all" && selectedStatus === "all") {
         return true;
       }
-      const neighborhoodMatch = selectedNeighborhood === "all" || project.location === selectedNeighborhood;
+      const neighborhoodMatch = selectedNeighborhood === "all" || project.district === selectedNeighborhood;
       const statusMatch = selectedStatus === "all" || project.status === selectedStatus;
       return neighborhoodMatch && statusMatch;
     });
@@ -72,16 +68,14 @@ const FeaturedProjects = () => {
           <div className="max-w-[1200px] mx-auto">
             <ProjectSearch onFilterChange={handleFilterChange} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
               {displayedProjects.map((project) => (
-                <div key={project.id} className="flex justify-center">
-                  <ProjectCard project={project} />
-                </div>
+                <ProjectCard key={project.id} project={project} />
               ))}
             </div>
 
             {hasMoreProjects && (
-              <div className="flex justify-end mt-8">
+              <div className="flex justify-center mt-8">
                 <Button 
                   onClick={handleLoadMore}
                   className="bg-gold hover:bg-gold/90 text-white px-6 py-2 rounded-full"

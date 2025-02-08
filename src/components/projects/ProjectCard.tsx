@@ -3,18 +3,19 @@ import { Card } from "../ui/card";
 import { useNavigate } from "react-router-dom";
 import { useCallback, memo } from "react";
 import { Badge } from "../ui/badge";
+import { Home, Bath, Ruler } from "lucide-react";
 
 interface Project {
   id: string;
   name: string;
-  location: string;
+  city: string;
+  district: string;
   status: string;
-  floors: number;
-  units: number;
+  property_value: number;
+  rooms: number;
+  bathrooms: number;
+  area: number;
   thumbnail_url: string;
-  price?: number;
-  price_single_street?: number;
-  price_roof?: number;
 }
 
 interface ProjectCardProps {
@@ -36,7 +37,7 @@ const getStatusColor = (status: string) => {
 
 const formatPrice = (price?: number) => {
   if (!price) return "السعر عند الطلب";
-  return `ريال ${price.toLocaleString('en-US')}`;
+  return `${price.toLocaleString('ar-SA')} ريال`;
 };
 
 const ProjectCard = memo(({ project }: ProjectCardProps) => {
@@ -77,39 +78,37 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           </Badge>
         </div>
 
-        <div className="p-4 flex flex-col flex-grow">
-          <div className="text-right mb-3">
-            <h3 className="text-lg font-bold text-darkBlue">
+        <div className="p-6 flex flex-col flex-grow">
+          <div className="text-right mb-4">
+            <h3 className="text-xl font-bold text-darkBlue mb-2">
               {project.name}
             </h3>
-            <p className="text-sm text-gray-600">
-              مدينة مكة - {project.location}
+            <p className="text-lg font-bold text-gold">
+              {formatPrice(project.property_value)}
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 mb-3">
-            <div className="bg-gray-50 rounded-lg p-2">
-              <p className="text-base font-bold text-darkBlue">{project.floors}</p>
-              <p className="text-sm text-gray-600">الطوابق</p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-2">
-              <p className="text-base font-bold text-darkBlue">{project.units}</p>
-              <p className="text-sm text-gray-600">الشقق</p>
-            </div>
+          <div className="text-right mb-4">
+            <p className="text-sm text-gray-600 mb-1">
+              {project.city}
+            </p>
+            <p className="text-sm text-gray-600">
+              {project.district}
+            </p>
           </div>
 
-          <div className="mt-auto">
-            <p className="text-sm font-medium text-gray-600 mb-2 text-center">السعر</p>
-            <div className="space-y-1 text-right">
-              <p className="text-base font-bold text-gold">
-                على واجهة: {formatPrice(750000)}
-              </p>
-              <p className="text-base font-bold text-gold">
-                على واجهتين: {formatPrice(800000)}
-              </p>
-              <p className="text-base font-bold text-gold">
-                روف: {formatPrice(1400000)}
-              </p>
+          <div className="grid grid-cols-3 gap-4 mt-auto">
+            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-3">
+              <Home className="w-5 h-5 text-darkBlue mb-1" />
+              <p className="text-sm font-medium text-gray-600">{project.rooms} غرف</p>
+            </div>
+            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-3">
+              <Bath className="w-5 h-5 text-darkBlue mb-1" />
+              <p className="text-sm font-medium text-gray-600">{project.bathrooms} حمام</p>
+            </div>
+            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-3">
+              <Ruler className="w-5 h-5 text-darkBlue mb-1" />
+              <p className="text-sm font-medium text-gray-600">{project.area} م²</p>
             </div>
           </div>
         </div>
@@ -121,3 +120,4 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
 ProjectCard.displayName = 'ProjectCard';
 
 export default ProjectCard;
+
