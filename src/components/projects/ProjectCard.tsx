@@ -53,7 +53,7 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
   return (
     <div 
       onClick={handleClick} 
-      className="cursor-pointer group w-[360px]"
+      className="cursor-pointer group w-full max-w-[360px]"
       role="button"
       tabIndex={0}
     >
@@ -88,13 +88,17 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
             </p>
           </div>
 
-          <div className="text-right mb-4">
-            <p className="text-sm text-gray-600 mb-1">
-              {project.city}
-            </p>
-            <p className="text-sm text-gray-600">
-              {project.district}
-            </p>
+          <div className="text-right mb-6">
+            <div className="flex flex-col gap-1">
+              <p className="text-sm text-gray-600">
+                <span className="font-medium ml-1">المدينة:</span>
+                {project.city}
+              </p>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium ml-1">المنطقة:</span>
+                {project.district}
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4 mt-auto">
@@ -120,4 +124,3 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
 ProjectCard.displayName = 'ProjectCard';
 
 export default ProjectCard;
-
