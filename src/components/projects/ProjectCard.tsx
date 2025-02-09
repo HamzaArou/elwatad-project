@@ -101,7 +101,6 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
             <div className="space-y-6 opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
               {/* District */}
               <p className="text-right text-sm">
-                <span className="font-medium ml-1">المنطقة:</span>
                 {project.district}
               </p>
 
@@ -131,3 +130,4 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
 ProjectCard.displayName = 'ProjectCard';
 
 export default ProjectCard;
+
