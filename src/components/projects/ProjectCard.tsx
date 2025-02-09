@@ -82,8 +82,11 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
         </Badge>
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end p-6 text-white transition-all duration-300 group-hover:justify-center">
-          <div className="space-y-4 transition-all duration-300">
+        <div className="absolute inset-0 flex flex-col justify-between p-6 text-white">
+          {/* Always Visible Content */}
+          <div /> {/* Spacer */}
+          
+          <div className="space-y-4">
             {/* Price (acting as title) */}
             <p className="text-2xl font-bold text-right">
               {formatPrice(project.property_value)}
@@ -128,4 +131,3 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
 ProjectCard.displayName = 'ProjectCard';
 
 export default ProjectCard;
-
