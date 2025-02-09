@@ -82,23 +82,20 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
         </Badge>
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col justify-between p-6 text-white">
-          {/* Always Visible Content */}
-          <div /> {/* Spacer */}
-          
-          <div className="space-y-4">
-            {/* Price (acting as title) */}
-            <p className="text-2xl font-bold text-right">
-              {formatPrice(project.property_value)}
-            </p>
-            
-            {/* City */}
-            <p className="text-lg text-right">
-              {project.city}
-            </p>
+        <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+          <div className="transform transition-all duration-300 group-hover:translate-y-[-30%]">
+            {/* Always Visible Content */}
+            <div className="mb-4">
+              <p className="text-2xl font-bold text-right mb-2">
+                {formatPrice(project.property_value)}
+              </p>
+              <p className="text-lg text-right">
+                {project.city}
+              </p>
+            </div>
 
             {/* Content Revealed on Hover */}
-            <div className="space-y-6 opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+            <div className="space-y-6 opacity-0 transition-all duration-300 group-hover:opacity-100">
               {/* District */}
               <p className="text-right text-sm">
                 <span className="font-medium ml-1">المنطقة:</span>
