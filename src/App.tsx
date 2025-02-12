@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import ProjectDetails from "@/pages/ProjectDetails";
@@ -7,6 +8,7 @@ import ProjectForm from "@/pages/ProjectForm";
 import NotFound from "@/components/NotFound";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import LandingPage from "@/pages/LandingPage";
+import Properties from "@/pages/Properties";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -26,6 +28,7 @@ function App() {
               <Header />
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/properties" element={<Properties />} />
                 <Route path="/project/:id" element={<ProjectDetails />} />
                 <Route path="/admin" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
