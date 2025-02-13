@@ -40,7 +40,7 @@ export default {
       colors: {
         gold: "#B69665",
         darkBlue: "#B69665",
-        deepBlue: "#2F4447", // Updated to new secondary color
+        deepBlue: "#2F4447",
         warmBeige: "#F7E4C8",
         offWhite: "#F5F5F5",
         newsGreen: "#B69665",
@@ -54,7 +54,7 @@ export default {
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#2F4447", // Updated to new secondary color
+          DEFAULT: "#2F4447",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {

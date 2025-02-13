@@ -26,6 +26,10 @@
     --radius: 0.5rem;
   }
 
+  html, body {
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
+  }
+
   /* Typography Styles */
   .heading-primary {
     @apply text-4xl md:text-6xl font-bold text-deepBlue mb-6;

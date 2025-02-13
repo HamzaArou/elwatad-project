@@ -1,3 +1,4 @@
+
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App.tsx";
@@ -19,7 +20,10 @@ const queryClient = new QueryClient({
 
 // Create a function to load fonts
 const loadFonts = async () => {
+  // Wait for fonts to be loaded
   await document.fonts.ready;
+  
+  // Create root after fonts are loaded
   createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <App />
