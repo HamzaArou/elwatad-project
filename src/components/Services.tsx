@@ -25,9 +25,7 @@ const Services = () => {
   return <section className="pt-12 pb-24 bg-white">
       <div className="container mx-auto px-4">
         <div className="mb-12 text-right">
-          <h2 className="inline-block bg-white px-4 py-2 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-black font-extrabold text-3xl">
-            خدمات الفيصل
-          </h2>
+          <h2 className="inline-block bg-white px-4 py-2 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-black font-extrabold text-3xl">خدمات الوتد</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">

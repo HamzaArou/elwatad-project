@@ -1,6 +1,5 @@
 const AboutUs = () => {
-  return (
-    <section className="py-16 bg-[#2B2B2B] overflow-hidden">
+  return <section className="py-16 bg-[#2B2B2B] overflow-hidden">
       <div className="container mx-auto px-4 max-w-[1200px]">
         {/* Title visible only on mobile */}
         <h2 className="text-5xl font-bold text-white text-center mb-8 md:hidden">
@@ -19,26 +18,20 @@ const AboutUs = () => {
             
             {/* Content with adjusted padding for reduced height */}
             <div className="relative p-6">
-              <p className="text-white/90 leading-relaxed text-lg">
-                شركة وتد الكيان العقارية هي شركة رائدة في مجال التطوير والتسويق العقاري، تأسست برؤية رائدة وتفكير إبداعي. نحن نقدم حلولًا متكاملة للعملاء الذين يبحثون عن الجودة والتميز في مجال العقارات. تتسم شركتنا بالالتزام بأعلى معايير الجودة والنزاهة في جميع جوانب عملنا.
-              </p>
+              <p className="text-white/90 leading-relaxed text-lg">في وتد الكيان العقارية، نؤمن بأن العقار ليس مجرد مبنى، بل هو استثمار لحياة أفضل. نسعى لتقديم حلول عقارية متكاملة تناسب احتياجاتك، سواء كنت تبحث عن منزل الأحلام أو فرصة استثمارية واعدة.
+
+نعمل بخبرة واحترافية لنكون شريكك العقاري الموثوق، ونوفر لك مجموعة متنوعة من العقارات في أفضل المواقع، مع خدمات استشارية ودعم متكامل قبل وأثناء وبعد الشراء.</p>
             </div>
           </div>
           
           <div className="order-1 md:order-2">
             <div className="relative overflow-hidden rounded-[50px] shadow-2xl">
-              <img
-                src="/lovable-uploads/846a9d6e-0e88-4891-b25c-203b5b88bc86.png"
-                alt="مجموعة الفيصل العقارية - نموذج معماري"
-                className="w-full h-auto object-cover"
-              />
+              <img src="/lovable-uploads/846a9d6e-0e88-4891-b25c-203b5b88bc86.png" alt="مجموعة الفيصل العقارية - نموذج معماري" className="w-full h-auto object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default AboutUs;

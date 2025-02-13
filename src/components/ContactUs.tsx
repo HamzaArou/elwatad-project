@@ -6,27 +6,36 @@ import 'react-phone-input-2/lib/style.css';
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import ProjectsMap from "./ProjectsMap";
-
-const ContactUs = ({ projectId, projectName }: { projectId?: string, projectName?: string }) => {
-  const { toast } = useToast();
+const ContactUs = ({
+  projectId,
+  projectName
+}: {
+  projectId?: string;
+  projectName?: string;
+}) => {
+  const {
+    toast
+  } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     message: "",
-    selectedProject: projectId || "",
+    selectedProject: projectId || ""
   });
-
-  const { data: projects = [] } = useQuery({
+  const {
+    data: projects = []
+  } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*');
+      const {
+        data,
+        error
+      } = await supabase.from('projects').select('*');
       if (error) throw error;
       return data || [];
-    },
+    }
   });
 
   // Update selected project when projectId prop changes
@@ -38,26 +47,22 @@ const ContactUs = ({ projectId, projectName }: { projectId?: string, projectName
       }));
     }
   }, [projectId]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!formData.phone) {
       toast({
         title: "خطأ",
         description: "يرجى إدخال رقم الجوال",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     setIsSubmitting(true);
-
     try {
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           service_id: 'service_vsb08u9',
@@ -68,40 +73,35 @@ const ContactUs = ({ projectId, projectName }: { projectId?: string, projectName
             from_name: formData.name,
             phone_number: formData.phone,
             project: projectName || (formData.selectedProject ? projects.find(p => p.id === formData.selectedProject)?.name : ''),
-            message: formData.message || 'No message provided',
-          },
-        }),
+            message: formData.message || 'No message provided'
+          }
+        })
       });
-
       if (!response.ok) {
         throw new Error(`EmailJS error: ${response.status} ${await response.text()}`);
       }
-
       toast({
         title: "تم إرسال الطلب بنجاح",
-        description: "سنقوم بالتواصل معك قريباً",
+        description: "سنقوم بالتواصل معك قريباً"
       });
-
       setFormData({
         name: "",
         phone: "",
         message: "",
-        selectedProject: projectId || "",
+        selectedProject: projectId || ""
       });
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
         title: "حدث خطأ",
         description: "الرجاء المحاولة مرة أخرى",
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  return (
-    <section className="py-12 bg-offWhite">
+  return <section className="py-12 bg-offWhite">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Form Section with Title */}
@@ -112,82 +112,42 @@ const ContactUs = ({ projectId, projectName }: { projectId?: string, projectName
             <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 overflow-y-auto">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <input
-                    type="text"
-                    placeholder="الاسم - Name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className={cn(
-                      "w-full px-4 py-3 rounded-lg bg-offWhite border-0",
-                      "placeholder:text-gray-400 focus:ring-2 focus:ring-gold",
-                      "transition duration-200 text-right"
-                    )}
-                    required
-                  />
+                  <input type="text" placeholder="الاسم - Name" value={formData.name} onChange={e => setFormData({
+                  ...formData,
+                  name: e.target.value
+                })} className={cn("w-full px-4 py-3 rounded-lg bg-offWhite border-0", "placeholder:text-gray-400 focus:ring-2 focus:ring-gold", "transition duration-200 text-right")} required />
                 </div>
                 
                 <div className="phone-input-container">
-                  <PhoneInput
-                    country={'sa'}
-                    value={formData.phone}
-                    onChange={(phone) => setFormData({ ...formData, phone })}
-                    inputClass="!w-full !px-4 !py-3 !rounded-lg !bg-offWhite !border-0 !text-right"
-                    containerClass="!w-full !dir-ltr"
-                    buttonClass="!bg-offWhite !border-0 !rounded-lg !left-0 !right-auto"
-                    dropdownClass="!bg-white !left-0 !right-auto"
-                    enableSearch={false}
-                    disableSearchIcon
-                    inputProps={{
-                      required: true,
-                      placeholder: "الجوال - Mobile*",
-                    }}
-                  />
+                  <PhoneInput country={'sa'} value={formData.phone} onChange={phone => setFormData({
+                  ...formData,
+                  phone
+                })} inputClass="!w-full !px-4 !py-3 !rounded-lg !bg-offWhite !border-0 !text-right" containerClass="!w-full !dir-ltr" buttonClass="!bg-offWhite !border-0 !rounded-lg !left-0 !right-auto" dropdownClass="!bg-white !left-0 !right-auto" enableSearch={false} disableSearchIcon inputProps={{
+                  required: true,
+                  placeholder: "الجوال - Mobile*"
+                }} />
                 </div>
 
-                {!projectId && (
-                  <div>
-                    <select
-                      value={formData.selectedProject}
-                      onChange={(e) => setFormData({ ...formData, selectedProject: e.target.value })}
-                      className={cn(
-                        "w-full px-4 py-3 rounded-lg bg-offWhite border-0",
-                        "text-gray-600 focus:ring-2 focus:ring-gold",
-                        "transition duration-200 text-right"
-                      )}
-                    >
+                {!projectId && <div>
+                    <select value={formData.selectedProject} onChange={e => setFormData({
+                  ...formData,
+                  selectedProject: e.target.value
+                })} className={cn("w-full px-4 py-3 rounded-lg bg-offWhite border-0", "text-gray-600 focus:ring-2 focus:ring-gold", "transition duration-200 text-right")}>
                       <option value="">اختر المشروع - Select Project</option>
-                      {projects.map((project) => (
-                        <option key={project.id} value={project.id}>
+                      {projects.map(project => <option key={project.id} value={project.id}>
                           {project.name} - {project.location}
-                        </option>
-                      ))}
+                        </option>)}
                     </select>
-                  </div>
-                )}
+                  </div>}
 
                 <div>
-                  <textarea
-                    placeholder="الطلب - Looking for"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className={cn(
-                      "w-full px-4 py-3 rounded-lg bg-offWhite border-0",
-                      "placeholder:text-gray-400 focus:ring-2 focus:ring-gold",
-                      "transition duration-200 text-right min-h-[120px] resize-none"
-                    )}
-                  />
+                  <textarea placeholder="الطلب - Looking for" value={formData.message} onChange={e => setFormData({
+                  ...formData,
+                  message: e.target.value
+                })} className={cn("w-full px-4 py-3 rounded-lg bg-offWhite border-0", "placeholder:text-gray-400 focus:ring-2 focus:ring-gold", "transition duration-200 text-right min-h-[120px] resize-none")} />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={cn(
-                    "w-full py-3 px-6 rounded-lg",
-                    "bg-gold text-white font-semibold",
-                    "hover:bg-gold/90 transition duration-200",
-                    "disabled:opacity-50 disabled:cursor-not-allowed"
-                  )}
-                >
+                <button type="submit" disabled={isSubmitting} className={cn("w-full py-3 px-6 rounded-lg", "bg-gold text-white font-semibold", "hover:bg-gold/90 transition duration-200", "disabled:opacity-50 disabled:cursor-not-allowed")}>
                   {isSubmitting ? "جاري الإرسال..." : "Send - إرسال"}
                 </button>
               </form>
@@ -196,9 +156,7 @@ const ContactUs = ({ projectId, projectName }: { projectId?: string, projectName
 
           {/* Map Section with Title */}
           <div className="space-y-6 h-[600px] flex flex-col">
-            <h2 className="text-3xl font-bold text-darkBlue text-center">
-              مشاريع الفيصل
-            </h2>
+            <h2 className="text-3xl font-bold text-darkBlue text-center">مشاريع الوتد</h2>
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex-1">
               <ProjectsMap />
             </div>
@@ -228,8 +186,6 @@ const ContactUs = ({ projectId, projectName }: { projectId?: string, projectName
           right: auto !important;
         }
       `}</style>
-    </section>
-  );
+    </section>;
 };
-
 export default ContactUs;
