@@ -2,27 +2,27 @@
 import Hero from "@/components/Hero";
 import AboutUs from "@/components/AboutUs";
 import Services from "@/components/Services";
-import Stats from "@/components/Stats";
 import FeaturedProjects from "@/components/FeaturedProjects";
+import RequestProperty from "@/components/RequestProperty";
+import Stats from "@/components/Stats";
 import Partners from "@/components/Partners";
 import ContactUs from "@/components/ContactUs";
 import FloatingContact from "@/components/FloatingContact";
-import MortgageCalculator from "@/components/MortgageCalculator";
-import PropertySearch from "@/components/PropertySearch";
 
-export default function Index() {
+const Index = () => {
   return (
-    <main className="flex min-h-screen flex-col">
+    <main>
       <Hero />
-      <PropertySearch />
-      <FeaturedProjects />
-      <Services />
-      <Stats />
-      <MortgageCalculator />
-      <Partners />
       <AboutUs />
+      <Services />
+      <FeaturedProjects />
+      <RequestProperty />
+      <Stats />
+      <Partners />
       <ContactUs />
       <FloatingContact />
     </main>
   );
-}
+};
+
+export default Index;
