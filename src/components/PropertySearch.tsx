@@ -33,11 +33,11 @@ const PropertySearch = () => {
       }} className="mx-auto bg-white rounded-2xl shadow-lg py-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Right Side - Text */}
-            <div className="text-right px-8">
+            <div className="text-right px-[31px]">
               <h2 className="font-bold text-deepBlue mb-2 text-4xl px-[2px] py-[2px]">
                 اختر عقارك الآن
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-gray-600 text-2xl">
                 نساعدك على امتلاك منزل أحلامك
               </p>
             </div>
