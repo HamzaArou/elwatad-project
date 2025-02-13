@@ -45,14 +45,14 @@ const PropertySearch = () => {
             {/* Left Side - Selection Options */}
             <div className="flex flex-col gap-6 px-8">
               {/* City Selection */}
-              <div className="w-full overflow-x-auto scrollbar-hide">
-                <div className="flex gap-4 min-w-min pb-2">
+              <div className="w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:flex lg:justify-between">
                   {cities.map((city) => (
                     <button
                       key={city.id}
                       onClick={() => setSelectedCity(city.name)}
                       className={cn(
-                        "relative h-24 w-64 flex-shrink-0 rounded-lg overflow-hidden group transition-all duration-300",
+                        "relative h-24 w-full lg:w-[48%] rounded-lg overflow-hidden group transition-all duration-300",
                         selectedCity === city.name 
                           ? "ring-2 ring-gold" 
                           : "hover:ring-2 hover:ring-gold/50"
@@ -74,14 +74,14 @@ const PropertySearch = () => {
               <Separator className="bg-gray-200" />
 
               {/* Property Type Selection */}
-              <div className="w-full overflow-x-auto scrollbar-hide">
-                <div className="flex gap-4 min-w-min pb-2">
+              <div className="w-full">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {propertyTypes.map((type) => (
                     <button
                       key={type.id}
                       onClick={() => setSelectedType(type.name)}
                       className={cn(
-                        "py-3 px-8 min-w-[160px] rounded-lg text-center transition-all duration-300",
+                        "py-3 px-4 rounded-lg text-center transition-all duration-300 w-full",
                         selectedType === type.name
                           ? "bg-gold text-white"
                           : "bg-gray-100 hover:bg-gray-200 text-gray-700"
@@ -96,16 +96,6 @@ const PropertySearch = () => {
           </div>
         </div>
       </div>
-
-      <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </section>
   );
 };
