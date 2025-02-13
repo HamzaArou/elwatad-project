@@ -30,7 +30,7 @@ const PropertySearch = () => {
       <div className="container mx-auto px-4">
         <div style={{
         maxWidth: "1120px"
-      }} className="mx-auto bg-white shadow-lg px-[12px] py-[16px] rounded-xl">
+      }} className="mx-auto bg-white shadow-lg px-[12px] py-[26px] rounded-xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Right Side - Text */}
             <div className="text-right px-[31px] -mt-6">
