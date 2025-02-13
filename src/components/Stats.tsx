@@ -52,7 +52,7 @@ const Stats = () => {
   return (
     <section
       ref={sectionRef}
-      className="pt-12 pb-24 bg-[#f5f5f5] relative overflow-hidden"
+      className="pt-12 pb-24 bg-white relative overflow-hidden"
     >
       <div className="container mx-auto px-4">
         <div className="mb-8 text-right">
