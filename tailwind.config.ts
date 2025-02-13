@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -37,12 +38,12 @@ export default {
         "collapsible-up": "collapsible-up 0.3s ease-in-out",
       },
       colors: {
-        gold: "#606060", // Updated from #D4AF37 to #606060
-        darkBlue: "#000000",
-        deepBlue: "#000000",
+        gold: "#B69665", // Updated from #606060 to match new brand color
+        darkBlue: "#B69665", // Updated to use brand color
+        deepBlue: "#B69665", // Updated to use brand color
         warmBeige: "#F7E4C8",
         offWhite: "#F5F5F5",
-        newsGreen: "#234F27",
+        newsGreen: "#B69665", // Updated to use brand color
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -82,7 +83,7 @@ export default {
         'vertical-lines': "url('/patterns/vertical-lines.svg')",
       },
       boxShadow: {
-        'gold': '0 4px 14px 0 rgba(96, 96, 96, 0.39)', // Updated shadow color to match new gold color
+        'gold': '0 4px 14px 0 rgba(182, 150, 101, 0.39)', // Updated to match new gold color
       },
     },
   },
