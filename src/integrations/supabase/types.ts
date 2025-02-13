@@ -153,6 +153,7 @@ export type Database = {
           location: string
           name: string
           plans: string[] | null
+          property_type: Database["public"]["Enums"]["property_type"] | null
           property_value: number | null
           rooms: number | null
           specifications: string[] | null
@@ -177,6 +178,7 @@ export type Database = {
           location: string
           name: string
           plans?: string[] | null
+          property_type?: Database["public"]["Enums"]["property_type"] | null
           property_value?: number | null
           rooms?: number | null
           specifications?: string[] | null
@@ -201,6 +203,7 @@ export type Database = {
           location?: string
           name?: string
           plans?: string[] | null
+          property_type?: Database["public"]["Enums"]["property_type"] | null
           property_value?: number | null
           rooms?: number | null
           specifications?: string[] | null
@@ -218,7 +221,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      property_type: "فيلا" | "شقة" | "روف" | "أرض"
     }
     CompositeTypes: {
       [_ in never]: never
