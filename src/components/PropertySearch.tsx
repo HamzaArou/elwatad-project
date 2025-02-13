@@ -27,7 +27,7 @@ const PropertySearch = () => {
   ];
 
   return (
-    <section className="relative -mt-[89.5px] z-10 bg-[#f5f5f5]">
+    <section className="relative -mt-[89.5px] z-10">
       <div className="container mx-auto px-4">
         <div style={{ width: "1120px", height: "179px" }} className="mx-auto bg-white rounded-2xl shadow-lg">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
