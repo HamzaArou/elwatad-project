@@ -22,7 +22,7 @@ const services = [{
   description: "نطور مشاريع عقارية متميزة تلبي تطلعات عملائنا وتضيف قيمة للمجتمع"
 }];
 const Services = () => {
-  return <section className="pt-12 pb-24 bg-white">
+  return <section className="pt-12 pb-2 bg-white">
       <div className="container mx-auto px-4">
         <div className="mb-12 text-right">
           <h2 className="inline-block bg-white px-4 py-2 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-black font-extrabold text-3xl">خدمات الوتد</h2>

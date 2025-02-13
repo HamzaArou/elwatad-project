@@ -43,7 +43,7 @@ const PropertySearch = () => {
             </div>
 
             {/* Left Side - Selection Options */}
-            <div className="flex flex-col gap-6 px-8">
+            <div className="flex flex-col gap-6 px-2">
               {/* City Selection */}
               <div className="w-full">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:flex lg:justify-between">
