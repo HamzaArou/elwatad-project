@@ -34,7 +34,7 @@ const PropertySearch = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Right Side - Text */}
             <div className="text-right px-[31px]">
-              <h2 className="font-bold text-deepBlue mb-2 text-4xl px-[2px] py-[2px]">
+              <h2 className="font-bold text-deepBlue mb-2 px-[2px] py-[2px] text-4xl">
                 اختر عقارك الآن
               </h2>
               <p className="text-gray-600 text-2xl">
