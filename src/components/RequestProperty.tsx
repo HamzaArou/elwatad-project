@@ -6,7 +6,7 @@ const RequestProperty = () => {
     <section className="relative w-full bg-deepBlue overflow-hidden">
       {/* Angled shape container */}
       <div className="relative w-full" style={{
-        clipPath: "polygon(0 0, 100% 0, 100% 85%, 0 100%)",
+        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 85%)", // Changed the clip-path to match the screenshot
       }}>
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
