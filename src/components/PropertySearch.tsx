@@ -1,13 +1,35 @@
 
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 const PropertySearch = () => {
+  const [selectedCity, setSelectedCity] = useState("جدة");
+  const [selectedType, setSelectedType] = useState("فيلا");
+
+  const cities = [
+    {
+      id: "jeddah",
+      name: "جدة",
+      image: "/lovable-uploads/ec951bdf-5286-4f67-aa73-22714ede89b9.png"
+    },
+    {
+      id: "makkah",
+      name: "مكة",
+      image: "/lovable-uploads/ec951bdf-5286-4f67-aa73-22714ede89b9.png"
+    }
+  ];
+
+  const propertyTypes = [
+    { id: "villa", name: "فيلا" },
+    { id: "apartment", name: "شقة" },
+    { id: "roof", name: "روف" },
+    { id: "land", name: "أرض" }
+  ];
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="max-w-[1200px] mx-auto bg-[#f5f5f5] rounded-2xl p-8 shadow-lg">
+        <div className="max-w-[1200px] mx-auto bg-white rounded-2xl p-8 shadow-lg">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Right Side - Text */}
             <div className="text-right">
@@ -20,43 +42,52 @@ const PropertySearch = () => {
             </div>
 
             {/* Left Side - Selection Options */}
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* City Selection */}
-              <div className="bg-white p-6 rounded-xl">
-                <h3 className="text-lg font-semibold mb-4 text-right">المدينة</h3>
-                <RadioGroup defaultValue="جدة" className="flex gap-4 justify-end">
-                  <div className="flex items-center space-x-2 space-x-reverse">
-                    <Label htmlFor="makkah">مكة</Label>
-                    <RadioGroupItem value="مكة" id="makkah" />
-                  </div>
-                  <div className="flex items-center space-x-2 space-x-reverse">
-                    <Label htmlFor="jeddah">جدة</Label>
-                    <RadioGroupItem value="جدة" id="jeddah" />
-                  </div>
-                </RadioGroup>
+              <div>
+                <div className="grid grid-cols-2 gap-4">
+                  {cities.map((city) => (
+                    <button
+                      key={city.id}
+                      onClick={() => setSelectedCity(city.name)}
+                      className={cn(
+                        "relative h-32 rounded-xl overflow-hidden group transition-all duration-300",
+                        selectedCity === city.name 
+                          ? "ring-2 ring-gold" 
+                          : "hover:ring-2 hover:ring-gold/50"
+                      )}
+                    >
+                      <img
+                        src={city.image}
+                        alt={city.name}
+                        className="w-full h-full object-cover brightness-50"
+                      />
+                      <span className="absolute inset-0 flex items-center justify-center text-white text-xl font-semibold">
+                        {city.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Property Type Selection */}
-              <div className="bg-white p-6 rounded-xl">
-                <h3 className="text-lg font-semibold mb-4 text-right">نوع العقار</h3>
-                <RadioGroup defaultValue="شقة" className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center space-x-2 space-x-reverse justify-end">
-                    <Label htmlFor="apartment">شقة</Label>
-                    <RadioGroupItem value="شقة" id="apartment" />
-                  </div>
-                  <div className="flex items-center space-x-2 space-x-reverse justify-end">
-                    <Label htmlFor="villa">فيلا</Label>
-                    <RadioGroupItem value="فيلا" id="villa" />
-                  </div>
-                  <div className="flex items-center space-x-2 space-x-reverse justify-end">
-                    <Label htmlFor="roof">روف</Label>
-                    <RadioGroupItem value="روف" id="roof" />
-                  </div>
-                  <div className="flex items-center space-x-2 space-x-reverse justify-end">
-                    <Label htmlFor="land">أرض</Label>
-                    <RadioGroupItem value="أرض" id="land" />
-                  </div>
-                </RadioGroup>
+              <div>
+                <div className="grid grid-cols-2 gap-4">
+                  {propertyTypes.map((type) => (
+                    <button
+                      key={type.id}
+                      onClick={() => setSelectedType(type.name)}
+                      className={cn(
+                        "py-3 px-6 rounded-lg text-center transition-all duration-300",
+                        selectedType === type.name
+                          ? "bg-gold text-white"
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                      )}
+                    >
+                      <span className="text-lg font-semibold">{type.name}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
