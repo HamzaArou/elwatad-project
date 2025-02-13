@@ -33,7 +33,7 @@ const PropertySearch = () => {
       }} className="mx-auto bg-white shadow-lg px-[12px] py-[16px] rounded-xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Right Side - Text */}
-            <div className="text-right px-[31px]">
+            <div className="text-right px-[31px] -mt-6">
               <h2 className="font-bold text-deepBlue mb-2 px-[2px] py-[2px] text-4xl">
                 اختر عقارك الآن
               </h2>
@@ -56,7 +56,7 @@ const PropertySearch = () => {
                 </div>
               </div>
 
-              <Separator className="bg-gray-200 rounded-none" />
+              <Separator className="bg-gray-300 h-[2px] w-full rounded-full" />
 
               {/* Property Type Selection */}
               <div className="w-full">
