@@ -8,21 +8,23 @@ import Stats from "@/components/Stats";
 import Partners from "@/components/Partners";
 import ContactUs from "@/components/ContactUs";
 import FloatingContact from "@/components/FloatingContact";
+import MortgageCalculator from "@/components/MortgageCalculator";
+import PropertySearch from "@/components/PropertySearch";
 
-const Index = () => {
+export default function Index() {
   return (
-    <main>
+    <main className="flex min-h-screen flex-col">
       <Hero />
-      <AboutUs />
-      <Services />
+      <PropertySearch />
       <FeaturedProjects />
       <RequestProperty />
+      <Services />
       <Stats />
+      <MortgageCalculator />
       <Partners />
+      <AboutUs />
       <ContactUs />
       <FloatingContact />
     </main>
   );
-};
-
-export default Index;
+}
