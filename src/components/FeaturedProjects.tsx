@@ -44,14 +44,14 @@ const FeaturedProjects = () => {
     return <div>Loading...</div>;
   }
   return <section id="projects" className="pt-8 pb-24 bg-white">
-      <div className="container mx-auto px-4">
+      <div className="container px-[13px] py-0 mx-0 my-0">
         <div className="mb-6 text-right">
           <h2 className="inline-block bg-white px-4 py-2 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-black font-extrabold text-3xl">
             مشاريع الفيصل
           </h2>
         </div>
 
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-[1200px] px-0 my-0 mx-0 py-0 -mt-16">
           <ProjectSearch onFilterChange={handleFilterChange} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
