@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -26,7 +27,14 @@
     --radius: 0.5rem;
   }
 
-  html, body {
+  /* Global font settings */
+  :root {
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
+  }
+
+  html, 
+  body,
+  *:not(i):not(.lucide):not(svg) {
     font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
@@ -34,11 +42,13 @@
   .heading-primary {
     @apply text-4xl md:text-6xl font-bold text-deepBlue mb-6;
     letter-spacing: -0.02em;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
   .heading-secondary {
     @apply text-3xl md:text-4xl font-bold text-deepBlue mb-4;
     letter-spacing: -0.01em;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
   /* Horizontal Dividers */
@@ -55,18 +65,21 @@
     @apply px-6 py-3 bg-deepBlue text-gold font-medium rounded-lg 
            transition-all duration-300 hover:bg-opacity-90 
            border-2 border-transparent hover:border-gold;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
   .btn-secondary {
     @apply px-6 py-3 bg-gold text-white font-medium rounded-lg 
            transition-all duration-300 hover:bg-opacity-90
            border-2 border-transparent hover:border-deepBlue;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
   .btn-white {
     @apply px-8 py-4 bg-white text-black font-bold rounded-lg 
            transition-all duration-300 hover:bg-black hover:text-white
            text-lg inline-flex items-center gap-3;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
   /* Icon Styles */
@@ -81,7 +94,6 @@
 
   body {
     @apply bg-background text-foreground rtl;
-    font-family: "IBM Plex Sans Arabic", sans-serif;
   }
 
   /* Geometric Patterns */
@@ -134,6 +146,7 @@
 
   .slide-show__title {
     @apply text-center mb-8;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
   /* Hide scrollbar for the partners carousel */
@@ -159,14 +172,17 @@
 
   .landing-title {
     @apply text-4xl md:text-6xl font-bold text-center mb-12;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
   .landing-subtitle {
     @apply text-xl md:text-2xl text-center mb-8 max-w-3xl mx-auto;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 
   .landing-button {
     @apply bg-gold hover:bg-gold/90 text-white px-8 py-4 rounded-lg 
            text-lg font-bold transition-all duration-300;
+    font-family: "IBM Plex Sans Arabic", sans-serif !important;
   }
 }
