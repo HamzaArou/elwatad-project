@@ -1,5 +1,5 @@
 const AboutUs = () => {
-  return <section className="py-16 bg-[#2B2B2B] overflow-hidden">
+  return <section className="py-16 overflow-hidden bg-[#2f4447]">
       <div className="container mx-auto px-4 max-w-[1200px]">
         {/* Title visible only on mobile */}
         <h2 className="text-5xl font-bold text-white text-center mb-8 md:hidden">
