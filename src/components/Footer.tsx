@@ -73,8 +73,18 @@ const Footer = () => {
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('projects')} className="hover:text-gold transition-colors">
-                  مشاريعنا
+                <button onClick={() => scrollToSection('properties')} className="hover:text-gold transition-colors">
+                  العقارات
+                </button>
+              </li>
+              <li>
+                <button onClick={() => scrollToSection('about')} className="hover:text-gold transition-colors">
+                  من نحن
+                </button>
+              </li>
+              <li>
+                <button onClick={() => scrollToSection('request')} className="hover:text-gold transition-colors">
+                  اطلب عقارك
                 </button>
               </li>
               <li>
@@ -83,20 +93,15 @@ const Footer = () => {
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('stats')} className="hover:text-gold transition-colors">
-                  مميزاتنا
-                </button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('about')} className="hover:text-gold transition-colors">
-                  عن الشركة
+                <button onClick={() => scrollToSection('register')} className="hover:text-gold transition-colors">
+                  تسجيل
                 </button>
               </li>
               <li>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="hover:text-gold transition-colors">
-                      اتصل بنا
+                      تواصل معنا
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-[200px]">

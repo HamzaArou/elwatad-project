@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -83,11 +84,11 @@ const Header = () => {
 
   const navLinks = [
     { href: "hero", text: "الرئيسية" },
-    { href: "news", text: "آخر الأخبار" },
-    { href: "projects", text: "مشاريعنا" },
-    { href: "stats", text: "إنجازاتنا" },
+    { href: "properties", text: "العقارات" },
+    { href: "about", text: "من نحن" },
+    { href: "request", text: "اطلب عقارك" },
     { href: "services", text: "خدماتنا" },
-    { href: "about", text: "عن الشركة" },
+    { href: "register", text: "تسجيل" },
   ];
 
   const isProjectPage = location.pathname.includes('/project/');
@@ -109,9 +110,7 @@ const Header = () => {
         <div className="flex items-center">
           <button onClick={() => scrollToSection('hero')}>
             <img
-              src={isScrolled 
-                ? "/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png" 
-                : "/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png"}
+              src="/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png"
               alt="وتد الكيان العقارية"
               className="w-[110px] h-[115px] object-contain transition-all duration-300"
             />
