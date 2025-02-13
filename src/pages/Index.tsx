@@ -8,13 +8,11 @@ import Partners from "@/components/Partners";
 import ContactUs from "@/components/ContactUs";
 import FloatingContact from "@/components/FloatingContact";
 import MortgageCalculator from "@/components/MortgageCalculator";
-import PropertySearch from "@/components/PropertySearch";
 
 export default function Index() {
   return (
     <main className="flex min-h-screen flex-col">
       <Hero />
-      <PropertySearch />
       <FeaturedProjects />
       <Services />
       <Stats />
