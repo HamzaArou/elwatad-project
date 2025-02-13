@@ -1,4 +1,3 @@
-
 import { Twitter, Instagram, Mail, Phone } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -20,10 +19,8 @@ const Footer = () => {
   };
 
   const scrollToSection = async (sectionId: string) => {
-    // First navigate to home if not already there
     if (location.pathname !== '/') {
       await navigate('/');
-      // Wait for navigation to complete
       setTimeout(() => {
         const section = document.getElementById(sectionId);
         if (section) {
@@ -36,7 +33,6 @@ const Footer = () => {
         }
       }, 100);
     } else {
-      // If already on home page, just scroll
       const section = document.getElementById(sectionId);
       if (section) {
         const headerHeight = document.querySelector('header')?.getBoundingClientRect().height || 0;
@@ -69,12 +65,22 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <button onClick={() => scrollToSection('hero')} className="hover:text-gold transition-colors">
-                  الرئيسية
+                  رئيسية
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('projects')} className="hover:text-gold transition-colors">
-                  مشاريعنا
+                <button onClick={() => scrollToSection('properties')} className="hover:text-gold transition-colors">
+                  العقارات
+                </button>
+              </li>
+              <li>
+                <button onClick={() => scrollToSection('about')} className="hover:text-gold transition-colors">
+                  من نحن
+                </button>
+              </li>
+              <li>
+                <button onClick={() => scrollToSection('request')} className="hover:text-gold transition-colors">
+                  اطلب عقارك
                 </button>
               </li>
               <li>
@@ -83,38 +89,9 @@ const Footer = () => {
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('stats')} className="hover:text-gold transition-colors">
-                  مميزاتنا
+                <button onClick={() => scrollToSection('register')} className="hover:text-gold transition-colors">
+                  تسجيل
                 </button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('about')} className="hover:text-gold transition-colors">
-                  عن الشركة
-                </button>
-              </li>
-              <li>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="hover:text-gold transition-colors">
-                      اتصل بنا
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-[200px]">
-                    <DropdownMenuItem onClick={handleCall} className="gap-2 cursor-pointer">
-                      <Phone className="h-5 w-5" />
-                      <span>اتصل بنا</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleWhatsApp} className="gap-2 cursor-pointer">
-                      <img src="/lovable-uploads/5a30ecf6-b0b1-41ce-908d-7d07e173fe6e.png" alt="WhatsApp" className="h-5 w-5" />
-                      <span>واتساب</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </li>
-              <li>
-                <Link to="/privacy-policy" className="hover:text-gold transition-colors">
-                  سياسة الخصوصية
-                </Link>
               </li>
             </ul>
           </div>
