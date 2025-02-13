@@ -1,19 +1,24 @@
+
 import { Twitter, Instagram, Mail, Phone } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
+
 const Footer = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const phoneNumber = "+966505148231";
   const whatsappNumber = "966505148231";
   const mapUrl = "https://maps.app.goo.gl/MqS1HB1ZJpb7xXZv8";
+
   const handleCall = () => {
     window.location.href = `tel:${phoneNumber}`;
   };
+
   const handleWhatsApp = () => {
     window.location.href = `https://wa.me/${whatsappNumber}`;
   };
+
   const scrollToSection = async (sectionId: string) => {
     // First navigate to home if not already there
     if (location.pathname !== '/') {
@@ -43,10 +48,15 @@ const Footer = () => {
       }
     }
   };
-  const TikTokIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+
+  const TikTokIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
       <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-    </svg>;
-  return <footer className="bg-deepBlue text-white py-16">
+    </svg>
+  );
+
+  return (
+    <footer className="bg-[#2F4447] text-white py-16">
       <div className="container mx-auto px-4 max-w-[960px]">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="text-center md:text-right">
@@ -138,7 +148,6 @@ const Footer = () => {
               القاضي, Batha Quraish, Makkah 24231, Saudi Arabia
             </p>
           </div>
-
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 text-center">
@@ -147,6 +156,8 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;

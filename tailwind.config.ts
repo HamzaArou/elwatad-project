@@ -38,12 +38,12 @@ export default {
         "collapsible-up": "collapsible-up 0.3s ease-in-out",
       },
       colors: {
-        gold: "#B69665", // Updated from #606060 to match new brand color
-        darkBlue: "#B69665", // Updated to use brand color
-        deepBlue: "#B69665", // Updated to use brand color
+        gold: "#B69665",
+        darkBlue: "#B69665",
+        deepBlue: "#2F4447", // Updated to new secondary color
         warmBeige: "#F7E4C8",
         offWhite: "#F5F5F5",
-        newsGreen: "#B69665", // Updated to use brand color
+        newsGreen: "#B69665",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -54,7 +54,7 @@ export default {
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#2F4447", // Updated to new secondary color
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -83,7 +83,7 @@ export default {
         'vertical-lines': "url('/patterns/vertical-lines.svg')",
       },
       boxShadow: {
-        'gold': '0 4px 14px 0 rgba(182, 150, 101, 0.39)', // Updated to match new gold color
+        'gold': '0 4px 14px 0 rgba(182, 150, 101, 0.39)',
       },
     },
   },
