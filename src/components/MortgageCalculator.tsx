@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Slider } from "./ui/slider";
 import { Input } from "./ui/input";
@@ -11,7 +10,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-
 const MortgageCalculator = () => {
   const [propertyValue, setPropertyValue] = useState(10000);
   const [downPayment, setDownPayment] = useState(3000);
@@ -23,7 +21,9 @@ const MortgageCalculator = () => {
     email: "",
     phone: ""
   });
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
 
   // Calculate values
   const totalEligibleAmount = propertyValue - downPayment;
@@ -32,12 +32,13 @@ const MortgageCalculator = () => {
   const addedProfits = totalEligibleAmount * annualRate * duration;
   const totalPayment = totalEligibleAmount + addedProfits;
   const monthlyInstallment = (totalPayment / (duration * 12)).toFixed(2);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       // First, save to database
-      const { error: dbError } = await supabase.from('interest_forms').insert([{
+      const {
+        error: dbError
+      } = await supabase.from('interest_forms').insert([{
         full_name: formData.full_name,
         email: formData.email,
         phone: formData.phone
@@ -45,7 +46,9 @@ const MortgageCalculator = () => {
       if (dbError) throw dbError;
 
       // Then, send email using Supabase Edge Function
-      const { error: emailError } = await supabase.functions.invoke('send-mortgage-email', {
+      const {
+        error: emailError
+      } = await supabase.functions.invoke('send-mortgage-email', {
         body: {
           ...formData,
           propertyValue,
@@ -56,12 +59,10 @@ const MortgageCalculator = () => {
         }
       });
       if (emailError) throw emailError;
-
       toast({
         title: "تم إرسال طلبك بنجاح",
         description: "سنتواصل معك قريباً"
       });
-      
       setIsDialogOpen(false);
       setFormData({
         full_name: "",
@@ -77,12 +78,10 @@ const MortgageCalculator = () => {
       });
     }
   };
-
-  return (
-    <section className="py-16 bg-white">
+  return <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="mb-8">
-          <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
+          <h2 className="inline-block bg-white py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665] px-[57px]">
             حاسبة التمويل العقاري
           </h2>
         </div>
@@ -271,8 +270,6 @@ const MortgageCalculator = () => {
           left: auto;
         }
       `}</style>
-    </section>
-  );
+    </section>;
 };
-
 export default MortgageCalculator;
