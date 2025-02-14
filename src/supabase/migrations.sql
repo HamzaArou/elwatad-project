@@ -1,4 +1,3 @@
-
 -- Create profiles table for admin authentication
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id),
@@ -16,11 +15,11 @@ CREATE TABLE IF NOT EXISTS public.login_attempts (
 
 -- Create interest forms table for mortgage calculator
 CREATE TABLE IF NOT EXISTS public.interest_forms (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   full_name TEXT NOT NULL,
   email TEXT NOT NULL,
   phone TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
 -- Enable RLS on new tables

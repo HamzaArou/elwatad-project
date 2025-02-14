@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 const partners = [{
   name: "البنك الأهلي السعودي",
   logo: "/lovable-uploads/6fe8f39b-e015-4493-866d-f073883d6e52.png"
@@ -40,9 +41,11 @@ const partners = [{
   name: "تصاميم",
   logo: "/lovable-uploads/1546fc60-ac3c-42af-9afc-a36b02435325.png"
 }];
+
 const Partners = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const scrollAmount = 300;
+
   const scroll = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
       const container = carouselRef.current;
@@ -53,34 +56,63 @@ const Partners = () => {
       });
     }
   };
-  return <section className="py-12 bg-[#f5f5f5] relative">
+
+  return (
+    <section className="py-12 bg-[#f5f5f5] relative">
       <div className="container mx-auto px-4">
         <div className="mb-6 text-right">
-          <h2 className="<span class=\"\n  inline-block\n  bg-white\n  px-6\n  py-3\n  rounded-tl-[100px]\n  rounded-tr-[5px]\n  rounded-br-[100px]\n  rounded-bl-[5px]\n  text-[#2F4447]\n  font-extrabold\n  text-4xl\n  -mt-12    /* Increase negative margin to move text up */\n  shadow-lg\n  border-2\n  border-[#B69665]\n\">\n  <!-- Your Title Text Here -->\n</span>\n">
+          <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
             شركاء النجاح
           </h2>
         </div>
         
         <div className="relative mx-16">
-          <button onClick={() => scroll('left')} className="absolute -left-16 top-1/2 -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300" aria-label="Scroll left">
+          <button 
+            onClick={() => scroll('left')} 
+            className="absolute -left-16 top-1/2 -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300" 
+            aria-label="Scroll left"
+          >
             <ChevronLeft className="h-6 w-6 text-gray-600" />
           </button>
 
-          <div ref={carouselRef} className="flex overflow-x-auto gap-8 px-4 scroll-smooth partners-carousel" style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch'
-        }}>
-            {partners.map((partner, index) => <div key={index} className="flex-shrink-0 bg-white rounded-full p-6 w-56 h-56 flex items-center justify-center transform hover:scale-105 transition-transform duration-300 shadow-lg">
-                <img src={partner.logo} alt={partner.name} className={`object-contain ${partner.name === "المبنى الذكي" || partner.name === "تصاميم" ? "max-w-[95%] max-h-[95%]" : "max-w-[85%] max-h-[85%]"}`} />
-              </div>)}
+          <div 
+            ref={carouselRef} 
+            className="flex overflow-x-auto gap-8 px-4 scroll-smooth partners-carousel" 
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
+            {partners.map((partner, index) => (
+              <div 
+                key={index} 
+                className="flex-shrink-0 bg-white rounded-full p-6 w-56 h-56 flex items-center justify-center transform hover:scale-105 transition-transform duration-300 shadow-lg"
+              >
+                <img 
+                  src={partner.logo} 
+                  alt={partner.name} 
+                  className={`object-contain ${
+                    partner.name === "المبنى الذكي" || partner.name === "تصاميم" 
+                      ? "max-w-[95%] max-h-[95%]" 
+                      : "max-w-[85%] max-h-[85%]"
+                  }`} 
+                />
+              </div>
+            ))}
           </div>
 
-          <button onClick={() => scroll('right')} className="absolute -right-16 top-1/2 -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300" aria-label="Scroll right">
+          <button 
+            onClick={() => scroll('right')} 
+            className="absolute -right-16 top-1/2 -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300" 
+            aria-label="Scroll right"
+          >
             <ChevronRight className="h-6 w-6 text-gray-600" />
           </button>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Partners;
