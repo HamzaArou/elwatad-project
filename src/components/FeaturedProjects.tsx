@@ -46,10 +46,10 @@ const FeaturedProjects = () => {
   return <section id="projects" className="pt-8 pb-2 bg-white">
       <div className="container px-[13px] py-0 mx-0 my-0">
         <div className="mb-6 text-right my-[32px]">
-          <h2 className="inline-block bg-white px-4 py-2 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-black font-extrabold text-3xl">مشاريع الوتد</h2>
+          <h2 className="<span class=\"\n  inline-block\n  bg-white\n  px-6\n  py-3\n  rounded-tl-[100px]\n  rounded-tr-[5px]\n  rounded-br-[100px]\n  rounded-bl-[5px]\n  text-[#2F4447]\n  font-extrabold\n  text-4xl\n  -mt-12    /* Increase negative margin to move text up */\n  shadow-lg\n  border-2\n  border-[#B69665]\n\">\n  <!-- Your Title Text Here -->\n</span>">مشاريع الوتد</h2>
         </div>
 
-        <div className="max-w-[1200px] mx-auto px-4 py-0 -mt-16">
+        <div className="max-w-[1200px] mx-auto px-4 py-0 -mt-3">
           <ProjectSearch onFilterChange={handleFilterChange} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
