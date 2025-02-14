@@ -10,7 +10,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-
 const MortgageCalculator = () => {
   const [propertyValue, setPropertyValue] = useState(10000);
   const [downPayment, setDownPayment] = useState(3000);
@@ -33,7 +32,6 @@ const MortgageCalculator = () => {
   const addedProfits = totalEligibleAmount * annualRate * duration;
   const totalPayment = totalEligibleAmount + addedProfits;
   const monthlyInstallment = (totalPayment / (duration * 12)).toFixed(2);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -80,7 +78,6 @@ const MortgageCalculator = () => {
       });
     }
   };
-
   return <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="mb-8">
@@ -90,17 +87,17 @@ const MortgageCalculator = () => {
         </div>
 
         <div className="max-w-[960px] mx-auto mb-12 text-center">
-          <h3 className="text-2xl font-bold text-[#2F4447] mb-4">
+          <h3 className="font-bold text-[#2F4447] mb-4 text-4xl">
             خطوتك الأولى نحو امتلاك عقارك!
           </h3>
-          <p className="text-lg text-gray-600 leading-relaxed">
+          <p className="text-gray-600 leading-relaxed text-xl">
             حدد تفاصيل العقار الذي ترغب في شرائه، واحصل على تقدير دقيق للدفعة الأولى، قيمة الأقساط الشهرية، ومدة التمويل المناسبة لك.
           </p>
         </div>
 
         <div className="max-w-[960px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-gradient-to-br from-[#cccccc] to-[#cccccc]/90 text-black p-8 rounded-lg order-2 lg:order-1">
+            <div className="bg-gradient-to-br from-[#cccccc] to-[#cccccc]/90 text-black p-8 rounded-lg order-2 lg:order-1 bg-[#f5f7f5]">
               <div className="text-center mb-8">
                 <h3 className="text-lg mb-2">المبلغ الإجمالي المؤهل</h3>
                 <p className="text-4xl font-bold mb-4">
@@ -279,5 +276,4 @@ const MortgageCalculator = () => {
       `}</style>
     </section>;
 };
-
 export default MortgageCalculator;
