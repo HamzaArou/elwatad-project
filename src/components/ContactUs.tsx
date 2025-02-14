@@ -106,7 +106,7 @@ const ContactUs = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Form Section with Title */}
           <div className="space-y-6 h-[600px] flex flex-col">
-            <h2 className="text-3xl font-bold text-darkBlue text-center">
+            <h2 className="<span class=\"\n  inline-block\n  bg-white\n  px-6\n  py-3\n  rounded-tl-[100px]\n  rounded-tr-[5px]\n  rounded-br-[100px]\n  rounded-bl-[5px]\n  text-[#2F4447]\n  font-extrabold\n  text-4xl\n  -mt-12    /* Increase negative margin to move text up */\n  shadow-lg\n  border-2\n  border-[#B69665]\n\">\n  <!-- Your Title Text Here -->\n</span>">
               {projectId ? "سجل اهتمامك بهذا المشروع" : "سجل اهتمامك"}
             </h2>
             <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 overflow-y-auto">

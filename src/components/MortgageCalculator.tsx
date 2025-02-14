@@ -10,7 +10,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-
 const MortgageCalculator = () => {
   const [propertyValue, setPropertyValue] = useState(10000);
   const [downPayment, setDownPayment] = useState(3000);
@@ -20,9 +19,11 @@ const MortgageCalculator = () => {
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
-    phone: "",
+    phone: ""
   });
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
 
   // Calculate values
   const totalEligibleAmount = propertyValue - downPayment;
@@ -31,64 +32,56 @@ const MortgageCalculator = () => {
   const addedProfits = totalEligibleAmount * annualRate * duration;
   const totalPayment = totalEligibleAmount + addedProfits;
   const monthlyInstallment = (totalPayment / (duration * 12)).toFixed(2);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
       // First, save to database
-      const { error: dbError } = await supabase
-        .from('interest_forms')
-        .insert([
-          {
-            full_name: formData.full_name,
-            email: formData.email,
-            phone: formData.phone,
-          }
-        ]);
-
+      const {
+        error: dbError
+      } = await supabase.from('interest_forms').insert([{
+        full_name: formData.full_name,
+        email: formData.email,
+        phone: formData.phone
+      }]);
       if (dbError) throw dbError;
 
       // Then, send email using Supabase Edge Function
-      const { error: emailError } = await supabase.functions.invoke('send-mortgage-email', {
+      const {
+        error: emailError
+      } = await supabase.functions.invoke('send-mortgage-email', {
         body: {
           ...formData,
           propertyValue,
           downPayment,
           duration,
           monthlyInstallment,
-          totalEligibleAmount,
-        },
+          totalEligibleAmount
+        }
       });
-
       if (emailError) throw emailError;
-
       toast({
         title: "تم إرسال طلبك بنجاح",
-        description: "سنتواصل معك قريباً",
+        description: "سنتواصل معك قريباً"
       });
-
       setIsDialogOpen(false);
       setFormData({
         full_name: "",
         email: "",
-        phone: "",
+        phone: ""
       });
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
         title: "حدث خطأ",
         description: "الرجاء المحاولة مرة أخرى",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
-  return (
-    <section className="py-16 bg-white">
+  return <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-darkBlue inline-block bg-darkBlue px-4 py-2 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-white">
+          <h2 className="<span class=\"\n  inline-block\n  bg-white\n  px-6\n  py-3\n  rounded-tl-[100px]\n  rounded-tr-[5px]\n  rounded-br-[100px]\n  rounded-bl-[5px]\n  text-[#2F4447]\n  font-extrabold\n  text-4xl\n  -mt-12    /* Increase negative margin to move text up */\n  shadow-lg\n  border-2\n  border-[#B69665]\n\">\n  <!-- Your Title Text Here -->\n</span>">
             حاسبة التمويل العقاري
           </h2>
         </div>
@@ -112,11 +105,7 @@ const MortgageCalculator = () => {
                 </div>
               </div>
 
-              <Collapsible 
-                open={isDetailsOpen} 
-                onOpenChange={setIsDetailsOpen}
-                className="transition-all duration-300 ease-in-out"
-              >
+              <Collapsible open={isDetailsOpen} onOpenChange={setIsDetailsOpen} className="transition-all duration-300 ease-in-out">
                 <CollapsibleTrigger className="w-full text-center mt-6 flex items-center justify-center gap-2 hover:text-gold transition-colors">
                   <span>{isDetailsOpen ? 'إخفاء التفاصيل' : 'توسيع القائمة لعرض التفاصيل'}</span>
                   <ChevronDown className={`transform transition-transform duration-300 ${isDetailsOpen ? 'rotate-180' : ''}`} />
@@ -156,41 +145,27 @@ const MortgageCalculator = () => {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2 text-right">
                       <Label htmlFor="full_name">الاسم الكامل</Label>
-                      <Input
-                        id="full_name"
-                        value={formData.full_name}
-                        onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                        required
-                        className="text-right"
-                        dir="rtl"
-                      />
+                      <Input id="full_name" value={formData.full_name} onChange={e => setFormData({
+                      ...formData,
+                      full_name: e.target.value
+                    })} required className="text-right" dir="rtl" />
                     </div>
                     <div className="space-y-2 text-right">
                       <Label htmlFor="email">البريد الإلكتروني</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
-                        className="text-right"
-                        dir="rtl"
-                      />
+                      <Input id="email" type="email" value={formData.email} onChange={e => setFormData({
+                      ...formData,
+                      email: e.target.value
+                    })} required className="text-right" dir="rtl" />
                     </div>
                     <div className="space-y-2 text-right">
                       <Label htmlFor="phone">رقم الجوال</Label>
-                      <PhoneInput
-                        country="sa"
-                        value={formData.phone}
-                        onChange={(phone) => setFormData({ ...formData, phone: phone })}
-                        inputProps={{
-                          required: true,
-                          id: "phone"
-                        }}
-                        containerClass="!w-full"
-                        inputClass="!w-full !h-10 !text-right !pr-[48px]"
-                        buttonClass="!border-input"
-                      />
+                      <PhoneInput country="sa" value={formData.phone} onChange={phone => setFormData({
+                      ...formData,
+                      phone: phone
+                    })} inputProps={{
+                      required: true,
+                      id: "phone"
+                    }} containerClass="!w-full" inputClass="!w-full !h-10 !text-right !pr-[48px]" buttonClass="!border-input" />
                     </div>
                     <Button type="submit" className="w-full bg-gold hover:bg-gold/90">
                       إرسال
@@ -208,12 +183,7 @@ const MortgageCalculator = () => {
                   <label className="text-xl font-bold text-gray-800">قيمة العقار</label>
                   <div className="relative">
                     <div className="flex items-center gap-2 bg-white border-2 border-darkBlue rounded-full px-4 py-2">
-                      <Input
-                        type="number"
-                        value={propertyValue}
-                        onChange={(e) => setPropertyValue(Number(e.target.value))}
-                        className="w-24 text-left border-none p-0 text-lg font-bold focus-visible:ring-0"
-                      />
+                      <Input type="number" value={propertyValue} onChange={e => setPropertyValue(Number(e.target.value))} className="w-24 text-left border-none p-0 text-lg font-bold focus-visible:ring-0" />
                       <span className="text-sm font-medium text-gray-600">SR</span>
                     </div>
                   </div>
@@ -222,15 +192,11 @@ const MortgageCalculator = () => {
                   <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-darkBlue text-white px-3 py-1 rounded-full text-sm">
                     {propertyValue.toLocaleString()} SR
                   </div>
-                  <Slider
-                    value={[propertyValue]}
-                    onValueChange={([value]) => setPropertyValue(value)}
-                    max={100000000} // Updated to 100 million
-                    step={100000} // Adjusted step for better control with larger numbers
-                    className="my-4"
-                  />
+                  <Slider value={[propertyValue]} onValueChange={([value]) => setPropertyValue(value)} max={100000000} // Updated to 100 million
+                step={100000} // Adjusted step for better control with larger numbers
+                className="my-4" />
                   <div className="flex justify-between text-sm text-gray-600 mt-2">
-                    <span>SR {(100000000).toLocaleString()}</span>
+                    <span>SR {100000000 .toLocaleString()}</span>
                     <span>SR 0</span>
                   </div>
                 </div>
@@ -245,12 +211,7 @@ const MortgageCalculator = () => {
                   </div>
                   <div className="relative">
                     <div className="flex items-center gap-2 bg-white border-2 border-darkBlue rounded-full px-4 py-2">
-                      <Input
-                        type="number"
-                        value={downPayment}
-                        onChange={(e) => setDownPayment(Number(e.target.value))}
-                        className="w-24 text-left border-none p-0 text-lg font-bold focus-visible:ring-0"
-                      />
+                      <Input type="number" value={downPayment} onChange={e => setDownPayment(Number(e.target.value))} className="w-24 text-left border-none p-0 text-lg font-bold focus-visible:ring-0" />
                       <span className="text-sm font-medium text-gray-600">SR</span>
                     </div>
                   </div>
@@ -259,13 +220,7 @@ const MortgageCalculator = () => {
                   <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-darkBlue text-white px-3 py-1 rounded-full text-sm">
                     {downPayment.toLocaleString()} SR
                   </div>
-                  <Slider
-                    value={[downPayment]}
-                    onValueChange={([value]) => setDownPayment(value)}
-                    max={propertyValue * 0.3}
-                    step={1000}
-                    className="my-4"
-                  />
+                  <Slider value={[downPayment]} onValueChange={([value]) => setDownPayment(value)} max={propertyValue * 0.3} step={1000} className="my-4" />
                   <div className="flex justify-between text-sm text-gray-600 mt-2">
                     <span>SR {(propertyValue * 0.3).toLocaleString()}</span>
                     <span>SR 0</span>
@@ -279,12 +234,7 @@ const MortgageCalculator = () => {
                   <label className="text-xl font-bold text-gray-800">مدة التمويل (بالأعوام)</label>
                   <div className="relative">
                     <div className="flex items-center gap-2 bg-white border-2 border-darkBlue rounded-full px-4 py-2">
-                      <Input
-                        type="number"
-                        value={duration}
-                        onChange={(e) => setDuration(Number(e.target.value))}
-                        className="w-24 text-left border-none p-0 text-lg font-bold focus-visible:ring-0"
-                      />
+                      <Input type="number" value={duration} onChange={e => setDuration(Number(e.target.value))} className="w-24 text-left border-none p-0 text-lg font-bold focus-visible:ring-0" />
                     </div>
                   </div>
                 </div>
@@ -292,14 +242,7 @@ const MortgageCalculator = () => {
                   <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-darkBlue text-white px-3 py-1 rounded-full text-sm">
                     {duration}
                   </div>
-                  <Slider
-                    value={[duration]}
-                    onValueChange={([value]) => setDuration(value)}
-                    max={30}
-                    min={1}
-                    step={1}
-                    className="my-4"
-                  />
+                  <Slider value={[duration]} onValueChange={([value]) => setDuration(value)} max={30} min={1} step={1} className="my-4" />
                   <div className="flex justify-between text-sm text-gray-600 mt-2">
                     <span>30</span>
                     <span>1</span>
@@ -329,8 +272,6 @@ const MortgageCalculator = () => {
           }
         `}
       </style>
-    </section>
-  );
+    </section>;
 };
-
 export default MortgageCalculator;
