@@ -1,14 +1,17 @@
 
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 const RequestProperty = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative w-full bg-deepBlue overflow-hidden">
       {/* Angled shape container */}
       <div 
         className="relative w-full" 
         style={{
-          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 85%)" // Changed the clip-path to match the screenshot
+          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 85%)"
         }}
       >
         <div className="container mx-auto px-4 py-16 md:py-24">
@@ -37,7 +40,7 @@ const RequestProperty = () => {
               <div className="pt-6">
                 <Button 
                   className="bg-gold hover:bg-gold/90 text-white px-8 py-6 text-xl rounded-md transition-all duration-300 hover:scale-105" 
-                  onClick={() => window.location.href = '/contact'}
+                  onClick={() => navigate('/property-request')}
                 >
                   اطلب الآن
                 </Button>

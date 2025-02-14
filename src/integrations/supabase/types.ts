@@ -213,6 +213,33 @@ export type Database = {
         }
         Relationships: []
       }
+      property_requests: {
+        Row: {
+          city: string
+          created_at: string
+          id: string
+          name: string
+          phone: string
+          property_type: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          id?: string
+          name: string
+          phone: string
+          property_type: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          id?: string
+          name?: string
+          phone?: string
+          property_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
