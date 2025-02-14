@@ -59,7 +59,7 @@ const FeaturedProjects = () => {
           </div>
 
           <div className="flex justify-center mt-8">
-            <Button onClick={handleViewAll} className="bg-[#B69665] hover:bg-[#B69665]/90 text-white font-bold text-lg rounded-full shadow-lg transition duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-105 px-[34px] py-[26px]">
+            <Button onClick={handleViewAll} className="bg-[#B69665] hover:bg-[#B69665]/90 text-white font-bold text-lg rounded-full shadow-lg transition duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-105 px-[34px] py-[35px]">
               عرض كل العقارات
             </Button>
           </div>
