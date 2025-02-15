@@ -54,8 +54,9 @@ const Header = () => {
   const scrollToSection = (sectionId: string) => {
     const isPrivacyPage = location.pathname === '/privacy-policy';
     const isProjectPage = location.pathname.includes('/project/');
+    const isPropertyRequestPage = location.pathname === '/property-request';
     
-    if (isPrivacyPage || isProjectPage) {
+    if (isPrivacyPage || isProjectPage || isPropertyRequestPage) {
       navigate('/');
       setTimeout(() => {
         const section = document.getElementById(sectionId);
@@ -107,7 +108,19 @@ const Header = () => {
       <div className="w-full h-full flex items-center px-10" dir="ltr">
         {/* Logo Section - Left side */}
         <div className="flex items-center">
-          <button onClick={() => scrollToSection('hero')}>
+          <button 
+            onClick={() => {
+              if (location.pathname !== '/') {
+                navigate('/');
+                setTimeout(() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 100);
+              } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className="cursor-pointer"
+          >
             <img
               src="/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png"
               alt="وتد الكيان العقارية"
@@ -128,7 +141,7 @@ const Header = () => {
                   className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
                     shouldUseGoldText ? 'text-[#B69665]' : 
                     isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
-                  }`}
+                  } cursor-pointer`}
                 >
                   {link.text}
                 </button>
@@ -138,7 +151,7 @@ const Header = () => {
                   <button className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
                     shouldUseGoldText ? 'text-[#B69665]' : 
                     isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
-                  }`}>
+                  } cursor-pointer`}>
                     تواصل معنا
                   </button>
                 </DropdownMenuTrigger>
@@ -169,7 +182,7 @@ const Header = () => {
             className={`transition-colors duration-300 ${
               shouldUseGoldText ? 'text-[#B69665]' : 
               isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
-            }`}
+            } cursor-pointer`}
           >
             {isMobileMenuOpen ? (
               <X className="h-8 w-8" />
@@ -187,17 +200,17 @@ const Header = () => {
                 <button
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
-                  className={`nav-link py-3 font-ibm-arabic text-lg text-white hover:text-gold transition-colors duration-300 text-right w-full`}
+                  className="nav-link py-3 font-ibm-arabic text-lg text-white hover:text-gold transition-colors duration-300 text-right w-full cursor-pointer"
                 >
                   {link.text}
                 </button>
               ))}
               <div className="flex gap-4 py-3">
-                <button onClick={handleCall} className="flex items-center gap-2 text-white hover:text-gold">
+                <button onClick={handleCall} className="flex items-center gap-2 text-white hover:text-gold cursor-pointer">
                   <Phone className="h-5 w-5" />
                   <span>اتصل بنا</span>
                 </button>
-                <button onClick={handleWhatsApp} className="flex items-center gap-2 text-white hover:text-gold">
+                <button onClick={handleWhatsApp} className="flex items-center gap-2 text-white hover:text-gold cursor-pointer">
                   <img 
                     src="/lovable-uploads/5a30ecf6-b0b1-41ce-908d-7d07e173fe6e.png" 
                     alt="WhatsApp"
