@@ -246,8 +246,9 @@ const About = () => {
                   {/* Back of card */}
                   <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
                     <Card className="h-full bg-gradient-to-br from-[#2F4447] to-[#B69665]">
-                      <CardContent className="p-6 text-center h-full flex items-center justify-center">
-                        <p className="text-white text-lg leading-relaxed">{feature.description}</p>
+                      <CardContent className="p-6 text-center h-full flex flex-col items-center justify-center space-y-3">
+                        <h3 className="text-xl font-extrabold text-white border-b-2 border-white/30 pb-2">{feature.title}</h3>
+                        <p className="text-white text-sm leading-relaxed">{feature.description}</p>
                       </CardContent>
                     </Card>
                   </div>
