@@ -169,19 +169,19 @@ const PropertyRequest = () => {
 
               <Card className="border-0 shadow-lg bg-[#2F4447] text-white">
                 <CardContent className="p-6 space-y-6">
-                  <h3 className="text-xl font-bold text-right mb-6">لماذا تختار وتد الكيان العقارية؟</h3>
+                  <h3 className="text-2xl font-bold text-white text-right mb-6">لماذا تختار وتد الكيان العقارية؟</h3>
                   <ul className="space-y-6">
-                    <li className="flex items-center justify-end gap-4">
+                    <li className="flex flex-row-reverse items-center gap-4">
+                      <div className="w-6 h-6 rounded-full bg-gold flex-shrink-0"></div>
                       <span className="text-right text-base">نوفر لك عقارات متنوعة بمواقع استراتيجية</span>
-                      <div className="w-6 h-6 rounded-full bg-gold flex-shrink-0"></div>
                     </li>
-                    <li className="flex items-center justify-end gap-4">
+                    <li className="flex flex-row-reverse items-center gap-4">
+                      <div className="w-6 h-6 rounded-full bg-gold flex-shrink-0"></div>
                       <span className="text-right text-base">نضمن لك تجربة سلسة من البداية حتى توقيع العقود</span>
-                      <div className="w-6 h-6 rounded-full bg-gold flex-shrink-0"></div>
                     </li>
-                    <li className="flex items-center justify-end gap-4">
-                      <span className="text-right text-base">فريقنا مستعد لمساعدتك في اختيار العقار المناسب لك</span>
+                    <li className="flex flex-row-reverse items-center gap-4">
                       <div className="w-6 h-6 rounded-full bg-gold flex-shrink-0"></div>
+                      <span className="text-right text-base">فريقنا مستعد لمساعدتك في اختيار العقار المناسب لك</span>
                     </li>
                   </ul>
                 </CardContent>
