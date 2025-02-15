@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useCallback, memo } from "react";
 import { Badge } from "../ui/badge";
-import { Home, Bath, Ruler } from "lucide-react";
+import { Home, Bath, Ruler, Heart } from "lucide-react";
 
 interface Project {
   id: string;
@@ -49,6 +49,11 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
     navigate(`/project/${project.id}`);
   }, [navigate, project.id]);
 
+  const handleHeartClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the card click
+    navigate('/register');
+  }, [navigate]);
+
   return (
     <div 
       onClick={handleClick} 
@@ -71,8 +76,8 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           }}
         />
         
-        {/* Dark Overlay - darker on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 transition-opacity duration-300 group-hover:from-black/90 group-hover:to-black/40" />
+        {/* Dark Overlay - Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
         {/* Status Badge */}
         <Badge 
@@ -81,20 +86,24 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           {project.status}
         </Badge>
 
-        {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col justify-between p-6 text-white">
-          {/* Always Visible Content */}
-          <div /> {/* Spacer */}
-          
-          <div className="space-y-4">
-            {/* Price (acting as title) */}
-            <p className="text-2xl font-bold text-right">
+        {/* Heart Icon */}
+        <button
+          onClick={handleHeartClick}
+          className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
+          aria-label="Add to favorites"
+        >
+          <Heart className="w-6 h-6 text-white" />
+        </button>
+
+        {/* Main Content - Always at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 p-6">
+          {/* Base Info Container */}
+          <div className="space-y-2 transform transition-transform duration-300 group-hover:translate-y-[-80px]">
+            <h3 className="text-2xl font-bold text-right text-white">
               {formatPrice(project.property_value)}
-            </p>
-            
-            {/* City */}
-            <div className="flex flex-col gap-2 text-right">
-              <p className="text-lg">
+            </h3>
+            <div className="text-right">
+              <p className="text-lg text-white">
                 {project.city}
               </p>
               <p className="text-sm text-white/80">
@@ -102,24 +111,21 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
                 {project.district}
               </p>
             </div>
+          </div>
 
-            {/* Content Revealed on Hover */}
-            <div className="space-y-6 opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-              {/* Stats Grid */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                  <Home className="w-5 h-5 text-white mb-1" />
-                  <p className="text-sm font-medium">{project.rooms} غرف</p>
-                </div>
-                <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                  <Bath className="w-5 h-5 text-white mb-1" />
-                  <p className="text-sm font-medium">{project.bathrooms} حمام</p>
-                </div>
-                <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                  <Ruler className="w-5 h-5 text-white mb-1" />
-                  <p className="text-sm font-medium">{project.area} م²</p>
-                </div>
-              </div>
+          {/* Stats Grid - Hidden by default */}
+          <div className="grid grid-cols-3 gap-4 mt-6 opacity-0 transform translate-y-8 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+            <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
+              <Home className="w-5 h-5 text-white mb-1" />
+              <p className="text-sm font-medium text-white">{project.rooms} غرف</p>
+            </div>
+            <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
+              <Bath className="w-5 h-5 text-white mb-1" />
+              <p className="text-sm font-medium text-white">{project.bathrooms} حمام</p>
+            </div>
+            <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
+              <Ruler className="w-5 h-5 text-white mb-1" />
+              <p className="text-sm font-medium text-white">{project.area} م²</p>
             </div>
           </div>
         </div>
