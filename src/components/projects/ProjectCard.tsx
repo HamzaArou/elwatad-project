@@ -1,8 +1,10 @@
 
 import { useNavigate } from "react-router-dom";
-import { useCallback, memo } from "react";
+import { useCallback, memo, useState, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { Home, Bath, Ruler, Heart } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Project {
   id: string;
@@ -41,6 +43,15 @@ const formatPrice = (price?: number) => {
 
 const ProjectCard = memo(({ project }: ProjectCardProps) => {
   const navigate = useNavigate();
+  const { user, toggleFavorite, isFavorite } = useAuth();
+  const { toast } = useToast();
+  const [isFav, setIsFav] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      isFavorite(project.id).then(setIsFav);
+    }
+  }, [user, project.id, isFavorite]);
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     if (window.getSelection()?.toString()) {
@@ -49,10 +60,26 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
     navigate(`/project/${project.id}`);
   }, [navigate, project.id]);
 
-  const handleHeartClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering the card click
-    navigate('/register');
-  }, [navigate]);
+  const handleHeartClick = useCallback(async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      navigate('/register');
+      return;
+    }
+
+    try {
+      await toggleFavorite(project.id);
+      setIsFav(!isFav);
+      toast({
+        description: isFav ? "تمت إزالة العقار من المفضلة" : "تمت إضافة العقار إلى المفضلة",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "حدث خطأ ما. الرجاء المحاولة مرة أخرى.",
+      });
+    }
+  }, [user, navigate, project.id, toggleFavorite, isFav, toast]);
 
   return (
     <div 
@@ -89,10 +116,14 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
         {/* Heart Icon */}
         <button
           onClick={handleHeartClick}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
-          aria-label="Add to favorites"
+          className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-sm transition-colors ${
+            isFav 
+              ? 'bg-white/20 text-red-500' 
+              : 'bg-white/10 text-white hover:bg-white/20'
+          }`}
+          aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
         >
-          <Heart className="w-6 h-6 text-white" />
+          <Heart className="w-6 h-6" fill={isFav ? "currentColor" : "none"} />
         </button>
 
         {/* Main Content - Always at bottom */}

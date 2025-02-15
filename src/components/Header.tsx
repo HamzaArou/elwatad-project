@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,7 @@ const Header = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const phoneNumber = "+966505148231";
   const whatsappNumber = "966505148231";
@@ -89,13 +91,20 @@ const Header = () => {
     { href: "about", text: "من نحن" },
     { href: "request", text: "اطلب عقارك" },
     { href: "services", text: "خدماتنا" },
-    { href: "register", text: "تسجيل" },
   ];
 
   const isProjectPage = location.pathname.includes('/project/');
   const isPrivacyPage = location.pathname === '/privacy-policy';
   const isPropertyRequestPage = location.pathname === '/property-request';
   const shouldUseGoldText = isPropertyRequestPage && !isScrolled;
+
+  const handleAuthClick = () => {
+    if (user) {
+      signOut();
+    } else {
+      navigate('/register');
+    }
+  };
 
   return (
     <header
@@ -105,8 +114,73 @@ const Header = () => {
         !isProjectPage && !isVisible ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="w-full h-full flex items-center px-10" dir="ltr">
-        {/* Logo Section - Left side */}
+      <div className="w-full h-full flex items-center justify-between px-6 md:px-10" dir="ltr">
+        {/* Left Side - Additional Logos */}
+        <div className="flex items-center gap-4">
+          <img
+            src="/lovable-uploads/b003dd7b-9db8-4ee9-a46a-843b5a9b16e4.png"
+            alt="Logo 1"
+            className="h-16 w-auto"
+          />
+          <img
+            src="/lovable-uploads/697a92cd-3c0f-4b48-b2b7-ee819715bd38.png"
+            alt="Logo 2"
+            className="h-16 w-auto"
+          />
+        </div>
+
+        {/* Center - Navigation */}
+        <nav className="hidden lg:flex items-center justify-center flex-1 px-4">
+          <div className="flex gap-8 rtl">
+            {navLinks.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => scrollToSection(link.href)}
+                className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
+                  shouldUseGoldText ? 'text-[#B69665]' : 
+                  isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
+                } cursor-pointer`}
+              >
+                {link.text}
+              </button>
+            ))}
+            <button
+              onClick={handleAuthClick}
+              className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
+                shouldUseGoldText ? 'text-[#B69665]' : 
+                isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
+              } cursor-pointer`}
+            >
+              {user ? 'تسجيل خروج' : 'تسجيل'}
+            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
+                  shouldUseGoldText ? 'text-[#B69665]' : 
+                  isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
+                } cursor-pointer`}>
+                  تواصل معنا
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[200px]">
+                <DropdownMenuItem onClick={handleCall} className="gap-2 cursor-pointer">
+                  <Phone className="h-5 w-5" />
+                  <span>اتصل بنا</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleWhatsApp} className="gap-2 cursor-pointer">
+                  <img 
+                    src="/lovable-uploads/5a30ecf6-b0b1-41ce-908d-7d07e173fe6e.png" 
+                    alt="WhatsApp"
+                    className="h-5 w-5"
+                  />
+                  <span>واتساب</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </nav>
+
+        {/* Right Side - Main Logo */}
         <div className="flex items-center">
           <button 
             onClick={() => {
@@ -129,53 +203,8 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Navigation Container - Centered */}
-        <div className="flex-1 max-w-[960px] mx-auto px-4">
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center justify-start rtl">
-            <div className="flex gap-8">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => scrollToSection(link.href)}
-                  className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
-                    shouldUseGoldText ? 'text-[#B69665]' : 
-                    isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
-                  } cursor-pointer`}
-                >
-                  {link.text}
-                </button>
-              ))}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
-                    shouldUseGoldText ? 'text-[#B69665]' : 
-                    isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
-                  } cursor-pointer`}>
-                    تواصل معنا
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[200px]">
-                  <DropdownMenuItem onClick={handleCall} className="gap-2 cursor-pointer">
-                    <Phone className="h-5 w-5" />
-                    <span>اتصل بنا</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleWhatsApp} className="gap-2 cursor-pointer">
-                    <img 
-                      src="/lovable-uploads/5a30ecf6-b0b1-41ce-908d-7d07e173fe6e.png" 
-                      alt="WhatsApp"
-                      className="h-5 w-5"
-                    />
-                    <span>واتساب</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </nav>
-        </div>
-
-        {/* Mobile Menu Button - Right side */}
-        <div className="lg:hidden px-4">
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
@@ -191,38 +220,44 @@ const Header = () => {
             )}
           </button>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full right-0 left-0 bg-black/90 backdrop-blur-sm shadow-lg animate-slide-in">
-            <nav className="flex flex-col p-4 rtl">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => scrollToSection(link.href)}
-                  className="nav-link py-3 font-ibm-arabic text-lg text-white hover:text-gold transition-colors duration-300 text-right w-full cursor-pointer"
-                >
-                  {link.text}
-                </button>
-              ))}
-              <div className="flex gap-4 py-3">
-                <button onClick={handleCall} className="flex items-center gap-2 text-white hover:text-gold cursor-pointer">
-                  <Phone className="h-5 w-5" />
-                  <span>اتصل بنا</span>
-                </button>
-                <button onClick={handleWhatsApp} className="flex items-center gap-2 text-white hover:text-gold cursor-pointer">
-                  <img 
-                    src="/lovable-uploads/5a30ecf6-b0b1-41ce-908d-7d07e173fe6e.png" 
-                    alt="WhatsApp"
-                    className="h-5 w-5"
-                  />
-                  <span>واتساب</span>
-                </button>
-              </div>
-            </nav>
-          </div>
-        )}
       </div>
+
+      {/* Mobile Navigation */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden absolute top-full right-0 left-0 bg-black/90 backdrop-blur-sm shadow-lg animate-slide-in">
+          <nav className="flex flex-col p-4 rtl">
+            {navLinks.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => scrollToSection(link.href)}
+                className="nav-link py-3 font-ibm-arabic text-lg text-white hover:text-gold transition-colors duration-300 text-right w-full cursor-pointer"
+              >
+                {link.text}
+              </button>
+            ))}
+            <button
+              onClick={handleAuthClick}
+              className="nav-link py-3 font-ibm-arabic text-lg text-white hover:text-gold transition-colors duration-300 text-right w-full cursor-pointer"
+            >
+              {user ? 'تسجيل خروج' : 'تسجيل'}
+            </button>
+            <div className="flex gap-4 py-3">
+              <button onClick={handleCall} className="flex items-center gap-2 text-white hover:text-gold cursor-pointer">
+                <Phone className="h-5 w-5" />
+                <span>اتصل بنا</span>
+              </button>
+              <button onClick={handleWhatsApp} className="flex items-center gap-2 text-white hover:text-gold cursor-pointer">
+                <img 
+                  src="/lovable-uploads/5a30ecf6-b0b1-41ce-908d-7d07e173fe6e.png" 
+                  alt="WhatsApp"
+                  className="h-5 w-5"
+                />
+                <span>واتساب</span>
+              </button>
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
