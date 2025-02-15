@@ -1,4 +1,3 @@
-
 import { Twitter, Instagram, Mail, Phone } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -9,7 +8,7 @@ const Footer = () => {
   const navigate = useNavigate();
   const phoneNumber = "+966505148231";
   const whatsappNumber = "966505148231";
-  const mapUrl = "https://maps.app.goo.gl/MqS1HB1ZJpb7xXZv8";
+  const mapUrl = "https://maps.app.goo.gl/sMQoUi9T15nYNpfo9";
 
   const handleCall = () => {
     window.location.href = `tel:${phoneNumber}`;
@@ -20,10 +19,8 @@ const Footer = () => {
   };
 
   const scrollToSection = async (sectionId: string) => {
-    // First navigate to home if not already there
     if (location.pathname !== '/') {
       await navigate('/');
-      // Wait for navigation to complete
       setTimeout(() => {
         const section = document.getElementById(sectionId);
         if (section) {
@@ -36,7 +33,6 @@ const Footer = () => {
         }
       }, 100);
     } else {
-      // If already on home page, just scroll
       const section = document.getElementById(sectionId);
       if (section) {
         const headerHeight = document.querySelector('header')?.getBoundingClientRect().height || 0;
@@ -150,7 +146,9 @@ const Footer = () => {
               <img src="/lovable-uploads/a544c699-418c-470d-b4ab-94ab59cf1cc0.png" alt="موقع الشركة على الخريطة" className="w-full rounded-lg shadow-md" />
             </a>
             <p className="text-white/80 text-sm leading-relaxed">
-              القاضي, Batha Quraish, Makkah 24231, Saudi Arabia
+              وتد الكيان العقارية
+              <br />
+              6588 حي, Batha Quraish، 4226, Makkah 24352, Saudi Arabia
             </p>
           </div>
         </div>
