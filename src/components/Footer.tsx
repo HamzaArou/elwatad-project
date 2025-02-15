@@ -116,8 +116,8 @@ const Footer = () => {
             {/* Location Map and Address */}
             <div className="text-center lg:text-right">
               <h3 className="text-2xl font-bold mb-8 text-gold text-right">موقعنا</h3>
-              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity mb-4">
-                <img src="/lovable-uploads/a544c699-418c-470d-b4ab-94ab59cf1cc0.png" alt="موقع الشركة على الخريطة" className="w-full h-[200px] shadow-lg object-fill rounded-full" />
+              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity mb-4 rounded-none">
+                <img src="/lovable-uploads/a544c699-418c-470d-b4ab-94ab59cf1cc0.png" alt="موقع الشركة على الخريطة" className="w-full h-[200px] shadow-lg object-cover rounded-3xl" />
               </a>
               <div className="text-right space-y-2">
                 <p className="font-semibold text-white text-base">وتد الكيان العقارية</p>
