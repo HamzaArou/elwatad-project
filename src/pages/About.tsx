@@ -1,4 +1,3 @@
-
 import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
@@ -40,7 +39,7 @@ const About = () => {
       <section className="relative h-[60vh] flex items-center justify-center">
         <div className="absolute inset-0">
           <img
-            src="/lovable-uploads/6fc860b8-1756-41bd-90cb-d1103f9913d7.png"
+            src="/lovable-uploads/6bb40572-541a-4211-ad9e-8db2956d65da.png"
             alt="وتد الكيان العقارية"
             className="w-full h-full object-cover"
           />
