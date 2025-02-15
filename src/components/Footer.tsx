@@ -2,22 +2,18 @@ import { Twitter, Instagram, Mail, Phone } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
-
 const Footer = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const phoneNumber = "+966505148231";
   const whatsappNumber = "966505148231";
   const mapUrl = "https://maps.app.goo.gl/sMQoUi9T15nYNpfo9";
-
   const handleCall = () => {
     window.location.href = `tel:${phoneNumber}`;
   };
-
   const handleWhatsApp = () => {
     window.location.href = `https://wa.me/${whatsappNumber}`;
   };
-
   const scrollToSection = async (sectionId: string) => {
     if (location.pathname !== '/') {
       await navigate('/');
@@ -44,15 +40,10 @@ const Footer = () => {
       }
     }
   };
-
-  const TikTokIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+  const TikTokIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
       <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-    </svg>
-  );
-
-  return (
-    <footer className="relative bg-[#2F4447] text-white">
+    </svg>;
+  return <footer className="relative bg-[#2F4447] text-white">
       {/* City Skyline SVG Background */}
       <div className="absolute bottom-0 left-0 right-0 h-48 opacity-10">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full h-full">
@@ -67,11 +58,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Logo and Tagline */}
             <div className="text-center lg:text-right">
-              <img 
-                src="/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png" 
-                alt="وتد الكيان العقارية" 
-                className="w-[140px] h-[160px] object-contain mx-auto lg:mr-0"
-              />
+              <img src="/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png" alt="وتد الكيان العقارية" className="w-[140px] h-[160px] object-contain mx-auto lg:mr-0" />
               <p className="text-white/80 mt-4">حيث يلتقي الطموح بالواقع!</p>
             </div>
 
@@ -79,30 +66,36 @@ const Footer = () => {
             <div className="text-center lg:text-right">
               <h3 className="text-xl font-bold mb-6 text-gold">روابط سريعة</h3>
               <ul className="space-y-3">
-                {[
-                  { id: 'hero', text: 'الرئيسية' },
-                  { id: 'properties', text: 'العقارات' },
-                  { id: 'about', text: 'من نحن' },
-                  { id: 'request', text: 'اطلب عقارك' },
-                  { id: 'services', text: 'خدماتنا' },
-                  { id: 'register', text: 'تسجيل' }
-                ].map(link => (
-                  <li key={link.id}>
-                    <button 
-                      onClick={() => scrollToSection(link.id)}
-                      className="text-white/80 hover:text-gold transition-colors duration-300"
-                    >
+                {[{
+                id: 'hero',
+                text: 'الرئيسية'
+              }, {
+                id: 'properties',
+                text: 'العقارات'
+              }, {
+                id: 'about',
+                text: 'من نحن'
+              }, {
+                id: 'request',
+                text: 'اطلب عقارك'
+              }, {
+                id: 'services',
+                text: 'خدماتنا'
+              }, {
+                id: 'register',
+                text: 'تسجيل'
+              }].map(link => <li key={link.id}>
+                    <button onClick={() => scrollToSection(link.id)} className="text-white/80 hover:text-gold transition-colors duration-300">
                       {link.text}
                     </button>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
             </div>
 
             {/* Contact Info - Social Media Only */}
             <div className="text-center lg:text-right">
               <h3 className="text-2xl font-bold mb-8 text-gold text-right">تواصل معنا</h3>
-              <div className="flex justify-end gap-6">
+              <div className="flex justify-end gap-6 mx-[32px] px-0 py-[10px] my-0">
                 <a href="https://www.snapchat.com/add/alfaisal_group" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
                   <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
@@ -123,21 +116,12 @@ const Footer = () => {
             {/* Location Map and Address */}
             <div className="text-center lg:text-right">
               <h3 className="text-2xl font-bold mb-8 text-gold text-right">موقعنا</h3>
-              <a 
-                href={mapUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="block hover:opacity-90 transition-opacity mb-4"
-              >
-                <img 
-                  src="/lovable-uploads/a544c699-418c-470d-b4ab-94ab59cf1cc0.png" 
-                  alt="موقع الشركة على الخريطة" 
-                  className="w-full h-[200px] object-cover rounded-lg shadow-lg"
-                />
+              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity mb-4">
+                <img src="/lovable-uploads/a544c699-418c-470d-b4ab-94ab59cf1cc0.png" alt="موقع الشركة على الخريطة" className="w-full h-[200px] shadow-lg object-fill rounded-full" />
               </a>
               <div className="text-right space-y-2">
-                <p className="text-xl font-semibold text-white">وتد الكيان العقارية</p>
-                <p className="text-white/80 text-base leading-relaxed">
+                <p className="font-semibold text-white text-base">وتد الكيان العقارية</p>
+                <p className="text-white/80 leading-relaxed text-sm">
                   6588 حي, Batha Quraish، 4226,
                   <br />
                   Makkah 24352, Saudi Arabia
@@ -169,8 +153,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
