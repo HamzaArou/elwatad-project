@@ -1,9 +1,9 @@
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import PhoneInput from "react-phone-input-2";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -56,7 +56,8 @@ const PropertyRequest = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FDF8F3] via-white to-[#FDF8F3]">
-      <div className="container mx-auto px-4 py-12">
+      {/* Add padding-top to create space below header */}
+      <div className="container mx-auto px-4 pt-[140px] pb-12">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Form Section */}
