@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowRight, Building2, MapPin, Phone, User } from "lucide-react";
 import "react-phone-input-2/lib/style.css";
 
 const PropertyRequest = () => {
@@ -54,130 +56,132 @@ const PropertyRequest = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">طلب عقار</h1>
-          <p className="text-lg text-gray-700 leading-relaxed mb-4">
-            في وتد الكيان العقارية، نقدم لك مجموعة متميزة من العقارات التي تتناسب مع تطلعاتك، سواء كنت تبحث عن عقار للسكن أو للاستثمار. نحرص على تقديم حلول عقارية تناسب احتياجاتك، مع خطوات سلسة وواضحة تضمن لك أفضل تجربة ممكنة.
-          </p>
-          <p className="text-lg text-gray-700 font-semibold">
-            سجل بياناتك الآن، ليتمكن فريق المبيعات من خدمتك بشكل أسرع وعرض العقار لك بكل سهولة!
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/50">
+          <img 
+            src="/lovable-uploads/03b43d24-198b-4304-8501-0a2c95e13eb7.png"
+            alt="Property Request Hero"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="relative z-10 text-center text-white container mx-auto px-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">اطلب عقارك الآن</h1>
+          <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed opacity-90">
+            فريق وتد الكيان العقارية ملتزم بتقديم تشكيلة مختارة من أرقى العقارات التي تنسجم مع تطلعاتك وتلبي كل احتياجاتك
           </p>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Form Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-right block">الاسم</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="text-right"
-                  required
-                />
-              </div>
+      {/* Form Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <Card className="border-0 shadow-xl">
+              <CardContent className="p-8">
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-2xl font-bold text-gray-900">معلومات أساسية</h2>
+                    <div className="h-1 flex-grow mx-4 bg-gradient-to-r from-gold/20 to-gold"></div>
+                  </div>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-right block">رقم الجوال</Label>
-                <PhoneInput
-                  country="sa"
-                  value={formData.phone}
-                  onChange={(phone) => setFormData({ ...formData, phone })}
-                  inputProps={{
-                    required: true,
-                    id: "phone"
-                  }}
-                  containerClass="!w-full"
-                  inputClass="!w-full !h-10 !text-right !pr-[48px]"
-                  buttonClass="!border-input"
-                />
-              </div>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-right block text-lg">
+                        <User className="inline-block w-5 h-5 ml-2 text-gold" />
+                        الاسم
+                      </Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="text-right bg-gray-50 border-gray-300 focus:border-gold focus:ring-gold"
+                        required
+                      />
+                    </div>
 
-              <div className="space-y-2">
-                <Label className="text-right block mb-2">مدينة العقار</Label>
-                <RadioGroup
-                  value={formData.city}
-                  onValueChange={(value) => setFormData({ ...formData, city: value })}
-                  className="flex gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="جدة" id="city-jeddah" />
-                    <Label htmlFor="city-jeddah">جدة</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-right block text-lg">
+                        <Phone className="inline-block w-5 h-5 ml-2 text-gold" />
+                        رقم الجوال
+                      </Label>
+                      <PhoneInput
+                        country="sa"
+                        value={formData.phone}
+                        onChange={(phone) => setFormData({ ...formData, phone })}
+                        inputProps={{
+                          required: true,
+                          id: "phone"
+                        }}
+                        containerClass="!w-full"
+                        inputClass="!w-full !h-10 !text-right !pr-[48px] !bg-gray-50 !border-gray-300"
+                        buttonClass="!border-gray-300 !bg-gray-50"
+                      />
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="مكة" id="city-makkah" />
-                    <Label htmlFor="city-makkah">مكة</Label>
-                  </div>
-                </RadioGroup>
-              </div>
 
-              <div className="space-y-2">
-                <Label className="text-right block mb-2">نوع العقار</Label>
-                <RadioGroup
-                  value={formData.property_type}
-                  onValueChange={(value) => setFormData({ ...formData, property_type: value })}
-                  className="grid grid-cols-2 gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="فيلا" id="type-villa" />
-                    <Label htmlFor="type-villa">فيلا</Label>
+                  <div className="space-y-4">
+                    <Label className="text-right block text-lg">
+                      <MapPin className="inline-block w-5 h-5 ml-2 text-gold" />
+                      مدينة العقار
+                    </Label>
+                    <RadioGroup
+                      value={formData.city}
+                      onValueChange={(value) => setFormData({ ...formData, city: value })}
+                      className="flex gap-4"
+                    >
+                      {["جدة", "مكة"].map((city) => (
+                        <div key={city} className="flex items-center">
+                          <RadioGroupItem value={city} id={`city-${city}`} className="border-gold text-gold" />
+                          <Label htmlFor={`city-${city}`} className="mr-2">{city}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="شقة" id="type-apartment" />
-                    <Label htmlFor="type-apartment">شقة</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="روف" id="type-roof" />
-                    <Label htmlFor="type-roof">روف</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="أرض" id="type-land" />
-                    <Label htmlFor="type-land">أرض</Label>
-                  </div>
-                </RadioGroup>
-              </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-gold hover:bg-gold/90 text-white"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
-              </Button>
-            </form>
-          </div>
+                  <div className="space-y-4">
+                    <Label className="text-right block text-lg">
+                      <Building2 className="inline-block w-5 h-5 ml-2 text-gold" />
+                      نوع العقار
+                    </Label>
+                    <RadioGroup
+                      value={formData.property_type}
+                      onValueChange={(value) => setFormData({ ...formData, property_type: value })}
+                      className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                    >
+                      {["فيلا", "شقة", "روف", "أرض"].map((type) => (
+                        <div key={type} className="flex items-center">
+                          <RadioGroupItem value={type} id={`type-${type}`} className="border-gold text-gold" />
+                          <Label htmlFor={`type-${type}`} className="mr-2">{type}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
 
-          {/* Why Choose Us Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-right">لماذا تختار وتد الكيان العقارية؟</h2>
-            <ul className="space-y-4 text-right">
-              <li className="flex items-center gap-2 text-gray-700">
-                <span>نوفر لك عقارات متنوعة بمواقع استراتيجية وأسعار تنافسية.</span>
-              </li>
-              <li className="flex items-center gap-2 text-gray-700">
-                <span>نضمن لك تجربة سلسة من البداية حتى توقيع العقود.</span>
-              </li>
-              <li className="flex items-center gap-2 text-gray-700">
-                <span>فريقنا مستعد لمساعدتك في اختيار العقار المناسب لك.</span>
-              </li>
-            </ul>
-            <p className="mt-8 text-gray-700 font-semibold text-right">
-              املأ النموذج الآن، وسيتواصل معك أحد مستشارينا العقاريين بأسرع وقت.
-            </p>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gold hover:bg-gold/90 text-white text-lg py-6"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "جاري الإرسال..." : "التالي"}
+                    <ArrowRight className="mr-2 h-5 w-5" />
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </div>
+      </section>
 
       <style>{`
         .react-tel-input .form-control {
           direction: ltr;
           text-align: right;
           padding-right: 48px !important;
+          height: 2.5rem !important;
         }
         .react-tel-input .selected-flag {
           right: 0;
