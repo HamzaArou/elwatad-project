@@ -10,6 +10,7 @@ import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import LandingPage from "@/pages/LandingPage";
 import Properties from "@/pages/Properties";
 import PropertyRequest from "@/pages/PropertyRequest";
+import About from "@/pages/About";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -29,6 +30,7 @@ function App() {
               <Header />
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/properties" element={<Properties />} />
                 <Route path="/project/:id" element={<ProjectDetails />} />
                 <Route path="/property-request" element={<PropertyRequest />} />
