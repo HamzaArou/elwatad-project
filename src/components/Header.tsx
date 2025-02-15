@@ -93,13 +93,12 @@ const Header = () => {
 
   const isProjectPage = location.pathname.includes('/project/');
   const isPrivacyPage = location.pathname === '/privacy-policy';
-  const shouldUseBlackText = (isProjectPage || isPrivacyPage) && !isScrolled;
+  const isPropertyRequestPage = location.pathname === '/property-request';
+  const shouldUseGoldText = isPropertyRequestPage && !isScrolled;
 
   return (
     <header
-      className={`${
-        isProjectPage ? 'absolute' : 'fixed'
-      } top-0 left-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         isScrolled ? "bg-black/80 backdrop-blur-sm" : "bg-transparent"
       } h-[120px] transform ${
         !isProjectPage && !isVisible ? "-translate-y-full" : "translate-y-0"
@@ -127,7 +126,8 @@ const Header = () => {
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
                   className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
-                    shouldUseBlackText ? 'text-black' : 'text-white'
+                    shouldUseGoldText ? 'text-[#B69665]' : 
+                    isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
                   }`}
                 >
                   {link.text}
@@ -136,7 +136,8 @@ const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className={`nav-link font-ibm-arabic font-medium text-lg hover:text-gold transition-colors duration-300 ${
-                    shouldUseBlackText ? 'text-black' : 'text-white'
+                    shouldUseGoldText ? 'text-[#B69665]' : 
+                    isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
                   }`}>
                     تواصل معنا
                   </button>
@@ -166,7 +167,8 @@ const Header = () => {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
             className={`transition-colors duration-300 ${
-              shouldUseBlackText ? 'text-black' : 'text-white'
+              shouldUseGoldText ? 'text-[#B69665]' : 
+              isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'
             }`}
           >
             {isMobileMenuOpen ? (
@@ -185,7 +187,7 @@ const Header = () => {
                 <button
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
-                  className="nav-link py-3 font-ibm-arabic text-lg text-white hover:text-gold transition-colors duration-300 text-right w-full"
+                  className={`nav-link py-3 font-ibm-arabic text-lg text-white hover:text-gold transition-colors duration-300 text-right w-full`}
                 >
                   {link.text}
                 </button>
