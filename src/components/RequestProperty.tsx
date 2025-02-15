@@ -5,6 +5,13 @@ import { useNavigate } from "react-router-dom";
 const RequestProperty = () => {
   const navigate = useNavigate();
 
+  const handleNavigation = () => {
+    // Navigate to property request page
+    navigate('/property-request');
+    // Force scroll to top
+    window.scrollTo(0, 0);
+  };
+
   return (
     <section className="relative w-full bg-deepBlue overflow-hidden">
       {/* Angled shape container */}
@@ -40,7 +47,7 @@ const RequestProperty = () => {
               <div className="pt-6">
                 <Button 
                   className="bg-gold hover:bg-gold/90 text-white px-8 py-6 text-xl rounded-md transition-all duration-300 hover:scale-105" 
-                  onClick={() => navigate('/property-request')}
+                  onClick={handleNavigation}
                 >
                   اطلب الآن
                 </Button>
