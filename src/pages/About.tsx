@@ -14,16 +14,6 @@ const About = () => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               entry.target.classList.add('show');
-              
-              // Add staggered animation for child elements
-              const children = entry.target.querySelectorAll('.animate-child');
-              children.forEach((child, idx) => {
-                setTimeout(() => {
-                  (child as HTMLElement).style.opacity = '1';
-                  (child as HTMLElement).style.transform = 'translateY(0)';
-                }, idx * 200);
-              });
-              
               observer.unobserve(entry.target);
             }
           });
@@ -46,12 +36,12 @@ const About = () => {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative h-[60vh] md:h-[80vh] flex items-center justify-center">
+      <section className="relative h-[60vh] flex items-center justify-center">
         <div className="absolute inset-0">
           <img
             src="/lovable-uploads/f8b0b008-dcc3-45d4-ada1-880d52ca59c5.png"
             alt="وتد الكيان العقارية"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
         </div>
@@ -62,25 +52,25 @@ const About = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-16 relative overflow-hidden" ref={el => observerRefs.current[0] = el}>
+      <section className="py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#F7E4C8]/10 to-white" />
         <div className="container mx-auto px-4 relative">
-          <div className="mb-12 text-right animate-child">
+          <div className="mb-12 text-right">
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
               عن وتد الكيان العقارية
             </h2>
           </div>
           <div className="max-w-4xl mx-auto text-center space-y-6">
-            <p className="text-lg text-gray-700 leading-relaxed relative animate-child">
+            <p className="text-lg text-gray-700 leading-relaxed relative">
               <span className="block transform transition-all duration-700 hover:scale-105">
                 في وتد الكيان العقارية، نؤمن بأن العقار ليس مجرد مبنى، بل هو استثمار لحياة أفضل. نسعى لتقديم حلول عقارية متكاملة تناسب احتياجاتك، سواء كنت تبحث عن منزل الأحلام أو فرصة استثمارية واعدة.
               </span>
             </p>
-            <div className="w-32 h-1 bg-gradient-to-r from-[#B69665] to-[#2F4447] mx-auto my-8 transform transition-all duration-500 hover:scale-x-110 animate-child" />
-            <p className="text-lg text-gray-700 leading-relaxed animate-child">
+            <div className="w-32 h-1 bg-gradient-to-r from-[#B69665] to-[#2F4447] mx-auto my-8 transform transition-all duration-500 hover:scale-x-110" />
+            <p className="text-lg text-gray-700 leading-relaxed">
               نعمل بخبرة واحترافية لنكون شريكك العقاري الموثوق، ونوفر لك مجموعة متنوعة من العقارات في أفضل المواقع، مع خدمات استشارية ودعم متكامل قبل وأثناء وبعد الشراء.
             </p>
-            <p className="text-2xl font-bold text-[#2F4447] mt-8 relative animate-child">
+            <p className="text-2xl font-bold text-[#2F4447] mt-8 relative">
               <span className="relative inline-block after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#B69665] after:transform after:origin-left after:transition-transform after:duration-300 after:hover:scale-x-100">
                 وتد الكيان العقارية – حيث يلتقي الطموح بالواقع!
               </span>
@@ -90,7 +80,7 @@ const About = () => {
       </section>
 
       {/* After-Sale Services Section */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-white overflow-hidden" ref={el => observerRefs.current[1] = el}>
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-right">
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
@@ -144,7 +134,7 @@ const About = () => {
       </section>
 
       {/* Our Advantages Section */}
-      <section className="py-16 overflow-hidden" ref={el => observerRefs.current[2] = el}>
+      <section className="py-16 overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-right">
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
@@ -205,7 +195,7 @@ const About = () => {
       </section>
 
       {/* Future Features Section */}
-      <section className="py-16 bg-gray-50" ref={el => observerRefs.current[3] = el}>
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-right">
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
@@ -227,23 +217,6 @@ const About = () => {
         {`
           .service-card.show,
           .advantage-card.show {
-            opacity: 1;
-            transform: translateY(0);
-          }
-
-          .animate-child {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.7s ease-out;
-          }
-
-          section {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-          }
-
-          section.show {
             opacity: 1;
             transform: translateY(0);
           }
