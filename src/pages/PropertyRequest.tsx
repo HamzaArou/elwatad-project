@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import PhoneInput from "react-phone-input-2";
@@ -19,6 +18,14 @@ const PropertyRequest = () => {
     city: "جدة",
     property_type: "فيلا"
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.body.classList.add('property-request-page');
+    return () => {
+      document.body.classList.remove('property-request-page');
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,12 +62,14 @@ const PropertyRequest = () => {
   };
 
   return (
-    <div className="min-h-screen relative">
-      {/* Add a background overlay for the header area */}
-      <div className="absolute top-0 left-0 w-full h-[120px] bg-[#2F4447] z-0"></div>
+    <div className="min-h-screen relative bg-white">
+      <div 
+        className="fixed top-0 left-0 w-full h-[120px] bg-[#2F4447] z-[1]"
+        style={{ minWidth: '100vw' }}
+      />
       
-      <div className="relative z-10">
-        <div className="container mx-auto px-4 pt-[140px] pb-12">
+      <div className="relative z-[2] pt-[140px]">
+        <div className="container mx-auto px-4 pb-12">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               <Card className="border-0 shadow-xl bg-white overflow-hidden order-2 lg:order-1">
