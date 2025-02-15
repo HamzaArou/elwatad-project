@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -168,18 +167,21 @@ const PropertyRequest = () => {
                 </p>
               </div>
 
-              <Card className="border-0 shadow-lg bg-gradient-to-br from-deepBlue to-deepBlue/90 text-white">
-                <CardContent className="p-6 space-y-4">
-                  <h3 className="text-xl font-bold text-right">لماذا تختار وتد الكيان العقارية؟</h3>
-                  <ul className="space-y-3 text-right">
-                    <li className="flex items-center justify-end gap-2">
-                      <span>نوفر لك عقارات متنوعة بمواقع استراتيجية</span>
+              <Card className="border-0 shadow-lg bg-[#2F4447] text-white">
+                <CardContent className="p-6 space-y-6">
+                  <h3 className="text-xl font-bold text-right mb-6">لماذا تختار وتد الكيان العقارية؟</h3>
+                  <ul className="space-y-6">
+                    <li className="flex items-center justify-end gap-4">
+                      <span className="text-right text-base">نوفر لك عقارات متنوعة بمواقع استراتيجية</span>
+                      <div className="w-6 h-6 rounded-full bg-gold flex-shrink-0"></div>
                     </li>
-                    <li className="flex items-center justify-end gap-2">
-                      <span>نضمن لك تجربة سلسة من البداية حتى توقيع العقود</span>
+                    <li className="flex items-center justify-end gap-4">
+                      <span className="text-right text-base">نضمن لك تجربة سلسة من البداية حتى توقيع العقود</span>
+                      <div className="w-6 h-6 rounded-full bg-gold flex-shrink-0"></div>
                     </li>
-                    <li className="flex items-center justify-end gap-2">
-                      <span>فريقنا مستعد لمساعدتك في اختيار العقار المناسب لك</span>
+                    <li className="flex items-center justify-end gap-4">
+                      <span className="text-right text-base">فريقنا مستعد لمساعدتك في اختيار العقار المناسب لك</span>
+                      <div className="w-6 h-6 rounded-full bg-gold flex-shrink-0"></div>
                     </li>
                   </ul>
                 </CardContent>
