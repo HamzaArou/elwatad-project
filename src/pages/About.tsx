@@ -1,8 +1,11 @@
+
 import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
+
 const About = () => {
   const observerRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   useEffect(() => {
     const observers = observerRefs.current.map((ref, index) => {
       if (!ref) return null;
@@ -24,6 +27,46 @@ const About = () => {
       observers.forEach(observer => observer?.disconnect());
     };
   }, []);
+
+  const futureFeatures = [
+    {
+      title: "خدمة التنبيهات الذكية",
+      description: "تنبيه المستخدمين عند إضافة عقارات جديدة تلبي مواصفاتهم عبر البريد الإلكتروني أو تطبيق الجوال"
+    },
+    {
+      title: "الأسئلة المتكررة",
+      description: "قسم للإجابة على الاستفسارات الشائعة"
+    },
+    {
+      title: "أحدث العروض العقارية",
+      description: "البقاء على تواصل معنا، مع عرض آخر العروض على الموقع"
+    },
+    {
+      title: "طلب استشارتك المجانية الآن",
+      description: "إبراز قسم الاستشارة"
+    },
+    {
+      title: "خدمات التقييم العقاري",
+      description: "قسم يتيح للمستخدمين تقييم العقارات بناءً على معايير مثل الموقع، الأسعار، الجودة"
+    },
+    {
+      title: "تقارير السوق العقاري",
+      description: "نشر تقارير دورية عن حالة السوق والتوجهات الحديثة لتحليل الأسعار"
+    },
+    {
+      title: "تجارب العملاء",
+      description: "قسم لقصص النجاح أو تقييمات العملاء لبناء الثقة مع الزوار الجدد"
+    },
+    {
+      title: "خاصية البحث المتقدم",
+      description: "تحسين محرك البحث ليشمل فلاتر متعددة مثل الموقع، السعر، المساحة، نوع العقار، إلخ"
+    },
+    {
+      title: "خريطة ذكية لتحديد العقار المثالي",
+      description: "عرض أفضل أماكن الاستثمار أو السكن بناءً على معايير مثل التعليم، النقل، والمرافق"
+    }
+  ];
+
   return <main className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative h-[60vh] md:h-screen flex items-center justify-center">
@@ -188,12 +231,29 @@ const About = () => {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {["خدمة التنبيهات الذكية", "الأسئلة المتكررة", "أحدث العروض العقارية", "طلب استشارتك المجانية الآن", "خدمات التقييم العقاري", "تقارير السوق العقاري", "تجارب العملاء", "خاصية البحث المتقدم", "خريطة ذكية لتحديد العقار المثالي"].map((feature, index) => <Card key={index} className="bg-white hover:shadow-lg transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <SparklesIcon className="w-8 h-8 text-[#B69665] mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-[#2F4447]">{feature}</h3>
-                </CardContent>
-              </Card>)}
+            {futureFeatures.map((feature, index) => (
+              <div key={index} className="flip-card h-[200px] perspective">
+                <div className="flip-card-inner relative w-full h-full transition-transform duration-500 transform-style-3d">
+                  {/* Front of card */}
+                  <div className="flip-card-front absolute w-full h-full backface-hidden">
+                    <Card className="h-full bg-white hover:shadow-lg transition-all duration-300">
+                      <CardContent className="p-6 text-center h-full flex flex-col items-center justify-center">
+                        <SparklesIcon className="w-8 h-8 text-[#B69665] mx-auto mb-4" />
+                        <h3 className="text-xl font-bold text-[#2F4447]">{feature.title}</h3>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  {/* Back of card */}
+                  <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
+                    <Card className="h-full bg-gradient-to-br from-[#2F4447] to-[#B69665]">
+                      <CardContent className="p-6 text-center h-full flex items-center justify-center">
+                        <p className="text-white text-lg leading-relaxed">{feature.description}</p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -204,6 +264,36 @@ const About = () => {
           .advantage-card.show {
             opacity: 1;
             transform: translateY(0);
+          }
+
+          .perspective {
+            perspective: 1000px;
+          }
+
+          .transform-style-3d {
+            transform-style: preserve-3d;
+          }
+
+          .backface-hidden {
+            backface-visibility: hidden;
+          }
+
+          .rotate-y-180 {
+            transform: rotateY(180deg);
+          }
+
+          .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+          }
+
+          @media (hover: none) {
+            .flip-card-inner {
+              transition: transform 0.3s ease;
+            }
+            
+            .flip-card:active .flip-card-inner {
+              transform: rotateY(180deg);
+            }
           }
 
           @keyframes fadeInUp {
@@ -220,4 +310,5 @@ const About = () => {
       </style>
     </main>;
 };
+
 export default About;
