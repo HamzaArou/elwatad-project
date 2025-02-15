@@ -1,52 +1,38 @@
 import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
-
 const About = () => {
   const observerRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   useEffect(() => {
     const observers = observerRefs.current.map((ref, index) => {
       if (!ref) return null;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('show');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        {
-          threshold: 0.2,
-          rootMargin: "0px"
-        }
-      );
-
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.2,
+        rootMargin: "0px"
+      });
       observer.observe(ref);
       return observer;
     });
-
     return () => {
-      observers.forEach((observer) => observer?.disconnect());
+      observers.forEach(observer => observer?.disconnect());
     };
   }, []);
-
-  return (
-    <main className="min-h-screen bg-white">
+  return <main className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center">
         <div className="absolute inset-0">
-          <img
-            src="/lovable-uploads/f8b0b008-dcc3-45d4-ada1-880d52ca59c5.png"
-            alt="وتد الكيان العقارية"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
+          <img src="/lovable-uploads/f8b0b008-dcc3-45d4-ada1-880d52ca59c5.png" alt="وتد الكيان العقارية" className="w-full h-full object-cover" />
+          
         </div>
         <div className="relative z-10 text-center text-white">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 animate-fade-in">من نحن</h1>
+          <h1 className="text-5xl mb-4 animate-fade-in text-gray-50 font-extrabold py-0 md:text-8xl">من نحن</h1>
           <p className="text-xl md:text-2xl animate-fade-in delay-200">تعرف على وتد الكيان العقارية</p>
         </div>
       </section>
@@ -233,8 +219,6 @@ const About = () => {
           }
         `}
       </style>
-    </main>
-  );
+    </main>;
 };
-
 export default About;
