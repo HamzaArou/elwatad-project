@@ -1,8 +1,10 @@
 import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
+
 const About = () => {
   const observerRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   useEffect(() => {
     const observers = observerRefs.current.map((ref, index) => {
       if (!ref) return null;
@@ -24,12 +26,16 @@ const About = () => {
       observers.forEach(observer => observer?.disconnect());
     };
   }, []);
+
   return <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center">
+      <section className="relative h-[60vh] md:h-screen flex items-center justify-center">
         <div className="absolute inset-0">
-          <img src="/lovable-uploads/f8b0b008-dcc3-45d4-ada1-880d52ca59c5.png" alt="وتد الكيان العقارية" className="w-full h-full object-cover" />
-          
+          <img 
+            src="/lovable-uploads/f8b0b008-dcc3-45d4-ada1-880d52ca59c5.png" 
+            alt="وتد الكيان العقارية" 
+            className="w-full h-full object-cover object-bottom"
+          />
         </div>
         <div className="relative z-10 text-center text-white">
           <h1 className="text-5xl mb-4 animate-fade-in text-gray-50 font-extrabold py-0 md:text-8xl">من نحن</h1>
@@ -221,4 +227,5 @@ const About = () => {
       </style>
     </main>;
 };
+
 export default About;
