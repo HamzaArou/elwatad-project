@@ -140,7 +140,7 @@ export type Database = {
           address: string | null
           area: number | null
           bathrooms: number | null
-          city: string | null
+          city: string
           created_at: string
           description: string | null
           district: string | null
@@ -165,7 +165,7 @@ export type Database = {
           address?: string | null
           area?: number | null
           bathrooms?: number | null
-          city?: string | null
+          city: string
           created_at?: string
           description?: string | null
           district?: string | null
@@ -190,7 +190,7 @@ export type Database = {
           address?: string | null
           area?: number | null
           bathrooms?: number | null
-          city?: string | null
+          city?: string
           created_at?: string
           description?: string | null
           district?: string | null

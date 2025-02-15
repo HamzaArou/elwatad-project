@@ -93,18 +93,18 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
             </p>
             
             {/* City */}
-            <p className="text-lg text-right">
-              {project.city}
-            </p>
-
-            {/* Content Revealed on Hover */}
-            <div className="space-y-6 opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-              {/* District */}
-              <p className="text-right text-sm">
+            <div className="flex flex-col gap-2 text-right">
+              <p className="text-lg">
+                {project.city}
+              </p>
+              <p className="text-sm text-white/80">
                 <span className="font-medium ml-1">المنطقة:</span>
                 {project.district}
               </p>
+            </div>
 
+            {/* Content Revealed on Hover */}
+            <div className="space-y-6 opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
