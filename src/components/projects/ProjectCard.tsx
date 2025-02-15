@@ -71,8 +71,8 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           }}
         />
         
-        {/* Dark Overlay - Gradient from bottom */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 transition-all duration-300 group-hover:from-black/95" />
+        {/* Dark Overlay - Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
         {/* Status Badge */}
         <Badge 
@@ -81,27 +81,26 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           {project.status}
         </Badge>
 
-        {/* Content Container - Fixed at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 transition-transform duration-300 group-hover:translate-y-[-40px]">
-          {/* Main Info */}
-          <div className="space-y-3">
-            <p className="text-2xl font-bold text-right text-white">
+        {/* Main Content - Always at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 p-6">
+          {/* Base Info Container */}
+          <div className="space-y-2 transform transition-transform duration-300 group-hover:translate-y-[-80px]">
+            <h3 className="text-2xl font-bold text-right text-white">
               {formatPrice(project.property_value)}
-            </p>
-            
-            <div className="space-y-2">
-              <p className="text-lg text-white text-right">
+            </h3>
+            <div className="text-right">
+              <p className="text-lg text-white">
                 {project.city}
               </p>
-              <p className="text-sm text-white/80 text-right">
+              <p className="text-sm text-white/80">
                 <span className="font-medium ml-1">المنطقة:</span>
                 {project.district}
               </p>
             </div>
           </div>
 
-          {/* Stats Grid - Hidden by default, shown on hover */}
-          <div className="grid grid-cols-3 gap-4 mt-6 opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+          {/* Stats Grid - Hidden by default */}
+          <div className="grid grid-cols-3 gap-4 mt-6 opacity-0 transform translate-y-8 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
             <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
               <Home className="w-5 h-5 text-white mb-1" />
               <p className="text-sm font-medium text-white">{project.rooms} غرف</p>
