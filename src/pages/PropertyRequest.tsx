@@ -58,14 +58,7 @@ const PropertyRequest = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center">
-        <div className="absolute inset-0 bg-black/50">
-          <img 
-            src="/lovable-uploads/03b43d24-198b-4304-8501-0a2c95e13eb7.png"
-            alt="Property Request Hero"
-            className="w-full h-full object-cover"
-          />
-        </div>
+      <section className="relative py-16 bg-[#2F4447]">
         <div className="relative z-10 text-center text-white container mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">اطلب عقارك الآن</h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed opacity-90">
