@@ -102,46 +102,46 @@ const Footer = () => {
 
             {/* Contact Info */}
             <div className="text-center lg:text-right">
-              <h3 className="text-xl font-bold mb-6 text-gold">تواصل معنا</h3>
-              <address className="not-italic space-y-3 text-white/80">
-                <p className="flex items-center justify-center lg:justify-end gap-2">
-                  <span>وتد الكيان العقارية</span>
+              <h3 className="text-2xl font-bold mb-8 text-gold text-right">تواصل معنا</h3>
+              <div className="space-y-4 text-right">
+                <p className="text-xl font-semibold text-white">وتد الكيان العقارية</p>
+                <p className="text-white/80 text-base leading-relaxed">
+                  6588 حي, Batha Quraish، 4226,
+                  <br />
+                  Makkah 24352, Saudi Arabia
                 </p>
-                <p className="flex items-center justify-center lg:justify-end gap-2 text-sm">
-                  6588 حي, Batha Quraish، 4226, Makkah 24352, Saudi Arabia
-                </p>
-                <div className="flex justify-center lg:justify-end gap-4 mt-6">
+                <div className="flex justify-end gap-6 mt-8">
                   <a href="https://www.snapchat.com/add/alfaisal_group" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
-                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                     </svg>
                   </a>
                   <a href="https://x.com/alfaisal_group?s=21" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
-                    <Twitter className="w-6 h-6" />
+                    <Twitter className="w-7 h-7" />
                   </a>
                   <a href="https://www.instagram.com/alfaisal_group?igsh=MXE2MGY2bzJiODB0Zw%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
-                    <Instagram className="w-6 h-6" />
+                    <Instagram className="w-7 h-7" />
                   </a>
                   <a href="https://www.tiktok.com/@alfaisal_group?_t=ZS-8t2MVNY6jxw&_r=1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
                     <TikTokIcon />
                   </a>
                 </div>
-              </address>
+              </div>
             </div>
 
             {/* Location Map */}
             <div className="text-center lg:text-right">
-              <h3 className="text-xl font-bold mb-6 text-gold">موقعنا</h3>
+              <h3 className="text-2xl font-bold mb-8 text-gold text-right">موقعنا</h3>
               <a 
                 href={mapUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="block hover:opacity-90 transition-opacity rounded-lg overflow-hidden shadow-lg border border-white/10"
+                className="block hover:opacity-90 transition-opacity"
               >
                 <img 
                   src="/lovable-uploads/a544c699-418c-470d-b4ab-94ab59cf1cc0.png" 
                   alt="موقع الشركة على الخريطة" 
-                  className="w-full h-[160px] object-cover"
+                  className="w-full h-[200px] object-cover rounded-lg shadow-lg"
                 />
               </a>
             </div>
