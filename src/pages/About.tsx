@@ -1,5 +1,4 @@
-
-import { Building2, Shield, Star, SparklesIcon } from "lucide-react";
+import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const About = () => {
@@ -92,7 +91,7 @@ const About = () => {
       </section>
 
       {/* Our Advantages Section */}
-      <section className="py-16">
+      <section className="py-16 overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-right">
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
@@ -104,33 +103,61 @@ const About = () => {
               في وتد الكيان العقارية، نؤمن بأن نجاحنا يأتي من قدرتنا على تقديم تجربة عقارية استثنائية تجمع بين الجودة، الاحترافية، والثقة. نحن نتميز بـ:
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
+                icon: Briefcase,
                 title: "الخبرة الواسعة",
-                description: "فريق متخصص في السوق العقاري يوفر لك أفضل الحلول والاستشارات"
+                description: "فريق متخصص في السوق العقاري يوفر لك أفضل الحلول والاستشارات",
+                delay: "0"
               },
               {
+                icon: MapPin,
                 title: "عقارات في مواقع استراتيجية",
-                description: "نوفر لك خيارات مميزة في أفضل الأحياء والمناطق"
+                description: "نوفر لك خيارات مميزة في أفضل الأحياء والمناطق",
+                delay: "100"
               },
               {
+                icon: Search,
                 title: "شفافية ووضوح",
-                description: "نحرص على تقديم معلومات دقيقة لضمان اتخاذ قرارات استثمارية صحيحة"
+                description: "نحرص على تقديم معلومات دقيقة لضمان اتخاذ قرارات استثمارية صحيحة",
+                delay: "200"
               },
               {
+                icon: Zap,
                 title: "سرعة الإنجاز",
-                description: "إجراءات سلسة وسريعة لإنهاء معاملاتك بكل سهولة"
+                description: "إجراءات سلسة وسريعة لإنهاء معاملاتك بكل سهولة",
+                delay: "300"
               },
               {
+                icon: Headphones,
                 title: "خدمة عملاء متميزة",
-                description: "دعم مستمر وخدمات ما بعد البيع لضمان راحتك ورضاك"
+                description: "دعم مستمر وخدمات ما بعد البيع لضمان راحتك ورضاك",
+                delay: "400"
               }
             ].map((advantage, index) => (
-              <Card key={index} className="bg-white hover:shadow-lg transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <h3 className="text-xl font-bold text-[#2F4447] mb-3">{advantage.title}</h3>
-                  <p className="text-gray-600">{advantage.description}</p>
+              <Card 
+                key={index} 
+                className="group relative overflow-hidden bg-white hover:shadow-xl transition-all duration-500 ease-in-out transform hover:-translate-y-2 border-2 hover:border-[#B69665]"
+                style={{
+                  animation: `fadeInUp 0.6s ease-out forwards ${Number(advantage.delay)}ms`,
+                  opacity: 0,
+                  transform: 'translateY(20px)'
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="relative z-10">
+                    <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#B69665]/10 to-[#2F4447]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <advantage.icon className="w-8 h-8 text-[#B69665] group-hover:text-[#2F4447] transition-colors duration-300" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[#2F4447] mb-4 group-hover:text-[#B69665] transition-colors duration-300">
+                      {advantage.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                      {advantage.description}
+                    </p>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#B69665]/5 to-[#2F4447]/5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </CardContent>
               </Card>
             ))}
@@ -168,6 +195,19 @@ const About = () => {
           </div>
         </div>
       </section>
+
+<style jsx>{`
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`}</style>
     </main>
   );
 };
