@@ -1,3 +1,4 @@
+
 import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
@@ -43,38 +44,44 @@ const About = () => {
             alt="وتد الكيان العقارية"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
         </div>
         <div className="relative z-10 text-center text-white">
-          <h1 className="text-5xl font-bold mb-4">من نحن</h1>
-          <p className="text-xl">تعرف على وتد الكيان العقارية</p>
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 animate-fade-in">من نحن</h1>
+          <p className="text-xl md:text-2xl animate-fade-in delay-200">تعرف على وتد الكيان العقارية</p>
         </div>
       </section>
 
       {/* About Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#F7E4C8]/10 to-white" />
+        <div className="container mx-auto px-4 relative">
           <div className="mb-12 text-right">
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
               عن وتد الكيان العقارية
             </h2>
           </div>
           <div className="max-w-4xl mx-auto text-center space-y-6">
-            <p className="text-lg text-gray-700 leading-relaxed">
-              في وتد الكيان العقارية، نؤمن بأن العقار ليس مجرد مبنى، بل هو استثمار لحياة أفضل. نسعى لتقديم حلول عقارية متكاملة تناسب احتياجاتك، سواء كنت تبحث عن منزل الأحلام أو فرصة استثمارية واعدة.
+            <p className="text-lg text-gray-700 leading-relaxed relative">
+              <span className="block transform transition-all duration-700 hover:scale-105">
+                في وتد الكيان العقارية، نؤمن بأن العقار ليس مجرد مبنى، بل هو استثمار لحياة أفضل. نسعى لتقديم حلول عقارية متكاملة تناسب احتياجاتك، سواء كنت تبحث عن منزل الأحلام أو فرصة استثمارية واعدة.
+              </span>
             </p>
+            <div className="w-32 h-1 bg-gradient-to-r from-[#B69665] to-[#2F4447] mx-auto my-8 transform transition-all duration-500 hover:scale-x-110" />
             <p className="text-lg text-gray-700 leading-relaxed">
               نعمل بخبرة واحترافية لنكون شريكك العقاري الموثوق، ونوفر لك مجموعة متنوعة من العقارات في أفضل المواقع، مع خدمات استشارية ودعم متكامل قبل وأثناء وبعد الشراء.
             </p>
-            <p className="text-xl font-bold text-[#2F4447]">
-              وتد الكيان العقارية – حيث يلتقي الطموح بالواقع!
+            <p className="text-2xl font-bold text-[#2F4447] mt-8 relative">
+              <span className="relative inline-block after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#B69665] after:transform after:origin-left after:transition-transform after:duration-300 after:hover:scale-x-100">
+                وتد الكيان العقارية – حيث يلتقي الطموح بالواقع!
+              </span>
             </p>
           </div>
         </div>
       </section>
 
       {/* After-Sale Services Section */}
-      <section className="py-16 bg-gray-50 overflow-hidden">
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-right">
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
