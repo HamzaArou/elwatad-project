@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,14 +55,12 @@ const PropertyRequest = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FDF8F3] via-white to-[#FDF8F3]">
-      {/* Add padding-top to create space below header */}
       <div className="container mx-auto px-4 pt-[140px] pb-12">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            {/* Form Section */}
             <Card className="border-0 shadow-xl bg-white overflow-hidden order-2 lg:order-1">
               <CardContent className="p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-8 text-right">طلب عقار</h2>
+                <h2 className="text-2xl font-bold text-[#333333] mb-8 text-right">طلب عقار</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-4">
                     <div>
@@ -157,10 +154,9 @@ const PropertyRequest = () => {
               </CardContent>
             </Card>
 
-            {/* Info Section */}
             <div className="space-y-8 order-1 lg:order-2 lg:sticky lg:top-8">
               <div className="text-right">
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                <h1 className="text-3xl font-bold text-[#333333] mb-4">
                   ابحث عن عقارك المثالي معنا
                 </h1>
                 <p className="text-gray-600 leading-relaxed">
