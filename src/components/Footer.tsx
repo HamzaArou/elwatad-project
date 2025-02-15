@@ -1,4 +1,3 @@
-
 import { Twitter, Instagram, Mail, Phone } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -100,43 +99,35 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Contact Info */}
+            {/* Contact Info - Social Media Only */}
             <div className="text-center lg:text-right">
               <h3 className="text-2xl font-bold mb-8 text-gold text-right">تواصل معنا</h3>
-              <div className="space-y-4 text-right">
-                <p className="text-xl font-semibold text-white">وتد الكيان العقارية</p>
-                <p className="text-white/80 text-base leading-relaxed">
-                  6588 حي, Batha Quraish، 4226,
-                  <br />
-                  Makkah 24352, Saudi Arabia
-                </p>
-                <div className="flex justify-end gap-6 mt-8">
-                  <a href="https://www.snapchat.com/add/alfaisal_group" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
-                    <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
-                    </svg>
-                  </a>
-                  <a href="https://x.com/alfaisal_group?s=21" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
-                    <Twitter className="w-7 h-7" />
-                  </a>
-                  <a href="https://www.instagram.com/alfaisal_group?igsh=MXE2MGY2bzJiODB0Zw%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
-                    <Instagram className="w-7 h-7" />
-                  </a>
-                  <a href="https://www.tiktok.com/@alfaisal_group?_t=ZS-8t2MVNY6jxw&_r=1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
-                    <TikTokIcon />
-                  </a>
-                </div>
+              <div className="flex justify-end gap-6">
+                <a href="https://www.snapchat.com/add/alfaisal_group" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
+                  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                  </svg>
+                </a>
+                <a href="https://x.com/alfaisal_group?s=21" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
+                  <Twitter className="w-7 h-7" />
+                </a>
+                <a href="https://www.instagram.com/alfaisal_group?igsh=MXE2MGY2bzJiODB0Zw%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
+                  <Instagram className="w-7 h-7" />
+                </a>
+                <a href="https://www.tiktok.com/@alfaisal_group?_t=ZS-8t2MVNY6jxw&_r=1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
+                  <TikTokIcon />
+                </a>
               </div>
             </div>
 
-            {/* Location Map */}
+            {/* Location Map and Address */}
             <div className="text-center lg:text-right">
               <h3 className="text-2xl font-bold mb-8 text-gold text-right">موقعنا</h3>
               <a 
                 href={mapUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="block hover:opacity-90 transition-opacity"
+                className="block hover:opacity-90 transition-opacity mb-4"
               >
                 <img 
                   src="/lovable-uploads/a544c699-418c-470d-b4ab-94ab59cf1cc0.png" 
@@ -144,6 +135,14 @@ const Footer = () => {
                   className="w-full h-[200px] object-cover rounded-lg shadow-lg"
                 />
               </a>
+              <div className="text-right space-y-2">
+                <p className="text-xl font-semibold text-white">وتد الكيان العقارية</p>
+                <p className="text-white/80 text-base leading-relaxed">
+                  6588 حي, Batha Quraish، 4226,
+                  <br />
+                  Makkah 24352, Saudi Arabia
+                </p>
+              </div>
             </div>
           </div>
         </div>
