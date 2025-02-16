@@ -57,9 +57,12 @@ const Header = () => {
   const handleNavigation = (path: string) => {
     navigate(path);
     window.scrollTo(0, 0);
+    setIsMobileMenuOpen(false);
   };
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = async (sectionId: string) => {
+    setIsMobileMenuOpen(false);
+
     // Handle special navigation cases
     if (sectionId === 'about') {
       handleNavigation('/about');
@@ -69,13 +72,15 @@ const Header = () => {
       handleNavigation('/property-request');
       return;
     }
+    if (sectionId === 'properties') {
+      handleNavigation('/properties');
+      return;
+    }
 
-    const isPrivacyPage = location.pathname === '/privacy-policy';
-    const isProjectPage = location.pathname.includes('/project/');
-    const isPropertyRequestPage = location.pathname === '/property-request';
-    
-    if (isPrivacyPage || isProjectPage || isPropertyRequestPage) {
+    // If we're not on the home page, navigate there first
+    if (location.pathname !== '/') {
       navigate('/');
+      // Wait for navigation to complete
       setTimeout(() => {
         const section = document.getElementById(sectionId);
         if (section) {
@@ -98,6 +103,23 @@ const Header = () => {
         });
       }
     }
+  };
+
+  const handleAuthClick = () => {
+    if (user) {
+      navigate('/profile');
+    } else {
+      navigate('/register', { state: { redirectTo: location.pathname } });
+    }
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleFavoritesClick = () => {
+    if (!user) {
+      navigate('/register', { state: { redirectTo: '/' } });
+    } else {
+      navigate('/favorites');
+    }
     setIsMobileMenuOpen(false);
   };
 
@@ -113,22 +135,6 @@ const Header = () => {
   const isPrivacyPage = location.pathname === '/privacy-policy';
   const isPropertyRequestPage = location.pathname === '/property-request';
   const shouldUseGoldText = isPropertyRequestPage && !isScrolled;
-
-  const handleAuthClick = () => {
-    if (user) {
-      navigate('/profile');
-    } else {
-      navigate('/register', { state: { redirectTo: location.pathname } });
-    }
-  };
-
-  const handleFavoritesClick = () => {
-    if (!user) {
-      navigate('/register', { state: { redirectTo: '/' } });
-    } else {
-      navigate('/favorites');
-    }
-  };
 
   return (
     <header

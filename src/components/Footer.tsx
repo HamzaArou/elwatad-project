@@ -32,6 +32,10 @@ const Footer = () => {
       handleNavigation('/property-request');
       return;
     }
+    if (sectionId === 'properties') {
+      handleNavigation('/properties');
+      return;
+    }
 
     if (location.pathname !== '/') {
       await navigate('/');
