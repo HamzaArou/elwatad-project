@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 
 const Hero = () => {
@@ -28,15 +29,15 @@ const Hero = () => {
             <picture>
               <source
                 media="(min-width: 799px)"
-                srcSet="/lovable-uploads/e3cb0736-5822-44bc-b9d5-f81c5ef23bc0.png"
+                srcSet="/lovable-uploads/3c90a3ab-e014-4310-901b-0d857c0e80dc.png"
               />
               <source
                 media="(max-width: 799px)"
-                srcSet="/lovable-uploads/e3cb0736-5822-44bc-b9d5-f81c5ef23bc0.png"
+                srcSet="/lovable-uploads/3c90a3ab-e014-4310-901b-0d857c0e80dc.png"
               />
               <img
                 className="object-cover w-[110%] md:w-full h-full"
-                src="/lovable-uploads/e3cb0736-5822-44bc-b9d5-f81c5ef23bc0.png"
+                src="/lovable-uploads/3c90a3ab-e014-4310-901b-0d857c0e80dc.png"
                 alt="مجموعة الفيصل العقارية - مشاريع سكنية فاخرة"
                 loading="eager"
                 style={{
@@ -101,15 +102,15 @@ const Hero = () => {
             <picture>
               <source
                 media="(min-width: 799px)"
-                srcSet="/lovable-uploads/13427624-e4d1-4deb-8b95-ec9654451927.png"
+                srcSet="/lovable-uploads/ddab0cd1-e375-4092-8132-8ed3a49f1748.png"
               />
               <source
                 media="(max-width: 799px)"
-                srcSet="/lovable-uploads/13427624-e4d1-4deb-8b95-ec9654451927.png"
+                srcSet="/lovable-uploads/ddab0cd1-e375-4092-8132-8ed3a49f1748.png"
               />
               <img
                 className="object-cover w-[110%] md:w-full h-full"
-                src="/lovable-uploads/13427624-e4d1-4deb-8b95-ec9654451927.png"
+                src="/lovable-uploads/ddab0cd1-e375-4092-8132-8ed3a49f1748.png"
                 alt="مجموعة الفيصل العقارية - حلول تمويلية"
                 loading="eager"
                 style={{
@@ -174,15 +175,15 @@ const Hero = () => {
             <picture>
               <source
                 media="(min-width: 799px)"
-                srcSet="/lovable-uploads/19ff9208-ea6f-4a12-a927-f964eb3a9f79.png"
+                srcSet="/lovable-uploads/7b996429-01ab-44c9-8cf6-08fc77324ee6.png"
               />
               <source
                 media="(max-width: 799px)"
-                srcSet="/lovable-uploads/19ff9208-ea6f-4a12-a927-f964eb3a9f79.png"
+                srcSet="/lovable-uploads/7b996429-01ab-44c9-8cf6-08fc77324ee6.png"
               />
               <img
                 className="object-cover w-[110%] md:w-full h-full"
-                src="/lovable-uploads/19ff9208-ea6f-4a12-a927-f964eb3a9f79.png"
+                src="/lovable-uploads/7b996429-01ab-44c9-8cf6-08fc77324ee6.png"
                 alt="مجموعة الفيصل العقارية - تصميم عصري"
                 loading="eager"
                 style={{
@@ -247,15 +248,15 @@ const Hero = () => {
             <picture>
               <source
                 media="(min-width: 799px)"
-                srcSet="/lovable-uploads/8ad691e4-0f88-492b-b27a-d0e4ad4e3919.png"
+                srcSet="/lovable-uploads/1cc22874-ae6d-418e-b7aa-1da777bbec2c.png"
               />
               <source
                 media="(max-width: 799px)"
-                srcSet="/lovable-uploads/8ad691e4-0f88-492b-b27a-d0e4ad4e3919.png"
+                srcSet="/lovable-uploads/1cc22874-ae6d-418e-b7aa-1da777bbec2c.png"
               />
               <img
                 className="object-cover w-[110%] md:w-full h-full"
-                src="/lovable-uploads/8ad691e4-0f88-492b-b27a-d0e4ad4e3919.png"
+                src="/lovable-uploads/1cc22874-ae6d-418e-b7aa-1da777bbec2c.png"
                 alt="مجموعة الفيصل العقارية - تصميم حديث"
                 loading="eager"
                 style={{
@@ -320,15 +321,15 @@ const Hero = () => {
             <picture>
               <source
                 media="(min-width: 799px)"
-                srcSet="/lovable-uploads/5aa843af-badc-4180-a314-1b1cebb02ca9.png"
+                srcSet="/lovable-uploads/d468cdef-669c-4c3a-af46-7d079c45666f.png"
               />
               <source
                 media="(max-width: 799px)"
-                srcSet="/lovable-uploads/5aa843af-badc-4180-a314-1b1cebb02ca9.png"
+                srcSet="/lovable-uploads/d468cdef-669c-4c3a-af46-7d079c45666f.png"
               />
               <img
                 className="object-cover w-[110%] md:w-full h-full"
-                src="/lovable-uploads/5aa843af-badc-4180-a314-1b1cebb02ca9.png"
+                src="/lovable-uploads/d468cdef-669c-4c3a-af46-7d079c45666f.png"
                 alt="مجموعة الفيصل العقارية - جودة وراحة"
                 loading="eager"
                 style={{
