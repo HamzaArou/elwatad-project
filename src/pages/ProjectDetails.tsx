@@ -1,199 +1,128 @@
-
 import { useParams } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
+import ProjectGallery from "@/components/projects/ProjectGallery";
+import ProjectUnits from "@/components/projects/ProjectUnits";
+import ProjectLocation from "@/components/projects/ProjectLocation";
+import ProjectUpdates from "@/components/projects/ProjectUpdates";
+import Project360Views from "@/components/projects/Project360Views";
+import ContactUs from "@/components/ContactUs";
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import Header from "@/components/Header";
+import NotFound from "@/components/NotFound";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import ProjectTabsSection from "@/components/projects/ProjectTabsSection";
-import ProjectGallery from "@/components/projects/ProjectGallery";
-import RegisterInterestDialog from "@/components/RegisterInterestDialog";
-import { Building2, Bed, Bath, Square } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-
+function ProjectDetailsSkeleton() {
+  return <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <Skeleton className="h-10 w-64 mb-2" />
+        <Skeleton className="h-6 w-48" />
+      </div>
+      <Skeleton className="h-[400px] w-full rounded-lg" />
+    </div>;
+}
 export default function ProjectDetails() {
-  const { id } = useParams<{ id: string }>();
-
-  const { data: projectData, isLoading: isLoadingProject } = useQuery({
-    queryKey: ["project", id],
+  const {
+    id
+  } = useParams();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(null);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  const {
+    data: project,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['project', id],
     queryFn: async () => {
-      if (!id) throw new Error("No project ID provided");
-      
-      const { data: project, error: projectError } = await supabase
-        .from("projects")
-        .select(`
-          id,
-          name,
-          location,
-          district,
-          property_status,
-          property_value,
-          rooms,
-          bathrooms,
-          area,
-          thumbnail_url
-        `)
-        .eq("id", id)
-        .single();
-
+      if (!id) throw new Error('Project ID is required');
+      const {
+        data: project,
+        error: projectError
+      } = await supabase.from('projects').select(`
+          *,
+          project_details(*),
+          project_gallery(*)
+        `).eq('id', id).maybeSingle();
       if (projectError) throw projectError;
-
-      const { data: details, error: detailsError } = await supabase
-        .from("project_details")
-        .select("*")
-        .eq("project_id", id)
-        .single();
-
-      if (detailsError && detailsError.code !== 'PGRST116') throw detailsError;
-
-      const { data: media, error: mediaError } = await supabase
-        .from("project_media")
-        .select("*")
-        .eq("project_id", id)
-        .order("display_order");
-
-      if (mediaError) throw mediaError;
-
-      const { data: features, error: featuresError } = await supabase
-        .from("project_features")
-        .select("*")
-        .eq("project_id", id);
-
-      if (featuresError) throw featuresError;
-
-      return {
-        ...project,
-        details: details?.details,
-        lat: details?.lat,
-        lng: details?.lng,
-        media: media || [],
-        features: features || [],
-      };
+      if (!project) return null;
+      return project;
     },
+    retry: 1,
+    retryDelay: 1000,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30
   });
-
-  if (isLoadingProject) {
-    return <div>Loading...</div>;
-  }
-
-  if (!projectData) {
-    return <div>Project not found</div>;
-  }
-
-  const galleryItems = projectData.media.map(item => ({
-    id: item.id,
-    url: item.media_url,
-    type: item.media_type as 'image' | 'video',
-    content_type: 'gallery'
-  }));
-
-  const formatPrice = (price?: number) => {
-    if (!price) return "السعر عند الطلب";
-    return `${price.toLocaleString('ar-SA')} ريال`;
+  const handleMediaClick = (mediaUrl: string) => {
+    if (!mediaUrl) return;
+    const url = mediaUrl.startsWith('http') ? mediaUrl : `https://tdybblvmlsvxgkkwapei.supabase.co/storage/v1/object/public/project-images/${mediaUrl}`;
+    setSelectedMediaUrl(url);
+    setDialogOpen(true);
   };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Project Card Section */}
-      <div className="pt-[140px] pb-8"> {/* Added top padding to account for header height */}
-        <div className="max-w-[400px] mx-auto px-4"> {/* Fixed width container for consistent sizing */}
-          <Card className="overflow-hidden rounded-[24px] shadow-lg"> {/* Increased border radius */}
-            <div className="relative h-[400px]">
-              <img
-                src={projectData.thumbnail_url}
-                alt={projectData.name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80" />
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <div className="flex justify-between items-end">
-                  <div className="text-right">
-                    <span className="inline-block px-3 py-1 bg-gold text-white text-sm rounded-full mb-4">
-                      مشروع
-                    </span>
-                    <h1 className="text-3xl font-bold mb-2">{projectData.name}</h1>
-                    <p className="text-lg opacity-90">{projectData.location}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-gold">
-                      {formatPrice(projectData.property_value)}
-                    </div>
-                    <div className="text-sm opacity-90 mt-1">{projectData.property_status}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4 p-6 bg-white">
-              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-                <Square className="w-5 h-5 text-deepBlue" />
-                <div>
-                  <div className="text-sm text-gray-600">المساحة</div>
-                  <div className="font-semibold">{projectData.area} م²</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-                <Bed className="w-5 h-5 text-deepBlue" />
-                <div>
-                  <div className="text-sm text-gray-600">غرف النوم</div>
-                  <div className="font-semibold">{projectData.rooms}</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-                <Bath className="w-5 h-5 text-deepBlue" />
-                <div>
-                  <div className="text-sm text-gray-600">الحمامات</div>
-                  <div className="font-semibold">{projectData.bathrooms}</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-                <Building2 className="w-5 h-5 text-deepBlue" />
-                <div>
-                  <div className="text-sm text-gray-600">المنطقة</div>
-                  <div className="font-semibold">{projectData.district}</div>
-                </div>
-              </div>
-            </div>
-          </Card>
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setTimeout(() => setSelectedMediaUrl(null), 200);
+  };
+  if (isLoading) {
+    return <div>
+        <Header />
+        <div className="mt-[120px]">
+          <ProjectDetailsSkeleton />
         </div>
-      </div>
-
-      {/* Gallery Section */}
-      <div className="container mx-auto px-4 py-8">
-        <ProjectGallery gallery={galleryItems} />
-      </div>
-
-      {/* Tabs Section */}
-      <div className="container mx-auto px-4 pb-12">
-        <ProjectTabsSection
-          details={projectData.details}
-          rooms={projectData.rooms}
-          bathrooms={projectData.bathrooms}
-          area={projectData.area}
-          features={projectData.features.map(f => `${f.feature_type} (${f.amount})`)}
-          location={projectData.location || ""}
-          lat={projectData.lat}
-          lng={projectData.lng}
-        />
-      </div>
-
-      {/* Contact Section */}
-      <div className="bg-white shadow-md mt-12">
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">هل تريد معرفة المزيد عن هذا المشروع؟</h2>
-            <p className="text-xl text-gray-600 mb-8">
-              يمكنك التواصل معنا للحصول على مزيد من المعلومات حول المشروع والحجز
-            </p>
-            <RegisterInterestDialog>
-              <Button size="lg" className="bg-deepBlue hover:bg-deepBlue/90 text-lg px-8 py-6">
-                تواصل معنا
-              </Button>
-            </RegisterInterestDialog>
+      </div>;
+  }
+  if (error || !project) {
+    console.error('Project details error:', error);
+    return <NotFound />;
+  }
+  const thumbnailUrl = project.thumbnail_url || "https://tdybblvmlsvxgkkwapei.supabase.co/storage/v1/object/public/project-images/project_f47ac10b-58cc-4372-a567-0e02b2c3d479/project1.png";
+  const galleryImages = project.project_gallery || [];
+  return <div className="min-h-screen">
+      <Header />
+      <div className="container mx-auto px-4 py-8 mt-[120px]">
+        <div className="mb-12 text-center">
+          <p className="text-gold text-xl mb-2">مشروع</p>
+          <h1 className="text-5xl font-bold text-gold mb-3">{project.name}</h1>
+          <p className="text-2xl text-deepBlue mb-8">{project.location}</p>
+          
+          <div className="relative mx-auto bg-gradient-to-b from-deepBlue/10 to-deepBlue/5 p-4 sm:p-6 rounded-[30px] sm:rounded-[40px] shadow-lg w-[350px] sm:w-[450px]">
+            <div className="w-[320px] sm:w-[386px] mx-auto rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl" style={{
+            height: '400px'
+          }}>
+              <img src={thumbnailUrl} alt={project.name} className="w-full h-full object-cover" loading="lazy" />
+            </div>
           </div>
         </div>
+
+        
+
+        <Project360Views projectId={id} />
+
+        <div className="relative py-16 bg-gradient-to-b from-deepBlue/10 to-deepBlue/5 rounded-3xl mb-12">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center mb-8">
+              <h2 className="text-3xl font-bold text-white bg-deepBlue py-2 px-8 rounded-tr-[5px] rounded-tl-[100px] rounded-br-[100px] rounded-bl-[5px] inline-block">
+                تحديثات المشروع
+              </h2>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <ProjectUpdates projectId={id} />
+            </div>
+          </div>
+        </div>
+
+        <ContactUs projectId={id} projectName={project.name} />
       </div>
-    </div>
-  );
+
+      <Dialog open={dialogOpen} onOpenChange={handleCloseDialog}>
+        <DialogContent className="max-w-4xl w-full p-0 overflow-hidden bg-black/90">
+          {selectedMediaUrl && <div className="relative w-full aspect-video">
+              <img src={selectedMediaUrl} alt="" className="w-full h-full object-contain" loading="eager" />
+            </div>}
+        </DialogContent>
+      </Dialog>
+    </div>;
 }
