@@ -1,5 +1,46 @@
 import { z } from "zod";
 
+export const projectFeatureTypes = [
+  'غرفة خادمة',
+  'بها مصعد',
+  'بدون مسبح',
+  'بدون جراج',
+  'موقف خاص',
+  'غرفة سائق',
+  'غير مفروشة',
+  'مطبخ مجهز',
+  'تكييف مركزي',
+  'خزان مياه'
+] as const;
+
+export type ProjectFeatureType = typeof projectFeatureTypes[number];
+
+export const projectMediaSchema = z.object({
+  id: z.string().optional(),
+  media_url: z.string().url("الرجاء إدخال رابط صحيح"),
+  media_type: z.enum(["image", "video"]),
+  display_order: z.number(),
+});
+
+export const projectFeatureSchema = z.object({
+  id: z.string().optional(),
+  feature_type: z.enum(projectFeatureTypes),
+  amount: z.number().min(1, "يجب أن تكون الكمية أكبر من 0"),
+});
+
+export const projectDetailsSchema = z.object({
+  project_id: z.string(),
+  details: z.string().optional(),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+  media: z.array(projectMediaSchema),
+  features: z.array(projectFeatureSchema),
+});
+
+export type ProjectMedia = z.infer<typeof projectMediaSchema>;
+export type ProjectFeature = z.infer<typeof projectFeatureSchema>;
+export type ProjectDetails = z.infer<typeof projectDetailsSchema>;
+
 export const view360Schema = z.object({
   title: z.string().min(1, "عنوان الجولة مطلوب"),
   url: z.string().url("الرجاء إدخال رابط صحيح")

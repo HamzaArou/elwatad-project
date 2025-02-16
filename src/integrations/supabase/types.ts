@@ -89,6 +89,108 @@ export type Database = {
         }
         Relationships: []
       }
+      project_details: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          project_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          project_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_details_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_features: {
+        Row: {
+          amount: number
+          created_at: string
+          feature_type: Database["public"]["Enums"]["project_feature_type"]
+          id: string
+          project_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          feature_type: Database["public"]["Enums"]["project_feature_type"]
+          id?: string
+          project_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          feature_type?: Database["public"]["Enums"]["project_feature_type"]
+          id?: string
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_features_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_media: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          media_type: string
+          media_url: string
+          project_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          media_type: string
+          media_url: string
+          project_id: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          media_type?: string
+          media_url?: string
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_media_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_units: {
         Row: {
           area: number
@@ -238,6 +340,17 @@ export type Database = {
     }
     Enums: {
       media_type: "image" | "video"
+      project_feature_type:
+        | "غرفة خادمة"
+        | "بها مصعد"
+        | "بدون مسبح"
+        | "بدون جراج"
+        | "موقف خاص"
+        | "غرفة سائق"
+        | "غير مفروشة"
+        | "مطبخ مجهز"
+        | "تكييف مركزي"
+        | "خزان مياه"
       property_status: "فيلا" | "شقة" | "روف" | "أرض"
       property_type: "فيلا" | "شقة" | "روف" | "أرض"
     }
