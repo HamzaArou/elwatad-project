@@ -13,7 +13,7 @@ const PropertySearch = () => {
   }, {
     id: "makkah",
     name: "مكة",
-    image: "/lovable-uploads/ec951bdf-5286-4f67-aa73-22714ede89b9.png"
+    image: "/lovable-uploads/d926f0ff-6143-4dd3-a849-c5bee016bf9c.png"
   }];
   const propertyTypes = [{
     id: "villa",
