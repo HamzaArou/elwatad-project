@@ -39,7 +39,7 @@ const Properties = () => {
 
     return projects.filter(project => {
       // City filter
-      if (filters.city && project.city !== `مدينة ${filters.city}`) return false;
+      if (filters.city && `مدينة ${filters.city}` !== project.city) return false;
 
       // District filter
       if (filters.district && !project.district.toLowerCase().includes(filters.district.toLowerCase()))
@@ -89,11 +89,18 @@ const Properties = () => {
         <div className="max-w-[1200px] mx-auto">
           <ProjectSearch onSearch={setFilters} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-            {filteredProjects.map(project => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
+          {filteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+              {filteredProjects.map(project => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-xl text-gray-600">لا توجد نتائج تطابق معايير البحث</p>
+              <p className="text-gray-500 mt-2">يرجى تعديل الفلترات والمحاولة مرة أخرى</p>
+            </div>
+          )}
         </div>
       </div>
     </section>
