@@ -62,10 +62,15 @@ const Register = () => {
   };
 
   const handleLogin = async () => {
-    setIsLoading(true);
     try {
+      setIsLoading(true);
+
       if (!validateEmail(email)) {
         throw new Error('البريد الإلكتروني غير صالح');
+      }
+
+      if (password.length < 6) {
+        throw new Error('يجب أن تكون كلمة المرور 6 أحرف على الأقل');
       }
 
       await signIn(email, password);
