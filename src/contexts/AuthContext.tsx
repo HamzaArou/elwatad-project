@@ -71,7 +71,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string, name: string) => {
     try {
       console.log('Attempting sign up for:', email);
-      const { data, error } = await supabase.auth.signUp({
+      
+      // First, create the auth user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -81,32 +83,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       });
       
-      if (error) {
-        console.error('Sign up error:', error);
-        if (error.message.includes('already registered')) {
+      if (authError) {
+        console.error('Sign up error:', authError);
+        if (authError.message.includes('already registered')) {
           throw new Error('هذا البريد الإلكتروني مسجل بالفعل');
         }
-        throw error;
+        throw authError;
       }
 
-      console.log('Sign up successful:', data);
-      setUser(data.user);
-
-      // Insert into profiles table
-      if (data.user) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .upsert({
-            id: data.user.id,
-            email: email,
-            name: name,
-          });
-
-        if (profileError) {
-          console.error('Error creating profile:', profileError);
-          throw profileError;
-        }
+      if (!authData.user) {
+        throw new Error('Failed to create user');
       }
+
+      console.log('Auth signup successful:', authData);
+
+      // Then, create the profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: authData.user.id,
+          name: name,
+          email: email,
+          role: 'user'
+        });
+
+      if (profileError) {
+        console.error('Error creating profile:', profileError);
+        // If profile creation fails, we should clean up the auth user
+        await supabase.auth.signOut();
+        throw new Error('Failed to create user profile');
+      }
+
+      setUser(authData.user);
+      
+      toast({
+        title: "تم إنشاء الحساب بنجاح",
+        description: "مرحباً بك في تطبيقنا",
+      });
 
     } catch (error: any) {
       console.error('Sign up catch error:', error);
