@@ -17,6 +17,7 @@ export default function ProjectDetails() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(true);
   const stickyTriggerRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -77,13 +78,21 @@ export default function ProjectDetails() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsSticky(!entry.isIntersecting);
+        if (entry.target === footerRef.current) {
+          setIsSticky(false);
+        } 
+        else if (entry.target === stickyTriggerRef.current && !entry.isIntersecting) {
+          setIsSticky(true);
+        }
       },
       { threshold: 0 }
     );
 
     if (stickyTriggerRef.current) {
       observer.observe(stickyTriggerRef.current);
+    }
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
     }
 
     return () => observer.disconnect();
@@ -241,8 +250,8 @@ export default function ProjectDetails() {
       <div ref={stickyTriggerRef} className="h-1" />
 
       {/* Application Bar */}
-      <div className={`${isSticky ? 'fixed' : 'relative'} bottom-0 left-0 right-0 z-50`}>
-        <div className="bg-[#222222] py-4">
+      <div className={`${isSticky ? 'fixed' : 'relative'} bottom-0 left-0 right-0 z-50 bg-[#222222]`}>
+        <div className="py-4">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <Button 
               onClick={() => setDialogOpen(true)}
@@ -257,6 +266,9 @@ export default function ProjectDetails() {
           </div>
         </div>
       </div>
+
+      {/* Footer Reference Element */}
+      <div ref={footerRef} className="h-1" />
 
       {/* Application Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
