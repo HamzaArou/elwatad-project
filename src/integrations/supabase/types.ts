@@ -217,79 +217,43 @@ export type Database = {
       }
       projects: {
         Row: {
-          address: string | null
-          area: number | null
-          bathrooms: number | null
+          area: number
+          bathrooms: number
           city: string
           created_at: string
-          description: string | null
-          district: string | null
-          features: string[] | null
-          floors: number
-          gallery_type: string | null
+          district: string
           id: string
-          lat: number | null
-          lng: number | null
-          location: string
           name: string
-          plans: string[] | null
-          property_type: Database["public"]["Enums"]["property_type"] | null
-          property_value: number | null
-          rooms: number | null
-          specifications: string[] | null
-          status: string
-          thumbnail_url: string | null
-          units: number
+          property_status: Database["public"]["Enums"]["property_status"]
+          property_value: number
+          rooms: number
+          thumbnail_url: string
         }
         Insert: {
-          address?: string | null
-          area?: number | null
-          bathrooms?: number | null
+          area: number
+          bathrooms?: number
           city: string
           created_at?: string
-          description?: string | null
-          district?: string | null
-          features?: string[] | null
-          floors?: number
-          gallery_type?: string | null
+          district: string
           id?: string
-          lat?: number | null
-          lng?: number | null
-          location: string
           name: string
-          plans?: string[] | null
-          property_type?: Database["public"]["Enums"]["property_type"] | null
-          property_value?: number | null
-          rooms?: number | null
-          specifications?: string[] | null
-          status: string
-          thumbnail_url?: string | null
-          units?: number
+          property_status: Database["public"]["Enums"]["property_status"]
+          property_value: number
+          rooms?: number
+          thumbnail_url: string
         }
         Update: {
-          address?: string | null
-          area?: number | null
-          bathrooms?: number | null
+          area?: number
+          bathrooms?: number
           city?: string
           created_at?: string
-          description?: string | null
-          district?: string | null
-          features?: string[] | null
-          floors?: number
-          gallery_type?: string | null
+          district?: string
           id?: string
-          lat?: number | null
-          lng?: number | null
-          location?: string
           name?: string
-          plans?: string[] | null
-          property_type?: Database["public"]["Enums"]["property_type"] | null
-          property_value?: number | null
-          rooms?: number | null
-          specifications?: string[] | null
-          status?: string
-          thumbnail_url?: string | null
-          units?: number
+          property_status?: Database["public"]["Enums"]["property_status"]
+          property_value?: number
+          rooms?: number
+          thumbnail_url?: string
         }
         Relationships: []
       }
@@ -328,6 +292,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      property_status: "فيلا" | "شقة" | "روف" | "أرض"
       property_type: "فيلا" | "شقة" | "روف" | "أرض"
     }
     CompositeTypes: {

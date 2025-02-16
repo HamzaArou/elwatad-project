@@ -12,7 +12,7 @@ interface Project {
   name: string;
   city: string;
   district: string;
-  status: string;
+  property_status: "فيلا" | "شقة" | "روف" | "أرض";
   property_value: number;
   rooms: number;
   bathrooms: number;
@@ -26,12 +26,14 @@ interface ProjectCardProps {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "تم البيع بالكامل":
+    case "فيلا":
       return "bg-gold text-white";
-    case "قريباً":
+    case "شقة":
       return "bg-newsGreen text-white";
-    case "بدأ البيع":
+    case "روف":
       return "bg-deepBlue text-white";
+    case "أرض":
+      return "bg-gray-500 text-white";
     default:
       return "bg-gray-500 text-white";
   }
@@ -90,23 +92,19 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
 
     try {
       if (isFav) {
-        // Remove from favorites
         const { error } = await supabase
           .from('favorites')
           .delete()
           .eq('user_id', user.id)
           .eq('project_id', project.id);
 
-        if (error) {
-          console.error('Error removing favorite:', error);
-          throw error;
-        }
+        if (error) throw error;
+        
         setIsFav(false);
         toast({
           description: "تمت إزالة العقار من المفضلة",
         });
       } else {
-        // Add to favorites
         const { error } = await supabase
           .from('favorites')
           .insert([
@@ -116,10 +114,8 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
             }
           ]);
 
-        if (error) {
-          console.error('Error adding favorite:', error);
-          throw error;
-        }
+        if (error) throw error;
+        
         setIsFav(true);
         toast({
           description: "تمت إضافة العقار إلى المفضلة",
@@ -161,9 +157,9 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
 
         {/* Status Badge */}
         <Badge 
-          className={`absolute top-4 left-4 px-4 py-1 rounded-full text-sm font-medium ${getStatusColor(project.status)}`}
+          className={`absolute top-4 left-4 px-4 py-1 rounded-full text-sm font-medium ${getStatusColor(project.property_status)}`}
         >
-          {project.status}
+          {project.property_status}
         </Badge>
 
         {/* Heart Icon */}
