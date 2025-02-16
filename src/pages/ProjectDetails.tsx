@@ -89,7 +89,7 @@ export default function ProjectDetails() {
                 <div className="flex justify-between items-end">
                   <div className="text-right">
                     
-                    <h1 className="text-3xl font-bold mb-2">{projectData.name}</h1>
+                    <h1 className="text-3xl font-bold mb-2 text-slate-50">{projectData.name}</h1>
                     <p className="text-lg opacity-90">{projectData.location}</p>
                   </div>
                   <div className="text-right">
