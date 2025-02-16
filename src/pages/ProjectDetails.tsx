@@ -93,68 +93,70 @@ export default function ProjectDetails() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Project Card Section */}
-      <div className="container mx-auto px-4 py-8">
-        <Card className="overflow-hidden">
-          <div className="relative h-[400px]">
-            <img
-              src={projectData.thumbnail_url}
-              alt={projectData.name}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <div className="flex justify-between items-end">
-                <div className="text-right">
-                  <span className="inline-block px-3 py-1 bg-gold text-white text-sm rounded-full mb-4">
-                    مشروع
-                  </span>
-                  <h1 className="text-3xl font-bold mb-2">{projectData.name}</h1>
-                  <p className="text-lg opacity-90">{projectData.location}</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-gold">
-                    {formatPrice(projectData.property_value)}
+      <div className="pt-[140px] pb-8"> {/* Added top padding to account for header height */}
+        <div className="max-w-[400px] mx-auto px-4"> {/* Fixed width container for consistent sizing */}
+          <Card className="overflow-hidden rounded-[24px] shadow-lg"> {/* Increased border radius */}
+            <div className="relative h-[400px]">
+              <img
+                src={projectData.thumbnail_url}
+                alt={projectData.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80" />
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <div className="flex justify-between items-end">
+                  <div className="text-right">
+                    <span className="inline-block px-3 py-1 bg-gold text-white text-sm rounded-full mb-4">
+                      مشروع
+                    </span>
+                    <h1 className="text-3xl font-bold mb-2">{projectData.name}</h1>
+                    <p className="text-lg opacity-90">{projectData.location}</p>
                   </div>
-                  <div className="text-sm opacity-90 mt-1">{projectData.property_status}</div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-gold">
+                      {formatPrice(projectData.property_value)}
+                    </div>
+                    <div className="text-sm opacity-90 mt-1">{projectData.property_status}</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-white">
-            <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-              <Square className="w-5 h-5 text-deepBlue" />
-              <div>
-                <div className="text-sm text-gray-600">المساحة</div>
-                <div className="font-semibold">{projectData.area} م²</div>
-              </div>
-            </div>
             
-            <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-              <Bed className="w-5 h-5 text-deepBlue" />
-              <div>
-                <div className="text-sm text-gray-600">غرف النوم</div>
-                <div className="font-semibold">{projectData.rooms}</div>
+            <div className="grid grid-cols-2 gap-4 p-6 bg-white">
+              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                <Square className="w-5 h-5 text-deepBlue" />
+                <div>
+                  <div className="text-sm text-gray-600">المساحة</div>
+                  <div className="font-semibold">{projectData.area} م²</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                <Bed className="w-5 h-5 text-deepBlue" />
+                <div>
+                  <div className="text-sm text-gray-600">غرف النوم</div>
+                  <div className="font-semibold">{projectData.rooms}</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                <Bath className="w-5 h-5 text-deepBlue" />
+                <div>
+                  <div className="text-sm text-gray-600">الحمامات</div>
+                  <div className="font-semibold">{projectData.bathrooms}</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                <Building2 className="w-5 h-5 text-deepBlue" />
+                <div>
+                  <div className="text-sm text-gray-600">المنطقة</div>
+                  <div className="font-semibold">{projectData.district}</div>
+                </div>
               </div>
             </div>
-            
-            <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-              <Bath className="w-5 h-5 text-deepBlue" />
-              <div>
-                <div className="text-sm text-gray-600">الحمامات</div>
-                <div className="font-semibold">{projectData.bathrooms}</div>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-              <Building2 className="w-5 h-5 text-deepBlue" />
-              <div>
-                <div className="text-sm text-gray-600">المنطقة</div>
-                <div className="font-semibold">{projectData.district}</div>
-              </div>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
 
       {/* Gallery Section */}
@@ -184,7 +186,7 @@ export default function ProjectDetails() {
             <p className="text-xl text-gray-600 mb-8">
               يمكنك التواصل معنا للحصول على مزيد من المعلومات حول المشروع والحجز
             </p>
-            <RegisterInterestDialog defaultOpen={false}>
+            <RegisterInterestDialog>
               <Button size="lg" className="bg-deepBlue hover:bg-deepBlue/90 text-lg px-8 py-6">
                 تواصل معنا
               </Button>
