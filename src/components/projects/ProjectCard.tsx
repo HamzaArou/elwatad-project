@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useCallback, memo, useState, useEffect } from "react";
 import { Badge } from "../ui/badge";
@@ -41,7 +40,7 @@ const getStatusColor = (status: string) => {
 
 const formatPrice = (price?: number) => {
   if (!price) return "السعر عند الطلب";
-  return `${price.toLocaleString('ar-SA')} ريال`;
+  return `${price.toLocaleString('en-US')} ريال`;
 };
 
 const ProjectCard = memo(({ project }: ProjectCardProps) => {
