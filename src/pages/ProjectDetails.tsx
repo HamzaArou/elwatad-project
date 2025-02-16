@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +6,7 @@ import ProjectGallery from "@/components/projects/ProjectGallery";
 import { Building2, Bed, Bath, Square, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import PhoneInput from 'react-phone-input-2';
@@ -16,6 +15,8 @@ import 'react-phone-input-2/lib/style.css';
 export default function ProjectDetails() {
   const { id } = useParams<{ id: string; }>();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isSticky, setIsSticky] = useState(true);
+  const stickyTriggerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -72,6 +73,21 @@ export default function ProjectDetails() {
       };
     }
   });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+
+    if (stickyTriggerRef.current) {
+      observer.observe(stickyTriggerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -221,8 +237,11 @@ export default function ProjectDetails() {
         />
       </div>
 
+      {/* Sticky trigger div - placed right before where we want the bar to stop */}
+      <div ref={stickyTriggerRef} className="h-1" />
+
       {/* Application Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
+      <div className={`${isSticky ? 'fixed' : 'relative'} bottom-0 left-0 right-0 z-50`}>
         <div className="bg-[#222222] py-4">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <Button 
