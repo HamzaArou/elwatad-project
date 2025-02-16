@@ -16,14 +16,14 @@ const FeaturedProjects = () => {
     data: projects = [],
     isLoading
   } = useQuery({
-    queryKey: ['projects'],
+    queryKey: ['featured-projects'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('projects')
         .select(`
           id,
           name,
-          location,
+          city,
           district,
           property_status,
           property_value,
@@ -31,23 +31,16 @@ const FeaturedProjects = () => {
           bathrooms,
           area,
           thumbnail_url
-        `);
+        `)
+        .order('created_at', { ascending: false })
+        .limit(3);
       
       if (error) throw error;
       return data || [];
-    }
+    },
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
   });
-
-  const filteredProjects = useMemo(() => {
-    return projects.filter(project => {
-      if (selectedNeighborhood === "all" && selectedStatus === "all") {
-        return true;
-      }
-      const neighborhoodMatch = selectedNeighborhood === "all" || project.district === selectedNeighborhood;
-      const statusMatch = selectedStatus === "all" || project.property_status === selectedStatus;
-      return neighborhoodMatch && statusMatch;
-    }).slice(0, 3); // Only take the first 3 projects
-  }, [projects, selectedNeighborhood, selectedStatus]);
 
   const handleFilterChange = useCallback((neighborhood: string, status: string) => {
     setSelectedNeighborhood(neighborhood);
@@ -59,7 +52,11 @@ const FeaturedProjects = () => {
   }, [navigate]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-[400px] flex items-center justify-center">
+        <div className="animate-pulse text-xl text-gray-600">جاري التحميل...</div>
+      </div>
+    );
   }
 
   return (
@@ -75,7 +72,7 @@ const FeaturedProjects = () => {
           <ProjectSearch onFilterChange={handleFilterChange} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-            {filteredProjects.map(project => (
+            {projects.map(project => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>

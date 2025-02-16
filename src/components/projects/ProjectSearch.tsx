@@ -1,35 +1,45 @@
-import { useMemo } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+
+import { useState, useCallback } from 'react';
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+
 interface ProjectSearchProps {
   onFilterChange: (neighborhood: string, status: string) => void;
 }
-const ProjectSearch = ({
-  onFilterChange
-}: ProjectSearchProps) => {
-  const {
-    data: projects = []
-  } = useQuery({
-    queryKey: ['projects'],
-    queryFn: async () => {
-      const {
-        data,
-        error
-      } = await supabase.from('projects').select('*');
-      if (error) throw error;
-      return data || [];
-    }
-  });
-  const uniqueNeighborhoods = useMemo(() => {
-    return Array.from(new Set(projects.map(project => project.location))).sort();
-  }, [projects]);
-  const handleNeighborhoodChange = (value: string) => {
-    onFilterChange(value, "all");
-  };
-  const handleStatusChange = (value: string) => {
-    onFilterChange("all", value);
-  };
-  return;
+
+const ProjectSearch = ({ onFilterChange }: ProjectSearchProps) => {
+  const [neighborhood, setNeighborhood] = useState("all");
+  const [status, setStatus] = useState("all");
+
+  const handleSearch = useCallback(() => {
+    onFilterChange(neighborhood, status);
+  }, [neighborhood, status, onFilterChange]);
+
+  return (
+    <div className="flex flex-col md:flex-row gap-4 mb-8">
+      <Input
+        type="text"
+        placeholder="ابحث عن حي..."
+        value={neighborhood === "all" ? "" : neighborhood}
+        onChange={(e) => setNeighborhood(e.target.value || "all")}
+        className="flex-1"
+      />
+      <select
+        value={status}
+        onChange={(e) => setStatus(e.target.value)}
+        className="border rounded-md p-2 flex-1"
+      >
+        <option value="all">جميع الأنواع</option>
+        <option value="فيلا">فيلا</option>
+        <option value="شقة">شقة</option>
+        <option value="روف">روف</option>
+        <option value="أرض">أرض</option>
+      </select>
+      <Button onClick={handleSearch} className="bg-[#B69665] hover:bg-[#B69665]/90">
+        بحث
+      </Button>
+    </div>
+  );
 };
+
 export default ProjectSearch;

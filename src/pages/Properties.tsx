@@ -16,7 +16,7 @@ const Properties = () => {
         .select(`
           id,
           name,
-          location,
+          city,
           district,
           property_status,
           property_value,
@@ -24,14 +24,21 @@ const Properties = () => {
           bathrooms,
           area,
           thumbnail_url
-        `);
+        `)
+        .order('created_at', { ascending: false });
       if (error) throw error;
       return data || [];
-    }
+    },
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-xl text-gray-600">جاري التحميل...</div>
+      </div>
+    );
   }
 
   return (
