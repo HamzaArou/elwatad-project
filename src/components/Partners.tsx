@@ -33,8 +33,8 @@ const partners = [{
   name: "العيدروس",
   logo: "/lovable-uploads/cab06c45-41de-43d7-bbaa-cdf3b3cee32f.png"
 }, {
-  name: "وتد الكيان العقارية",
-  logo: "/lovable-uploads/685f1b71-7d10-4065-a7a5-7b83cfab395a.png"
+  name: "مجموعة الفيصل العقارية",
+  logo: "/lovable-uploads/e0a99b4a-d030-4902-b5cf-854bd79de304.png"
 }, {
   name: "المبنى الذكي",
   logo: "/lovable-uploads/c203f25d-af44-4a55-831a-27de74b28fe9.png"
