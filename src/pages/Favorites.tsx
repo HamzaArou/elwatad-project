@@ -20,6 +20,7 @@ const Favorites = () => {
     queryKey: ['favorites', user?.id],
     queryFn: async () => {
       if (!user) return [];
+
       const { data: favoritesData, error } = await supabase
         .from('favorites')
         .select(`
@@ -39,11 +40,20 @@ const Favorites = () => {
         `)
         .eq('user_id', user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching favorites:', error);
+        throw error;
+      }
+
+      console.log('Fetched favorites:', favoritesData);
       return favoritesData.map(f => f.projects);
     },
     enabled: !!user,
   });
+
+  if (!user) {
+    return null;
+  }
 
   if (isLoading) {
     return (

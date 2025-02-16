@@ -22,22 +22,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Enable session persistence
-    supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event, session);
-      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-        setUser(session?.user ?? null);
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-      }
-    });
-
     // Check for existing session on load
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('Initial session:', session);
       setUser(session?.user ?? null);
       setIsLoading(false);
     });
+
+    // Enable session persistence and handle auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session);
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        setUser(session?.user ?? null);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -57,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('Sign in successful:', data);
+      setUser(data.user);
     } catch (error: any) {
       console.error('Sign in catch error:', error);
       throw new Error(error.message || 'خطأ في البريد الإلكتروني أو كلمة المرور');
@@ -71,7 +76,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
         options: {
           data: { name },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       
@@ -84,15 +88,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('Sign up successful:', data);
+      setUser(data.user);
 
-      // Send welcome email
-      try {
-        await supabase.functions.invoke('send-welcome-email', {
-          body: { email, name },
-        });
-      } catch (emailError) {
-        console.error('Failed to send welcome email:', emailError);
-        // Don't throw here as the signup was successful
+      // Insert into profiles table
+      if (data.user) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: data.user.id,
+            email: email,
+            name: name,
+          });
+
+        if (profileError) {
+          console.error('Error creating profile:', profileError);
+        }
       }
 
     } catch (error: any) {
@@ -105,6 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      setUser(null);
     } catch (error: any) {
       console.error('Sign out error:', error);
       throw new Error('حدث خطأ أثناء تسجيل الخروج');
@@ -114,39 +125,67 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const toggleFavorite = async (projectId: string) => {
     if (!user) throw new Error('يجب تسجيل الدخول أولاً');
 
-    const { data: existingFavorite } = await supabase
-      .from('favorites')
-      .select()
-      .eq('user_id', user.id)
-      .eq('project_id', projectId)
-      .single();
-
-    if (existingFavorite) {
-      const { error } = await supabase
+    try {
+      const { data: existingFavorite, error: checkError } = await supabase
         .from('favorites')
-        .delete()
+        .select()
         .eq('user_id', user.id)
-        .eq('project_id', projectId);
-      if (error) throw error;
-    } else {
-      const { error } = await supabase
-        .from('favorites')
-        .insert([{ user_id: user.id, project_id: projectId }]);
-      if (error) throw error;
+        .eq('project_id', projectId)
+        .single();
+
+      if (checkError && !checkError.message.includes('No rows found')) {
+        throw checkError;
+      }
+
+      if (existingFavorite) {
+        const { error } = await supabase
+          .from('favorites')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('project_id', projectId);
+        
+        if (error) throw error;
+        
+        toast({
+          description: "تمت إزالة العقار من المفضلة",
+        });
+      } else {
+        const { error } = await supabase
+          .from('favorites')
+          .insert([{ user_id: user.id, project_id: projectId }]);
+        
+        if (error) throw error;
+        
+        toast({
+          description: "تمت إضافة العقار إلى المفضلة",
+        });
+      }
+    } catch (error: any) {
+      console.error('Toggle favorite error:', error);
+      throw new Error('حدث خطأ أثناء تحديث المفضلة');
     }
   };
 
   const isFavorite = async (projectId: string) => {
     if (!user) return false;
 
-    const { data: favorite } = await supabase
-      .from('favorites')
-      .select()
-      .eq('user_id', user.id)
-      .eq('project_id', projectId)
-      .single();
+    try {
+      const { data: favorite, error } = await supabase
+        .from('favorites')
+        .select()
+        .eq('user_id', user.id)
+        .eq('project_id', projectId)
+        .single();
 
-    return !!favorite;
+      if (error && !error.message.includes('No rows found')) {
+        throw error;
+      }
+
+      return !!favorite;
+    } catch (error) {
+      console.error('Check favorite error:', error);
+      return false;
+    }
   };
 
   return (
