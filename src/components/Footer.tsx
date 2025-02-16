@@ -149,7 +149,7 @@ const Footer = () => {
         <div className="py-6 text-center">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-white/60 text-sm">
-              © {new Date().getFullYear()} جميع الحقوق محفوظة لمجموعة الفيصل العقارية
+              © {new Date().getFullYear()} جميع الحقوق محفوظة  لـ وتد الكيان العقارية
             </p>
             <div className="flex items-center gap-4">
               <button onClick={handleCall} className="text-white/80 hover:text-gold transition-colors duration-300 flex items-center gap-2">
