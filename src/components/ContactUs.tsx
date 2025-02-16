@@ -101,7 +101,7 @@ const ContactUs = ({
       setIsSubmitting(false);
     }
   };
-  return <section className="py-12 bg-offWhite">
+  return <section className="bg-offWhite px-0 py-[70px]">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Form Section with Title */}
@@ -109,7 +109,7 @@ const ContactUs = ({
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665] mx-[118px]">
               {projectId ? "سجل اهتمامك بهذا المشروع" : "سجل اهتمامك"}
             </h2>
-            <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 overflow-y-auto">
+            <div className="bg-white shadow-lg p-8 flex-1 overflow-y-auto px-[30px] mx-0 rounded-2xl">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <input type="text" placeholder="الاسم - Name" value={formData.name} onChange={e => setFormData({
