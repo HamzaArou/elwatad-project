@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Register = () => {
   const [isLoginMode, setIsLoginMode] = useState(false);
@@ -81,6 +82,16 @@ const Register = () => {
       if (password.length < 6) {
         throw new Error('يجب أن تكون كلمة المرور 6 أحرف على الأقل');
       }
+
+      // Log login attempt
+      await supabase
+        .from('login_attempts')
+        .insert([
+          {
+            email,
+            ip_address: 'client-side' // For privacy, we're not tracking actual IPs
+          }
+        ]);
 
       await signIn(email, password);
       toast({

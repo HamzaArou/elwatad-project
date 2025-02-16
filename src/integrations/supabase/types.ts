@@ -38,6 +38,27 @@ export type Database = {
           },
         ]
       }
+      login_attempts: {
+        Row: {
+          attempt_time: string | null
+          email: string
+          id: string
+          ip_address: string | null
+        }
+        Insert: {
+          attempt_time?: string | null
+          email: string
+          id?: string
+          ip_address?: string | null
+        }
+        Update: {
+          attempt_time?: string | null
+          email?: string
+          id?: string
+          ip_address?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -45,6 +66,7 @@ export type Database = {
           email: string
           id: string
           name: string | null
+          role: string | null
           updated_at: string
         }
         Insert: {
@@ -53,6 +75,7 @@ export type Database = {
           email: string
           id: string
           name?: string | null
+          role?: string | null
           updated_at?: string
         }
         Update: {
@@ -61,6 +84,7 @@ export type Database = {
           email?: string
           id?: string
           name?: string | null
+          role?: string | null
           updated_at?: string
         }
         Relationships: []
