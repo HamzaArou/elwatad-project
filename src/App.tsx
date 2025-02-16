@@ -15,6 +15,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Register from "@/pages/Register";
 import Favorites from "@/pages/Favorites";
+import Profile from "@/pages/Profile";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -40,6 +41,7 @@ function App() {
                   <Route path="/project/:id" element={<ProjectDetails />} />
                   <Route path="/property-request" element={<PropertyRequest />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/profile" element={<Profile />} />
                   <Route path="/favorites" element={<Favorites />} />
                   <Route path="/admin" element={<AdminLogin />} />
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />

@@ -99,10 +99,10 @@ const Header = () => {
   const shouldUseGoldText = isPropertyRequestPage && !isScrolled;
 
   const handleAuthClick = () => {
-    if (!user) {
-      navigate('/register', { state: { redirectTo: location.pathname } });
+    if (user) {
+      navigate('/profile');
     } else {
-      navigate('/register');
+      navigate('/register', { state: { redirectTo: location.pathname } });
     }
   };
 
