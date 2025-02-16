@@ -58,7 +58,7 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           .select()
           .eq('user_id', user.id)
           .eq('project_id', project.id)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error('Error checking favorite status:', error);
@@ -97,7 +97,10 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           .eq('user_id', user.id)
           .eq('project_id', project.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error removing favorite:', error);
+          throw error;
+        }
         setIsFav(false);
         toast({
           description: "تمت إزالة العقار من المفضلة",
@@ -113,7 +116,10 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
             }
           ]);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error adding favorite:', error);
+          throw error;
+        }
         setIsFav(true);
         toast({
           description: "تمت إضافة العقار إلى المفضلة",
