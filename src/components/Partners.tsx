@@ -1,3 +1,4 @@
+
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -40,6 +41,21 @@ const partners = [{
 }, {
   name: "تصاميم",
   logo: "/lovable-uploads/1546fc60-ac3c-42af-9afc-a36b02435325.png"
+}, {
+  name: "بنك البلاد",
+  logo: "/lovable-uploads/7741b551-796d-4a4c-a8c5-174539a36619.png"
+}, {
+  name: "بنك الجزيرة",
+  logo: "/lovable-uploads/1a18df80-78ab-4ee5-aa40-c77aa0adbe19.png"
+}, {
+  name: "بنك الإمارات دبي الوطني",
+  logo: "/lovable-uploads/8d556ed0-4292-41d4-8752-0fe86b31d44f.png"
+}, {
+  name: "البنك الأول",
+  logo: "/lovable-uploads/0ff212e8-3149-4247-a776-4f83eb3b2893.png"
+}, {
+  name: "شركة سهل للتمويل",
+  logo: "/lovable-uploads/ed19863d-e302-4697-af62-6646b687fde4.png"
 }];
 
 const Partners = () => {
