@@ -1,13 +1,15 @@
+
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Separator } from "./ui/separator";
+
 const PropertySearch = () => {
   const [selectedCity, setSelectedCity] = useState("جدة");
   const [selectedType, setSelectedType] = useState("فيلا");
   const cities = [{
     id: "jeddah",
     name: "جدة",
-    image: "/lovable-uploads/ec951bdf-5286-4f67-aa73-22714ede89b9.png"
+    image: "/lovable-uploads/aafd9d6d-4172-4438-9c2b-17e2cfa6d870.png"
   }, {
     id: "makkah",
     name: "مكة",
@@ -26,6 +28,7 @@ const PropertySearch = () => {
     id: "land",
     name: "أرض"
   }];
+
   return <section className="relative -mt-[89.5px] z-10">
       <div className="container mx-auto px-4">
         <div style={{
@@ -72,4 +75,5 @@ const PropertySearch = () => {
       </div>
     </section>;
 };
+
 export default PropertySearch;
