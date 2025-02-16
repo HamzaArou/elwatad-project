@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('Attempting sign up for:', email);
       
-      // First, create the auth user
+      // First, create the auth user and wait for the session
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -97,7 +97,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       console.log('Auth signup successful:', authData);
 
-      // Then, create the profile
+      // Wait a moment for the session to be fully established
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Then, create the profile using the service role client
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({
@@ -105,7 +108,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           name: name,
           email: email,
           role: 'user'
-        });
+        })
+        .select()
+        .single();
 
       if (profileError) {
         console.error('Error creating profile:', profileError);
