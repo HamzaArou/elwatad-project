@@ -106,7 +106,7 @@ const ContactUs = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Form Section with Title */}
           <div className="space-y-6 h-[600px] flex flex-col">
-            <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665] mx-[112px]">
+            <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665] mx-[74px]">
               {projectId ? "سجل اهتمامك بهذا المشروع" : "سجل اهتمامك"}
             </h2>
             <div className="bg-white shadow-lg p-8 flex-1 overflow-y-auto px-[30px] mx-0 rounded-2xl">
