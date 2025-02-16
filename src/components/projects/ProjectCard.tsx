@@ -5,6 +5,7 @@ import { Badge } from "../ui/badge";
 import { Home, Bath, Ruler, Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Project {
   id: string;
@@ -43,15 +44,35 @@ const formatPrice = (price?: number) => {
 
 const ProjectCard = memo(({ project }: ProjectCardProps) => {
   const navigate = useNavigate();
-  const { user, toggleFavorite, isFavorite } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [isFav, setIsFav] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      isFavorite(project.id).then(setIsFav);
-    }
-  }, [user, project.id, isFavorite]);
+    const checkFavoriteStatus = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('favorites')
+          .select()
+          .eq('user_id', user.id)
+          .eq('project_id', project.id)
+          .single();
+
+        if (error) {
+          console.error('Error checking favorite status:', error);
+          return;
+        }
+
+        setIsFav(!!data);
+      } catch (error) {
+        console.error('Error checking favorite status:', error);
+      }
+    };
+
+    checkFavoriteStatus();
+  }, [user, project.id]);
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     if (window.getSelection()?.toString()) {
@@ -68,18 +89,44 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
     }
 
     try {
-      await toggleFavorite(project.id);
-      setIsFav(!isFav);
-      toast({
-        description: isFav ? "تمت إزالة العقار من المفضلة" : "تمت إضافة العقار إلى المفضلة",
-      });
+      if (isFav) {
+        // Remove from favorites
+        const { error } = await supabase
+          .from('favorites')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('project_id', project.id);
+
+        if (error) throw error;
+        setIsFav(false);
+        toast({
+          description: "تمت إزالة العقار من المفضلة",
+        });
+      } else {
+        // Add to favorites
+        const { error } = await supabase
+          .from('favorites')
+          .insert([
+            {
+              user_id: user.id,
+              project_id: project.id
+            }
+          ]);
+
+        if (error) throw error;
+        setIsFav(true);
+        toast({
+          description: "تمت إضافة العقار إلى المفضلة",
+        });
+      }
     } catch (error) {
+      console.error('Error toggling favorite:', error);
       toast({
         variant: "destructive",
         description: "حدث خطأ ما. الرجاء المحاولة مرة أخرى.",
       });
     }
-  }, [user, navigate, project.id, toggleFavorite, isFav, toast]);
+  }, [user, navigate, project.id, isFav, toast]);
 
   return (
     <div 
