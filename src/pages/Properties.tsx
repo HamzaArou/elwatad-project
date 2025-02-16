@@ -1,7 +1,9 @@
+
 import ProjectSearch from "@/components/projects/ProjectSearch";
 import ProjectCard from "@/components/projects/ProjectCard";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
 const Properties = () => {
   const {
     data: projects = [],
@@ -9,18 +11,31 @@ const Properties = () => {
   } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      const {
-        data,
-        error
-      } = await supabase.from('projects').select('*');
+      const { data, error } = await supabase
+        .from('projects')
+        .select(`
+          id,
+          name,
+          location,
+          district,
+          property_status,
+          property_value,
+          rooms,
+          bathrooms,
+          area,
+          thumbnail_url
+        `);
       if (error) throw error;
       return data || [];
     }
   });
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  return <section className="pt-8 pb-24 bg-[#f5f5f5]">
+
+  return (
+    <section className="pt-8 pb-24 bg-[#f5f5f5]">
       <div className="container mx-auto px-4">
         <div className="mb-6 text-right">
           <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
@@ -32,10 +47,14 @@ const Properties = () => {
           <ProjectSearch onFilterChange={(neighborhood, status) => {}} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-            {projects.map(project => <ProjectCard key={project.id} project={project} />)}
+            {projects.map(project => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
           </div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Properties;

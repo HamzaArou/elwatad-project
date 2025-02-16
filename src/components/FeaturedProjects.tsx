@@ -23,7 +23,7 @@ const FeaturedProjects = () => {
         .select(`
           id,
           name,
-          city,
+          location,
           district,
           property_status,
           property_value,
