@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +6,7 @@ import ProjectGallery from "@/components/projects/ProjectGallery";
 import { Building2, Bed, Bath, Square, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
@@ -83,7 +83,6 @@ export default function ProjectDetails() {
       const footerTop = footerRef.current.getBoundingClientRect().top;
       const viewportHeight = window.innerHeight;
       
-      // If footer is in view (or close to being in view), make the bar non-sticky
       if (footerTop <= viewportHeight) {
         setIsSticky(false);
       } else {
@@ -91,7 +90,6 @@ export default function ProjectDetails() {
       }
     };
 
-    // Check position immediately and on scroll
     checkPosition();
     window.addEventListener('scroll', checkPosition);
     window.addEventListener('resize', checkPosition);
@@ -158,8 +156,54 @@ export default function ProjectDetails() {
   };
 
   if (isLoadingProject) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-gray-50 pt-[140px]">
+        <div className="max-w-[400px] mx-auto px-4">
+          <Card className="overflow-hidden rounded-[24px] shadow-lg">
+            <div className="relative h-[400px]">
+              <Skeleton className="w-full h-full" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <div className="space-y-3">
+                  <Skeleton className="h-8 w-3/4" />
+                  <Skeleton className="h-6 w-1/2" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 p-6 bg-white">
+              {[1, 2, 3, 4].map((item) => (
+                <div key={item} className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                  <Skeleton className="h-5 w-5" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+
+        <div className="container mx-auto px-4 py-8">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[1, 2, 3].map((item) => (
+                <Skeleton key={item} className="h-[200px] rounded-lg" />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 pb-12">
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-[200px]" />
+            <Skeleton className="h-[400px] rounded-lg" />
+          </div>
+        </div>
+      </div>
+    );
   }
+
   if (!projectData) {
     return <div>Project not found</div>;
   }
@@ -177,7 +221,6 @@ export default function ProjectDetails() {
   };
 
   return <div className="min-h-screen bg-gray-50">
-      {/* Project Card Section */}
       <div className="pt-[140px] pb-8">
         <div className="max-w-[400px] mx-auto px-4">
           <Card className="overflow-hidden rounded-[24px] shadow-lg">
@@ -231,12 +274,10 @@ export default function ProjectDetails() {
         </div>
       </div>
 
-      {/* Gallery Section */}
       <div className="container mx-auto px-4 py-8">
         <ProjectGallery gallery={galleryItems} />
       </div>
 
-      {/* Tabs Section */}
       <div className="container mx-auto px-4 pb-12">
         <ProjectTabsSection 
           details={projectData.details} 
@@ -250,12 +291,8 @@ export default function ProjectDetails() {
         />
       </div>
 
-      {/* Sticky bar wrapper - this div will contain both the spacer and the bar */}
       <div ref={stickyWrapperRef} className="relative">
-        {/* Spacer to prevent content jump when bar becomes non-sticky */}
         <div className={`h-24 ${isSticky ? 'block' : 'hidden'}`} />
-
-        {/* Application Bar */}
         <div 
           className={`${
             isSticky 
@@ -280,10 +317,8 @@ export default function ProjectDetails() {
         </div>
       </div>
 
-      {/* Footer Reference Element */}
       <div ref={footerRef} className="h-1" />
 
-      {/* Application Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
