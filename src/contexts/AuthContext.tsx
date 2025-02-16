@@ -22,6 +22,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
+    // Set local storage persistence for auth state
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        localStorage.setItem('supabase.auth.token', session.access_token);
+      } else {
+        localStorage.removeItem('supabase.auth.token');
+      }
+    });
+
     // Check for existing session on load
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('Initial session:', session);
@@ -50,6 +59,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: {
+          persistSession: true // Enable session persistence
+        }
       });
       
       if (error) {
@@ -72,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('Attempting sign up for:', email);
       
-      // Create auth user with email confirmation disabled
+      // Create auth user with email confirmation disabled and session persistence enabled
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -80,7 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           emailRedirectTo: window.location.origin,
           data: {
             name: name // Store name in user metadata
-          }
+          },
+          persistSession: true // Enable session persistence
         }
       });
       
