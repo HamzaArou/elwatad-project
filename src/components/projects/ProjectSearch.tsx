@@ -28,7 +28,7 @@ const ProjectSearch = () => {
           <div className="space-y-6 text-right">
             {/* City Selection */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">مدينة العقار</h3>
+              <h3 className="text-lg font-semibold mb-3 text-slate-50">مدينة العقار</h3>
               <div className="grid grid-cols-3 gap-3">
                 {cities.map(city => <button key={city} onClick={() => setSelectedCity(city)} className={cn("py-2 px-4 rounded-full border border-white/20 transition-colors", selectedCity === city ? "bg-white text-black" : "hover:bg-white/10")}>
                     {city}
@@ -38,13 +38,13 @@ const ProjectSearch = () => {
 
             {/* District Input */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">المنطقة</h3>
+              <h3 className="text-lg font-semibold mb-3 text-gray-50">المنطقة</h3>
               <Input value={district} onChange={e => setDistrict(e.target.value)} placeholder="بحث..." className="bg-transparent border-white/20 text-white placeholder:text-white/50" dir="rtl" />
             </div>
 
             {/* Property Type */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">نوع العقار</h3>
+              <h3 className="text-lg font-semibold mb-3 text-gray-50">نوع العقار</h3>
               <div className="grid grid-cols-2 gap-3">
                 {propertyTypes.map(type => <button key={type} onClick={() => setSelectedType(type)} className={cn("py-2 px-4 rounded-full border border-white/20 transition-colors", selectedType === type ? "bg-white text-black" : "hover:bg-white/10")}>
                     {type}
@@ -54,7 +54,7 @@ const ProjectSearch = () => {
 
             {/* Room Count */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">عدد الغرف</h3>
+              <h3 className="text-lg font-semibold mb-3 text-gray-50">عدد الغرف</h3>
               <div className="grid grid-cols-5 gap-3">
                 {numbers.map(num => <button key={num} onClick={() => setRoomCount(num === "+9" ? 9 : Number(num))} className={cn("py-2 px-4 rounded-full border border-white/20 transition-colors", roomCount === (num === "+9" ? 9 : Number(num)) ? "bg-white text-black" : "hover:bg-white/10")}>
                     {num}
@@ -64,7 +64,7 @@ const ProjectSearch = () => {
 
             {/* Bathroom Count */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">عدد الحمامات</h3>
+              <h3 className="text-lg font-semibold mb-3 text-gray-50">عدد الحمامات</h3>
               <div className="grid grid-cols-5 gap-3">
                 {numbers.map(num => <button key={num} onClick={() => setBathroomCount(num === "+9" ? 9 : Number(num))} className={cn("py-2 px-4 rounded-full border border-white/20 transition-colors", bathroomCount === (num === "+9" ? 9 : Number(num)) ? "bg-white text-black" : "hover:bg-white/10")}>
                     {num}
@@ -74,7 +74,7 @@ const ProjectSearch = () => {
 
             {/* Area Range */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">مساحة العقار</h3>
+              <h3 className="text-lg font-semibold mb-3 text-gray-50">مساحة العقار</h3>
               <div className="space-y-4">
                 <div className="flex justify-between gap-4 text-sm">
                   <div className="flex-1">
@@ -92,7 +92,7 @@ const ProjectSearch = () => {
 
             {/* Property Value Range */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">قيمة العقار</h3>
+              <h3 className="font-semibold mb-3 text-lg text-gray-50">قيمة العقار</h3>
               <div className="space-y-4">
                 <div className="flex justify-between gap-4 text-sm">
                   <div className="flex-1">
