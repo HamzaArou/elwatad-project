@@ -96,6 +96,7 @@ export type Database = {
           id: string
           project_id: string | null
           specifications: string[] | null
+          views360: Json[] | null
         }
         Insert: {
           created_at?: string
@@ -103,6 +104,7 @@ export type Database = {
           id?: string
           project_id?: string | null
           specifications?: string[] | null
+          views360?: Json[] | null
         }
         Update: {
           created_at?: string
@@ -110,6 +112,7 @@ export type Database = {
           id?: string
           project_id?: string | null
           specifications?: string[] | null
+          views360?: Json[] | null
         }
         Relationships: [
           {
@@ -214,63 +217,42 @@ export type Database = {
       }
       projects: {
         Row: {
-          address: string | null
           area: number
           bathrooms: number
           city: string
           created_at: string
-          details: string | null
           district: string
-          features: string[] | null
           id: string
-          lat: number | null
-          lng: number | null
-          location: string | null
           name: string
           property_status: Database["public"]["Enums"]["property_status"]
           property_value: number
           rooms: number
-          status: string | null
           thumbnail_url: string
         }
         Insert: {
-          address?: string | null
           area: number
           bathrooms?: number
           city: string
           created_at?: string
-          details?: string | null
           district: string
-          features?: string[] | null
           id?: string
-          lat?: number | null
-          lng?: number | null
-          location?: string | null
           name: string
           property_status: Database["public"]["Enums"]["property_status"]
           property_value: number
           rooms?: number
-          status?: string | null
           thumbnail_url: string
         }
         Update: {
-          address?: string | null
           area?: number
           bathrooms?: number
           city?: string
           created_at?: string
-          details?: string | null
           district?: string
-          features?: string[] | null
           id?: string
-          lat?: number | null
-          lng?: number | null
-          location?: string | null
           name?: string
           property_status?: Database["public"]["Enums"]["property_status"]
           property_value?: number
           rooms?: number
-          status?: string | null
           thumbnail_url?: string
         }
         Relationships: []
