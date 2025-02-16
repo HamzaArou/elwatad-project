@@ -1,3 +1,4 @@
+
 import { Phone, MessageSquare, FileText } from "lucide-react";
 import { Twitter, Instagram } from "lucide-react";
 
@@ -41,7 +42,7 @@ const LandingFloatingContact = ({ onRegisterClick }: LandingFloatingContactProps
           {/* Social Media Links */}
           <div className="flex gap-4">
             <a
-              href="https://www.snapchat.com/add/alfaisal_group"
+              href="https://www.snapchat.com/t/pKato0AS"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gold hover:text-gold/90 transition-colors"
@@ -60,7 +61,7 @@ const LandingFloatingContact = ({ onRegisterClick }: LandingFloatingContactProps
               </svg>
             </a>
             <a
-              href="https://x.com/alfaisal_group?s=21"
+              href="https://x.com/wtd_2030?s=21&t=hN-a0qLjyLuJQBItnRQJig"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gold hover:text-gold/90 transition-colors"
@@ -69,7 +70,7 @@ const LandingFloatingContact = ({ onRegisterClick }: LandingFloatingContactProps
               <Twitter className="w-6 h-6" />
             </a>
             <a
-              href="https://www.instagram.com/alfaisal_group?igsh=MXE2MGY2bzJiODB0Zw%3D%3D&utm_source=qr"
+              href="https://www.instagram.com/wtd.2030/?igsh=MWZyaTJidTlicXEzbg%3D%3D"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gold hover:text-gold/90 transition-colors"
@@ -78,7 +79,7 @@ const LandingFloatingContact = ({ onRegisterClick }: LandingFloatingContactProps
               <Instagram className="w-6 h-6" />
             </a>
             <a
-              href="https://www.tiktok.com/@alfaisal_group?_t=ZS-8t2MVNY6jxw&_r=1"
+              href="https://www.tiktok.com/@wtd.2030?_t=8nQz6qwvWwi&_r=1"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gold hover:text-gold/90 transition-colors"

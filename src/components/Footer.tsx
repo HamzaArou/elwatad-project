@@ -112,18 +112,18 @@ const Footer = () => {
             <div className="text-center lg:text-right">
               <h3 className="text-2xl font-bold mb-8 text-gold text-right">تواصل معنا</h3>
               <div className="flex justify-end gap-6 mx-[32px] px-0 py-[10px] my-0">
-                <a href="https://www.snapchat.com/add/alfaisal_group" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
+                <a href="https://www.snapchat.com/t/pKato0AS" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
                   <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                   </svg>
                 </a>
-                <a href="https://x.com/alfaisal_group?s=21" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
+                <a href="https://x.com/wtd_2030?s=21&t=hN-a0qLjyLuJQBItnRQJig" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
                   <Twitter className="w-7 h-7" />
                 </a>
-                <a href="https://www.instagram.com/alfaisal_group?igsh=MXE2MGY2bzJiODB0Zw%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
+                <a href="https://www.instagram.com/wtd.2030/?igsh=MWZyaTJidTlicXEzbg%3D%3D" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
                   <Instagram className="w-7 h-7" />
                 </a>
-                <a href="https://www.tiktok.com/@alfaisal_group?_t=ZS-8t2MVNY6jxw&_r=1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
+                <a href="https://www.tiktok.com/@wtd.2030?_t=8nQz6qwvWwi&_r=1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold transition-colors duration-300">
                   <TikTokIcon />
                 </a>
               </div>
