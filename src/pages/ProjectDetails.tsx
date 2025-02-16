@@ -16,7 +16,7 @@ export default function ProjectDetails() {
   const { id } = useParams<{ id: string; }>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(true);
-  const stickyTriggerRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,18 +78,16 @@ export default function ProjectDetails() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.target === footerRef.current) {
-          setIsSticky(false);
-        } 
-        else if (entry.target === stickyTriggerRef.current && !entry.isIntersecting) {
-          setIsSticky(true);
-        }
+        setIsSticky(!entry.isIntersecting);
       },
-      { threshold: 0 }
+      { 
+        threshold: 0,
+        rootMargin: "0px" 
+      }
     );
 
-    if (stickyTriggerRef.current) {
-      observer.observe(stickyTriggerRef.current);
+    if (stickyRef.current) {
+      observer.observe(stickyRef.current);
     }
     if (footerRef.current) {
       observer.observe(footerRef.current);
@@ -246,8 +244,8 @@ export default function ProjectDetails() {
         />
       </div>
 
-      {/* Sticky trigger div - placed right before where we want the bar to stop */}
-      <div ref={stickyTriggerRef} className="h-1" />
+      {/* Last section that will trigger the observer */}
+      <div ref={stickyRef} className="h-32 bg-transparent" />
 
       {/* Application Bar */}
       <div className={`${isSticky ? 'fixed' : 'relative'} bottom-0 left-0 right-0 z-50 bg-[#222222]`}>
@@ -266,9 +264,6 @@ export default function ProjectDetails() {
           </div>
         </div>
       </div>
-
-      {/* Footer Reference Element */}
-      <div ref={footerRef} className="h-1" />
 
       {/* Application Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
