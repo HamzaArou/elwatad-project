@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, Heart, UserRound } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -115,18 +116,24 @@ const Header = () => {
       }`}
     >
       <div className="w-full h-full flex items-center justify-between px-6 md:px-10" dir="ltr">
-        {/* Left Side - Additional Logos */}
+        {/* Left Side - Profile and Favorites */}
         <div className="flex items-center gap-4">
-          <img
-            src="/lovable-uploads/b003dd7b-9db8-4ee9-a46a-843b5a9b16e4.png"
-            alt="Logo 1"
-            className="h-16 w-auto"
-          />
-          <img
-            src="/lovable-uploads/697a92cd-3c0f-4b48-b2b7-ee819715bd38.png"
-            alt="Logo 2"
-            className="h-16 w-auto"
-          />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:text-gold transition-colors"
+            onClick={() => navigate('/register')}
+          >
+            <UserRound className="h-6 w-6" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:text-gold transition-colors"
+            onClick={() => navigate('/favorites')}
+          >
+            <Heart className="h-6 w-6" />
+          </Button>
         </div>
 
         {/* Center - Navigation */}

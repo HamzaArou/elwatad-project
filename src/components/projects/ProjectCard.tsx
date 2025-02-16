@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useCallback, memo, useState, useEffect } from "react";
 import { Badge } from "../ui/badge";
@@ -126,7 +125,7 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
           <Heart className="w-6 h-6" fill={isFav ? "currentColor" : "none"} />
         </button>
 
-        {/* Main Content - Always at bottom */}
+        {/* Main Content */}
         <div className="absolute bottom-0 left-0 right-0 p-6">
           {/* Base Info Container */}
           <div className="space-y-2 transform transition-transform duration-300 group-hover:translate-y-[-80px]">
