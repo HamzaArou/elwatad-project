@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,7 +17,7 @@ export default function ProjectDetails() {
   const { id } = useParams<{ id: string; }>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(true);
-  const stickyRef = useRef<HTMLDivElement>(null);
+  const stickyWrapperRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,24 +77,29 @@ export default function ProjectDetails() {
   });
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsSticky(!entry.isIntersecting);
-      },
-      { 
-        threshold: 0,
-        rootMargin: "0px" 
+    const checkPosition = () => {
+      if (!stickyWrapperRef.current || !footerRef.current) return;
+
+      const footerTop = footerRef.current.getBoundingClientRect().top;
+      const viewportHeight = window.innerHeight;
+      
+      // If footer is in view (or close to being in view), make the bar non-sticky
+      if (footerTop <= viewportHeight) {
+        setIsSticky(false);
+      } else {
+        setIsSticky(true);
       }
-    );
+    };
 
-    if (stickyRef.current) {
-      observer.observe(stickyRef.current);
-    }
-    if (footerRef.current) {
-      observer.observe(footerRef.current);
-    }
+    // Check position immediately and on scroll
+    checkPosition();
+    window.addEventListener('scroll', checkPosition);
+    window.addEventListener('resize', checkPosition);
 
-    return () => observer.disconnect();
+    return () => {
+      window.removeEventListener('scroll', checkPosition);
+      window.removeEventListener('resize', checkPosition);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -244,26 +250,38 @@ export default function ProjectDetails() {
         />
       </div>
 
-      {/* Last section that will trigger the observer */}
-      <div ref={stickyRef} className="h-32 bg-transparent" />
+      {/* Sticky bar wrapper - this div will contain both the spacer and the bar */}
+      <div ref={stickyWrapperRef} className="relative">
+        {/* Spacer to prevent content jump when bar becomes non-sticky */}
+        <div className={`h-24 ${isSticky ? 'block' : 'hidden'}`} />
 
-      {/* Application Bar */}
-      <div className={`${isSticky ? 'fixed' : 'relative'} bottom-0 left-0 right-0 z-50 bg-[#222222]`}>
-        <div className="py-4">
-          <div className="container mx-auto px-4 flex justify-between items-center">
-            <Button 
-              onClick={() => setDialogOpen(true)}
-              className="bg-[#B69665] hover:bg-[#B69665]/90 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2"
-            >
-              قدم الآن
-              <ArrowUpRight className="h-5 w-5" />
-            </Button>
-            <h3 className="text-white text-xl font-bold">
-              سارع بتقديم طلبك الآن
-            </h3>
+        {/* Application Bar */}
+        <div 
+          className={`${
+            isSticky 
+              ? 'fixed bottom-0 left-0 right-0' 
+              : 'relative'
+          } z-50 bg-[#222222] transition-all duration-200`}
+        >
+          <div className="py-4">
+            <div className="container mx-auto px-4 flex justify-between items-center">
+              <Button 
+                onClick={() => setDialogOpen(true)}
+                className="bg-[#B69665] hover:bg-[#B69665]/90 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2"
+              >
+                قدم الآن
+                <ArrowUpRight className="h-5 w-5" />
+              </Button>
+              <h3 className="text-white text-xl font-bold">
+                سارع بتقديم طلبك الآن
+              </h3>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Footer Reference Element */}
+      <div ref={footerRef} className="h-1" />
 
       {/* Application Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
