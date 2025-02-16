@@ -36,6 +36,32 @@ export default function ProjectBasicInfo({ form, isLoading }: ProjectBasicInfoPr
 
       <FormField
         control={form.control}
+        name="city"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>مدينة العقار</FormLabel>
+            <Select
+              disabled={isLoading}
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+            >
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر المدينة" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="مدينة مكة">مدينة مكة</SelectItem>
+                <SelectItem value="مدينة جدة">مدينة جدة</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
         name="location"
         render={({ field }) => (
           <FormItem>

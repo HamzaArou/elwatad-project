@@ -66,6 +66,7 @@ export type ProjectUnit = {
 
 export const projectFormSchema = z.object({
   name: z.string().min(1, "اسم المشروع مطلوب"),
+  city: z.string().min(1, "المدينة مطلوبة"),
   location: z.string().min(1, "الموقع مطلوب"),
   address: z.string().optional(),
   lat: z.number().optional(),

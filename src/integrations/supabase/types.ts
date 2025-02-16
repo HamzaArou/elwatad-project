@@ -251,6 +251,7 @@ export type Database = {
         Row: {
           area: number
           bathrooms: number
+          city: Database["public"]["Enums"]["city_type"]
           created_at: string
           details: string | null
           district: string
@@ -269,6 +270,7 @@ export type Database = {
         Insert: {
           area: number
           bathrooms?: number
+          city?: Database["public"]["Enums"]["city_type"]
           created_at?: string
           details?: string | null
           district: string
@@ -287,6 +289,7 @@ export type Database = {
         Update: {
           area?: number
           bathrooms?: number
+          city?: Database["public"]["Enums"]["city_type"]
           created_at?: string
           details?: string | null
           district?: string
@@ -339,6 +342,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      city_type: "مدينة مكة" | "مدينة جدة"
       media_type: "image" | "video"
       project_feature_type:
         | "غرفة خادمة"
