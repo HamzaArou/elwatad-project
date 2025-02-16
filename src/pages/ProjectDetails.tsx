@@ -4,7 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import ProjectTabsSection from "@/components/projects/ProjectTabsSection";
 import ProjectGallery from "@/components/projects/ProjectGallery";
-import ProjectLocation from "@/components/projects/ProjectLocation";
+import RegisterInterestDialog from "@/components/RegisterInterestDialog";
+import { Building2, Bed, Bath, Square } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function ProjectDetails() {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +18,18 @@ export default function ProjectDetails() {
       
       const { data: project, error: projectError } = await supabase
         .from("projects")
-        .select("*")
+        .select(`
+          id,
+          name,
+          location,
+          district,
+          property_status,
+          property_value,
+          rooms,
+          bathrooms,
+          area,
+          thumbnail_url
+        `)
         .eq("id", id)
         .single();
 
@@ -71,9 +84,74 @@ export default function ProjectDetails() {
     content_type: 'gallery'
   }));
 
+  const formatPrice = (price?: number) => {
+    if (!price) return "السعر عند الطلب";
+    return `${price.toLocaleString('ar-SA')} ريال`;
+  };
+
   return (
-    <div>
-      <ProjectGallery gallery={galleryItems} />
+    <div className="min-h-screen bg-gray-50">
+      {/* Project Header Section */}
+      <div className="bg-white shadow-md">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-start">
+              <div className="text-right">
+                <span className="text-sm text-gold">مشروع</span>
+                <h1 className="text-3xl font-bold text-gray-900">{projectData.name}</h1>
+                <p className="text-gray-600 mt-2">{projectData.location}</p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-deepBlue">
+                  {formatPrice(projectData.property_value)}
+                </div>
+                <div className="text-sm text-gray-600 mt-1">{projectData.property_status}</div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                <Square className="w-5 h-5 text-deepBlue" />
+                <div>
+                  <div className="text-sm text-gray-600">المساحة</div>
+                  <div className="font-semibold">{projectData.area} م²</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                <Bed className="w-5 h-5 text-deepBlue" />
+                <div>
+                  <div className="text-sm text-gray-600">غرف النوم</div>
+                  <div className="font-semibold">{projectData.rooms}</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                <Bath className="w-5 h-5 text-deepBlue" />
+                <div>
+                  <div className="text-sm text-gray-600">الحمامات</div>
+                  <div className="font-semibold">{projectData.bathrooms}</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                <Building2 className="w-5 h-5 text-deepBlue" />
+                <div>
+                  <div className="text-sm text-gray-600">المنطقة</div>
+                  <div className="font-semibold">{projectData.district}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Gallery Section */}
+      <div className="py-8">
+        <ProjectGallery gallery={galleryItems} />
+      </div>
+
+      {/* Tabs Section */}
       <ProjectTabsSection
         details={projectData.details}
         rooms={projectData.rooms}
@@ -84,6 +162,23 @@ export default function ProjectDetails() {
         lat={projectData.lat}
         lng={projectData.lng}
       />
+
+      {/* Contact Section */}
+      <div className="bg-white shadow-md mt-12">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">هل تريد معرفة المزيد عن هذا المشروع؟</h2>
+            <p className="text-gray-600 mb-8">
+              يمكنك التواصل معنا للحصول على مزيد من المعلومات حول المشروع والحجز
+            </p>
+            <RegisterInterestDialog defaultOpen={false} onOpenChange={() => {}}>
+              <Button size="lg" className="bg-deepBlue hover:bg-deepBlue/90">
+                تواصل معنا
+              </Button>
+            </RegisterInterestDialog>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
