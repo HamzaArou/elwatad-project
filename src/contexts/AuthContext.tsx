@@ -72,10 +72,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('Attempting sign up for:', email);
       
-      // First, create the auth user
+      // Create auth user with email confirmation disabled
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: {
+            name: name // Store name in user metadata
+          }
+        }
       });
       
       if (authError) {
@@ -91,26 +97,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('Auth signup successful:', authData);
-
-      // Create the profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: authData.user.id,
-          name: name,
-          email: email,
-          role: 'user'
-        }, {
-          onConflict: 'id'
-        });
-
-      if (profileError) {
-        console.error('Error creating profile:', profileError);
-        // If profile creation fails, we should clean up the auth user
-        await supabase.auth.signOut();
-        throw new Error('Failed to create user profile');
-      }
-
       setUser(authData.user);
       
       toast({
