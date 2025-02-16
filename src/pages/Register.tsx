@@ -1,34 +1,62 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  const { signUp, signIn } = useAuth();
+
+  const redirectTo = location.state?.redirectTo || '/';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Here you would typically handle the registration logic
-    // For now, just show a toast
-    toast({
-      title: "تم إنشاء الحساب بنجاح",
-      description: "مرحباً بك في تطبيقنا",
-    });
-    
-    navigate('/');
+    try {
+      await signUp(email, password, name);
+      toast({
+        title: "تم إنشاء الحساب بنجاح",
+        description: "مرحباً بك في تطبيقنا",
+      });
+      navigate(redirectTo);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "حدث خطأ أثناء إنشاء الحساب. الرجاء المحاولة مرة أخرى.",
+      });
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      await signIn(email, password);
+      toast({
+        title: "تم تسجيل الدخول بنجاح",
+        description: "مرحباً بك مرة أخرى",
+      });
+      navigate(redirectTo);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "خطأ في البريد الإلكتروني أو كلمة المرور",
+      });
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Logos */}
+        {/* Logo */}
         <div className="flex justify-center gap-8 mb-8">
           <img
             src="/lovable-uploads/1f1e6660-2b87-47f7-a630-d9b632edd19e.png"
@@ -120,7 +148,7 @@ const Register = () => {
             <div className="mt-6">
               <Button
                 type="button"
-                onClick={() => navigate('/login')}
+                onClick={handleLogin}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gold bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold"
                 variant="outline"
               >

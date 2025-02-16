@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
 import ProjectDetails from "@/pages/ProjectDetails";
 import AdminLogin from "@/pages/AdminLogin";
@@ -14,6 +14,7 @@ import About from "@/pages/About";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Register from "@/pages/Register";
+import Favorites from "@/pages/Favorites";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -39,6 +40,7 @@ function App() {
                   <Route path="/project/:id" element={<ProjectDetails />} />
                   <Route path="/property-request" element={<PropertyRequest />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/favorites" element={<Favorites />} />
                   <Route path="/admin" element={<AdminLogin />} />
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
                   <Route path="/admin/project/new" element={<ProjectForm />} />

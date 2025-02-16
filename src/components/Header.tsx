@@ -100,10 +100,18 @@ const Header = () => {
   const shouldUseGoldText = isPropertyRequestPage && !isScrolled;
 
   const handleAuthClick = () => {
-    if (user) {
-      signOut();
+    if (!user) {
+      navigate('/register', { state: { redirectTo: location.pathname } });
     } else {
       navigate('/register');
+    }
+  };
+
+  const handleFavoritesClick = () => {
+    if (!user) {
+      navigate('/register', { state: { redirectTo: '/favorites' } });
+    } else {
+      navigate('/favorites');
     }
   };
 
@@ -122,7 +130,7 @@ const Header = () => {
             variant="ghost"
             size="icon"
             className="text-white hover:text-gold transition-colors"
-            onClick={() => navigate('/register')}
+            onClick={handleAuthClick}
           >
             <UserRound className="h-6 w-6" />
           </Button>
@@ -130,7 +138,7 @@ const Header = () => {
             variant="ghost"
             size="icon"
             className="text-white hover:text-gold transition-colors"
-            onClick={() => navigate('/favorites')}
+            onClick={handleFavoritesClick}
           >
             <Heart className="h-6 w-6" />
           </Button>
