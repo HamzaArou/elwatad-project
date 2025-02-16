@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useCallback, memo, useState, useEffect } from "react";
 import { Badge } from "../ui/badge";
@@ -62,7 +63,7 @@ const ProjectCard = memo(({ project }: ProjectCardProps) => {
   const handleHeartClick = useCallback(async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) {
-      navigate('/register');
+      navigate('/register', { state: { redirectTo: '/' } });
       return;
     }
 

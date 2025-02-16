@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Menu, X, Phone, Heart, UserRound } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -109,7 +108,7 @@ const Header = () => {
 
   const handleFavoritesClick = () => {
     if (!user) {
-      navigate('/register', { state: { redirectTo: '/favorites' } });
+      navigate('/register', { state: { redirectTo: '/' } });
     } else {
       navigate('/favorites');
     }
@@ -124,7 +123,6 @@ const Header = () => {
       }`}
     >
       <div className="w-full h-full flex items-center justify-between px-6 md:px-10" dir="ltr">
-        {/* Left Side - Profile and Favorites */}
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
@@ -144,7 +142,6 @@ const Header = () => {
           </Button>
         </div>
 
-        {/* Center - Navigation */}
         <nav className="hidden lg:flex items-center justify-center flex-1 px-4">
           <div className="flex gap-8 rtl">
             {navLinks.map((link) => (
@@ -195,7 +192,6 @@ const Header = () => {
           </div>
         </nav>
 
-        {/* Right Side - Main Logo */}
         <div className="flex items-center">
           <button 
             onClick={() => {
@@ -218,7 +214,6 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="lg:hidden">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -237,7 +232,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isMobileMenuOpen && (
         <div className="lg:hidden absolute top-full right-0 left-0 bg-black/90 backdrop-blur-sm shadow-lg animate-slide-in">
           <nav className="flex flex-col p-4 rtl">
