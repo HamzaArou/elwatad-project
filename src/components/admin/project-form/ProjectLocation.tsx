@@ -1,6 +1,6 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { UseFormReturn } from "react-hook-form";
 import { ProjectFormValues } from "@/types/project";
 import { useState, useEffect, useRef } from "react";
@@ -78,6 +78,54 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
           </FormItem>
         )}
       />
+
+      <div className="grid grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="lat"
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormItem>
+              <FormLabel>خط العرض (Latitude)</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="number"
+                  step="any"
+                  value={value || ''}
+                  onChange={(e) => onChange(parseFloat(e.target.value))}
+                  disabled={isLoading}
+                  placeholder="21.4225"
+                  className="text-left ltr"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="lng"
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormItem>
+              <FormLabel>خط الطول (Longitude)</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="number"
+                  step="any"
+                  value={value || ''}
+                  onChange={(e) => onChange(parseFloat(e.target.value))}
+                  disabled={isLoading}
+                  placeholder="39.8256"
+                  className="text-left ltr"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
 
       {previewUrl && (
         <div className="mt-4">

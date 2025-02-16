@@ -23,6 +23,8 @@ interface ProjectTabsSectionProps {
   area?: number;
   features?: string[];
   location: string;
+  lat?: number | null;
+  lng?: number | null;
 }
 
 const FEATURE_ICONS: Record<string, any> = {
@@ -41,7 +43,9 @@ export default function ProjectTabsSection({
   bathrooms = 0, 
   area = 0, 
   features = [],
-  location 
+  location,
+  lat,
+  lng
 }: ProjectTabsSectionProps) {
   return (
     <div className="relative py-16 bg-gradient-to-b from-deepBlue/5 to-deepBlue/0 rounded-3xl mb-12">
@@ -134,7 +138,7 @@ export default function ProjectTabsSection({
 
           <TabsContent value="location" className="mt-6 focus-visible:outline-none focus-visible:ring-0">
             <div className="bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-              <ProjectLocation location={location} />
+              <ProjectLocation location={location} lat={lat} lng={lng} />
             </div>
           </TabsContent>
         </Tabs>
