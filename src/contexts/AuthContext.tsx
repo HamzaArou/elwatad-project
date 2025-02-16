@@ -24,6 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Enable session persistence
     supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session);
       if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
         setUser(session?.user ?? null);
       } else if (event === 'SIGNED_OUT') {
@@ -33,6 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Check for existing session on load
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session);
       setUser(session?.user ?? null);
       setIsLoading(false);
     });
@@ -40,58 +42,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('Attempting sign in for:', email);
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-      if (error) throw error;
+      
+      if (error) {
+        console.error('Sign in error:', error);
+        if (error.message.includes('Invalid login credentials')) {
+          throw new Error('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+        }
+        throw error;
+      }
+
+      console.log('Sign in successful:', data);
     } catch (error: any) {
-      console.error('Sign in error:', error);
-      throw new Error('خطأ في البريد الإلكتروني أو كلمة المرور');
+      console.error('Sign in catch error:', error);
+      throw new Error(error.message || 'خطأ في البريد الإلكتروني أو كلمة المرور');
     }
   };
 
   const signUp = async (email: string, password: string, name: string) => {
     try {
-      // Sign up the user without email verification
-      const { error: signUpError, data } = await supabase.auth.signUp({
+      console.log('Attempting sign up for:', email);
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { name },
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       
-      if (signUpError) throw signUpError;
-
-      // Send welcome email using Edge Function
-      try {
-        const response = await fetch(`${process.env.SUPABASE_URL}/functions/v1/send-welcome-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({
-            email,
-            name,
-          }),
-        });
-
-        if (!response.ok) {
-          console.error('Failed to send welcome email');
+      if (error) {
+        console.error('Sign up error:', error);
+        if (error.message.includes('already registered')) {
+          throw new Error('هذا البريد الإلكتروني مسجل بالفعل');
         }
+        throw error;
+      }
+
+      console.log('Sign up successful:', data);
+
+      // Send welcome email
+      try {
+        await supabase.functions.invoke('send-welcome-email', {
+          body: { email, name },
+        });
       } catch (emailError) {
-        console.error('Error sending welcome email:', emailError);
+        console.error('Failed to send welcome email:', emailError);
+        // Don't throw here as the signup was successful
       }
 
     } catch (error: any) {
-      console.error('Sign up error:', error);
-      if (error.message.includes('already registered')) {
-        throw new Error('هذا البريد الإلكتروني مسجل بالفعل');
-      }
-      throw new Error('حدث خطأ أثناء إنشاء الحساب');
+      console.error('Sign up catch error:', error);
+      throw new Error(error.message || 'حدث خطأ أثناء إنشاء الحساب');
     }
   };
 

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -46,25 +45,21 @@ const Register = () => {
         throw new Error('يجب أن تكون كلمة المرور 6 أحرف على الأقل');
       }
 
+      console.log('Starting signup process');
       await signUp(email, password, name);
+      console.log('Signup successful');
+      
       toast({
         title: "تم إنشاء الحساب بنجاح",
         description: "مرحباً بك في تطبيقنا",
       });
       navigate(redirectTo);
     } catch (error: any) {
-      let errorMessage = "حدث خطأ أثناء إنشاء الحساب. الرجاء المحاولة مرة أخرى.";
-      
-      if (error.message) {
-        errorMessage = error.message;
-      } else if (error.error?.message) {
-        errorMessage = error.error.message;
-      }
-
+      console.error('Signup error:', error);
       toast({
         variant: "destructive",
         title: "خطأ",
-        description: errorMessage,
+        description: error.message || "حدث خطأ أثناء إنشاء الحساب. الرجاء المحاولة مرة أخرى.",
       });
     } finally {
       setIsLoading(false);
@@ -83,35 +78,21 @@ const Register = () => {
         throw new Error('يجب أن تكون كلمة المرور 6 أحرف على الأقل');
       }
 
-      // Log login attempt
-      await supabase
-        .from('login_attempts')
-        .insert([
-          {
-            email,
-            ip_address: 'client-side' // For privacy, we're not tracking actual IPs
-          }
-        ]);
-
+      console.log('Starting login process');
       await signIn(email, password);
+      console.log('Login successful');
+
       toast({
         title: "تم تسجيل الدخول بنجاح",
         description: "مرحباً بك مرة أخرى",
       });
       navigate(redirectTo);
     } catch (error: any) {
-      let errorMessage = "خطأ في البريد الإلكتروني أو كلمة المرور";
-      
-      if (error.message) {
-        errorMessage = error.message;
-      } else if (error.error?.message) {
-        errorMessage = error.error.message;
-      }
-
+      console.error('Login error:', error);
       toast({
         variant: "destructive",
         title: "خطأ",
-        description: errorMessage,
+        description: error.message || "خطأ في البريد الإلكتروني أو كلمة المرور",
       });
     } finally {
       setIsLoading(false);
