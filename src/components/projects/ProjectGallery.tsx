@@ -1,23 +1,24 @@
+
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 
-interface ProjectMedia {
+interface GalleryItem {
   id: string;
-  media_url: string;
-  media_type: string; // Changed from "image" | "video" to string to match Supabase
+  url: string;
+  type: 'image' | 'video';
   content_type: string;
 }
 
 interface ProjectGalleryProps {
-  images: ProjectMedia[];
+  gallery?: GalleryItem[];
   onImageClick?: (mediaUrl: string) => void;
 }
 
-export default function ProjectGallery({ images, onImageClick }: ProjectGalleryProps) {
+export default function ProjectGallery({ gallery = [], onImageClick }: ProjectGalleryProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const galleryMedia = images.filter(img => img.content_type === 'gallery');
+  const galleryMedia = gallery.filter(item => item.content_type === 'gallery');
   const preloadedImages = useRef<Set<string>>(new Set());
 
   const [sliderRef, instanceRef] = useKeenSlider({
@@ -31,8 +32,8 @@ export default function ProjectGallery({ images, onImageClick }: ProjectGalleryP
       const currentIndex = slider.track.details.rel;
       const nextIndex = (currentIndex + 1) % galleryMedia.length;
       const prevIndex = (currentIndex - 1 + galleryMedia.length) % galleryMedia.length;
-      preloadImage(galleryMedia[nextIndex].media_url);
-      preloadImage(galleryMedia[prevIndex].media_url);
+      preloadImage(galleryMedia[nextIndex].url);
+      preloadImage(galleryMedia[prevIndex].url);
     },
     created() {
       setLoaded(true);
@@ -55,28 +56,22 @@ export default function ProjectGallery({ images, onImageClick }: ProjectGalleryP
     },
   });
 
-  const preloadImage = useCallback((mediaUrl: string) => {
-    if (!mediaUrl || mediaUrl.endsWith('.mp4') || preloadedImages.current.has(mediaUrl)) {
+  const preloadImage = useCallback((url: string) => {
+    if (!url || url.endsWith('.mp4') || preloadedImages.current.has(url)) {
       return;
     }
 
     const img = new Image();
-    img.src = getPublicUrl(mediaUrl);
-    preloadedImages.current.add(mediaUrl);
-  }, []);
-
-  const getPublicUrl = useCallback((mediaUrl: string) => {
-    if (!mediaUrl) return '';
-    if (mediaUrl.startsWith('http')) return mediaUrl;
-    return `https://tdybblvmlsvxgkkwapei.supabase.co/storage/v1/object/public/project-images/${mediaUrl}`;
+    img.src = url;
+    preloadedImages.current.add(url);
   }, []);
 
   useEffect(() => {
     if (galleryMedia.length > 0) {
       const initialPreloadCount = Math.min(3, galleryMedia.length);
       for (let i = 0; i < initialPreloadCount; i++) {
-        if (galleryMedia[i].media_type === 'image') {
-          preloadImage(galleryMedia[i].media_url);
+        if (galleryMedia[i].type === 'image') {
+          preloadImage(galleryMedia[i].url);
         }
       }
     }
@@ -90,10 +85,10 @@ export default function ProjectGallery({ images, onImageClick }: ProjectGalleryP
     );
   }
 
-  const handleImageClick = (e: React.MouseEvent, mediaUrl: string) => {
+  const handleImageClick = (e: React.MouseEvent, url: string) => {
     e.stopPropagation();
     if (onImageClick) {
-      onImageClick(mediaUrl);
+      onImageClick(url);
     }
   };
 
@@ -111,12 +106,12 @@ export default function ProjectGallery({ images, onImageClick }: ProjectGalleryP
               <div 
                 key={media.id} 
                 className="keen-slider__slide cursor-pointer"
-                onClick={(e) => handleImageClick(e, media.media_url)}
+                onClick={(e) => handleImageClick(e, media.url)}
               >
                 <div className="w-full h-full flex items-center justify-center bg-black/5">
-                  {media.media_type === 'video' ? (
+                  {media.type === 'video' ? (
                     <video
-                      src={getPublicUrl(media.media_url)}
+                      src={media.url}
                       className="w-full h-full object-contain"
                       controls
                       playsInline
@@ -124,7 +119,7 @@ export default function ProjectGallery({ images, onImageClick }: ProjectGalleryP
                     />
                   ) : (
                     <img
-                      src={getPublicUrl(media.media_url)}
+                      src={media.url}
                       alt=""
                       className="w-full h-full object-contain"
                       loading="eager"
@@ -173,10 +168,10 @@ export default function ProjectGallery({ images, onImageClick }: ProjectGalleryP
                   currentSlide === idx ? 'ring-2 ring-primary' : ''
                 }`}
               >
-                {media.media_type === 'video' ? (
+                {media.type === 'video' ? (
                   <div className="aspect-video bg-gray-100 relative">
                     <video
-                      src={getPublicUrl(media.media_url)}
+                      src={media.url}
                       className="w-full h-full object-cover"
                       preload="none"
                     />
@@ -188,7 +183,7 @@ export default function ProjectGallery({ images, onImageClick }: ProjectGalleryP
                   </div>
                 ) : (
                   <img
-                    src={getPublicUrl(media.media_url)}
+                    src={media.url}
                     alt=""
                     className="aspect-video w-full object-cover"
                     loading="lazy"

@@ -89,76 +89,6 @@ export type Database = {
         }
         Relationships: []
       }
-      project_details: {
-        Row: {
-          created_at: string
-          details: string | null
-          features: string[] | null
-          id: string
-          project_id: string | null
-          specifications: string[] | null
-        }
-        Insert: {
-          created_at?: string
-          details?: string | null
-          features?: string[] | null
-          id?: string
-          project_id?: string | null
-          specifications?: string[] | null
-        }
-        Update: {
-          created_at?: string
-          details?: string | null
-          features?: string[] | null
-          id?: string
-          project_id?: string | null
-          specifications?: string[] | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "project_details_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      project_gallery: {
-        Row: {
-          content_type: string
-          created_at: string
-          id: string
-          media_type: string
-          media_url: string
-          project_id: string | null
-        }
-        Insert: {
-          content_type: string
-          created_at?: string
-          id?: string
-          media_type: string
-          media_url: string
-          project_id?: string | null
-        }
-        Update: {
-          content_type?: string
-          created_at?: string
-          id?: string
-          media_type?: string
-          media_url?: string
-          project_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "project_gallery_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       project_units: {
         Row: {
           area: number
@@ -217,14 +147,13 @@ export type Database = {
       }
       projects: {
         Row: {
-          address: string | null
           area: number
           bathrooms: number
-          city: string
           created_at: string
           details: string | null
           district: string
           features: string[] | null
+          gallery: Json[] | null
           id: string
           lat: number | null
           lng: number | null
@@ -233,18 +162,16 @@ export type Database = {
           property_status: Database["public"]["Enums"]["property_status"]
           property_value: number
           rooms: number
-          status: string | null
           thumbnail_url: string
         }
         Insert: {
-          address?: string | null
           area: number
           bathrooms?: number
-          city: string
           created_at?: string
           details?: string | null
           district: string
           features?: string[] | null
+          gallery?: Json[] | null
           id?: string
           lat?: number | null
           lng?: number | null
@@ -253,18 +180,16 @@ export type Database = {
           property_status: Database["public"]["Enums"]["property_status"]
           property_value: number
           rooms?: number
-          status?: string | null
           thumbnail_url: string
         }
         Update: {
-          address?: string | null
           area?: number
           bathrooms?: number
-          city?: string
           created_at?: string
           details?: string | null
           district?: string
           features?: string[] | null
+          gallery?: Json[] | null
           id?: string
           lat?: number | null
           lng?: number | null
@@ -273,7 +198,6 @@ export type Database = {
           property_status?: Database["public"]["Enums"]["property_status"]
           property_value?: number
           rooms?: number
-          status?: string | null
           thumbnail_url?: string
         }
         Relationships: []
@@ -313,11 +237,18 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      media_type: "image" | "video"
       property_status: "فيلا" | "شقة" | "روف" | "أرض"
       property_type: "فيلا" | "شقة" | "روف" | "أرض"
     }
     CompositeTypes: {
-      [_ in never]: never
+      gallery_item: {
+        id: string | null
+        url: string | null
+        type: Database["public"]["Enums"]["media_type"] | null
+        content_type: string | null
+        created_at: string | null
+      }
     }
   }
 }

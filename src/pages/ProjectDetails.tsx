@@ -5,7 +5,7 @@ import ProjectGallery from "@/components/projects/ProjectGallery";
 import ProjectTabsSection from "@/components/projects/ProjectTabsSection";
 import Project360Views from "@/components/projects/Project360Views";
 import ContactUs from "@/components/ContactUs";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Header from "@/components/Header";
 import NotFound from "@/components/NotFound";
@@ -29,10 +29,6 @@ export default function ProjectDetails() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const { data: project, isLoading, error } = useQuery({
     queryKey: ['project', id],
     queryFn: async () => {
@@ -40,11 +36,7 @@ export default function ProjectDetails() {
 
       const { data: project, error: projectError } = await supabase
         .from('projects')
-        .select(`
-          *,
-          project_details(*),
-          project_gallery(*)
-        `)
+        .select('*')
         .eq('id', id)
         .maybeSingle();
 
@@ -52,17 +44,11 @@ export default function ProjectDetails() {
       if (!project) return null;
       return project;
     },
-    retry: 1,
-    retryDelay: 1000,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 30,
   });
 
   const handleMediaClick = (mediaUrl: string) => {
     if (!mediaUrl) return;
-    const url = mediaUrl.startsWith('http') ? mediaUrl : 
-      `https://tdybblvmlsvxgkkwapei.supabase.co/storage/v1/object/public/project-images/${mediaUrl}`;
-    setSelectedMediaUrl(url);
+    setSelectedMediaUrl(mediaUrl);
     setDialogOpen(true);
   };
 
@@ -87,9 +73,6 @@ export default function ProjectDetails() {
     return <NotFound />;
   }
 
-  const thumbnailUrl = project.thumbnail_url || "https://tdybblvmlsvxgkkwapei.supabase.co/storage/v1/object/public/project-images/project_f47ac10b-58cc-4372-a567-0e02b2c3d479/project1.png";
-  const galleryImages = (project.project_gallery || []);
-
   return (
     <div className="min-h-screen">
       <Header />
@@ -102,7 +85,7 @@ export default function ProjectDetails() {
           <div className="relative mx-auto bg-gradient-to-b from-deepBlue/10 to-deepBlue/5 p-4 sm:p-6 rounded-[30px] sm:rounded-[40px] shadow-lg w-[350px] sm:w-[450px]">
             <div className="w-[320px] sm:w-[386px] mx-auto rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl" style={{ height: '400px' }}>
               <img
-                src={thumbnailUrl}
+                src={project.thumbnail_url}
                 alt={project.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -119,7 +102,7 @@ export default function ProjectDetails() {
               </h2>
             </div>
             
-            <ProjectGallery images={galleryImages} onImageClick={handleMediaClick} />
+            <ProjectGallery gallery={project.gallery} onImageClick={handleMediaClick} />
           </div>
         </div>
 
