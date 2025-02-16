@@ -2,8 +2,10 @@
 import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProjectGallery from "@/components/projects/ProjectGallery";
+import ProjectUnits from "@/components/projects/ProjectUnits";
+import ProjectLocation from "@/components/projects/ProjectLocation";
+import ProjectUpdates from "@/components/projects/ProjectUpdates";
 import Project360Views from "@/components/projects/Project360Views";
-import ProjectDetailsSection from "@/components/projects/ProjectDetailsSection";
 import ContactUs from "@/components/ContactUs";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -125,14 +127,19 @@ export default function ProjectDetails() {
 
         <Project360Views projectId={id} />
 
-        <ProjectDetailsSection 
-          details={project.details}
-          rooms={project.rooms}
-          bathrooms={project.bathrooms}
-          area={project.area}
-          features={project.features}
-          location={project.location}
-        />
+        <div className="relative py-16 bg-gradient-to-b from-deepBlue/10 to-deepBlue/5 rounded-3xl mb-12">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center mb-8">
+              <h2 className="text-3xl font-bold text-white bg-deepBlue py-2 px-8 rounded-tr-[5px] rounded-tl-[100px] rounded-br-[100px] rounded-bl-[5px] inline-block">
+                تحديثات المشروع
+              </h2>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <ProjectUpdates projectId={id} />
+            </div>
+          </div>
+        </div>
 
         <ContactUs projectId={id} projectName={project.name} />
       </div>
