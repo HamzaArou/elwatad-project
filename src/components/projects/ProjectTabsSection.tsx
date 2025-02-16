@@ -1,4 +1,3 @@
-
 import { 
   Building2, 
   Info, 
@@ -7,7 +6,7 @@ import {
   Bath, 
   Square, 
   User, 
-  LiftGenerator, 
+  Elevator, 
   Waves, 
   Car, 
   UserCheck,
@@ -28,7 +27,7 @@ interface ProjectTabsSectionProps {
 
 const FEATURE_ICONS: Record<string, any> = {
   "غرفة خادمة": <User className="w-5 h-5" />,
-  "بها مصعد": <LiftGenerator className="w-5 h-5" />,
+  "بها مصعد": <Elevator className="w-5 h-5" />,
   "بدون مسبح": <Waves className="w-5 h-5" />,
   "بدون جراج": <Car className="w-5 h-5" />,
   "موقف خاص": <Car className="w-5 h-5" />,
