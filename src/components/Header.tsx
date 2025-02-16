@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Menu, X, Phone, Heart, UserRound } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -53,7 +54,22 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY, location.pathname]);
 
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
+
   const scrollToSection = (sectionId: string) => {
+    // Handle special navigation cases
+    if (sectionId === 'about') {
+      handleNavigation('/about');
+      return;
+    }
+    if (sectionId === 'request') {
+      handleNavigation('/property-request');
+      return;
+    }
+
     const isPrivacyPage = location.pathname === '/privacy-policy';
     const isProjectPage = location.pathname.includes('/project/');
     const isPropertyRequestPage = location.pathname === '/property-request';
