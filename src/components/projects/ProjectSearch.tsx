@@ -18,7 +18,7 @@ export interface SearchFilters {
 }
 
 interface ProjectSearchProps {
-  onSearch: (filters: SearchFilters) => void;
+  onSearch: (filters: SearchFilters | null) => void;
 }
 
 const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
@@ -46,6 +46,17 @@ const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
       valueRange
     });
     setDialogOpen(false);
+  };
+
+  const handleClearFilters = () => {
+    setSelectedCity("");
+    setSelectedType("");
+    setRoomCount(null);
+    setBathroomCount(null);
+    setDistrict("");
+    setAreaRange([0, 1000]);
+    setValueRange([0, 10000000]);
+    onSearch(null);
   };
 
   return (
@@ -220,13 +231,21 @@ const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
               </div>
             </div>
 
-            {/* Search Button */}
-            <Button
-              onClick={handleSearch}
-              className="w-full bg-white text-black hover:bg-white/90 py-6 text-lg font-semibold"
-            >
-              بحث
-            </Button>
+            {/* Buttons */}
+            <div className="flex gap-4">
+              <Button
+                onClick={handleClearFilters}
+                className="flex-1 bg-transparent text-white hover:bg-white/10 border border-white/20 py-6 text-lg font-semibold"
+              >
+                مسح الفلتر
+              </Button>
+              <Button
+                onClick={handleSearch}
+                className="flex-1 bg-white text-black hover:bg-white/90 py-6 text-lg font-semibold"
+              >
+                بحث
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
