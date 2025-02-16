@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface Project {
   id: string;
   name: string;
-  city: string;
+  city: "مدينة مكة" | "مدينة جدة";
   district: string;
   property_status: "فيلا" | "شقة" | "روف" | "أرض";
   property_value: number;

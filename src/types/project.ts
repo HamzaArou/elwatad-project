@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 export const projectFeatureTypes = [
@@ -64,9 +65,14 @@ export type ProjectUnit = {
   };
 };
 
+export const cityTypes = ["مدينة مكة", "مدينة جدة"] as const;
+export type CityType = typeof cityTypes[number];
+
 export const projectFormSchema = z.object({
   name: z.string().min(1, "اسم المشروع مطلوب"),
-  city: z.string().min(1, "المدينة مطلوبة"),
+  city: z.enum(cityTypes, {
+    errorMap: () => ({ message: "المدينة مطلوبة" }),
+  }),
   location: z.string().min(1, "الموقع مطلوب"),
   address: z.string().optional(),
   lat: z.number().optional(),

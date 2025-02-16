@@ -3,7 +3,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import { ProjectFormValues } from "@/types/project";
+import { ProjectFormValues, cityTypes } from "@/types/project";
 
 interface ProjectBasicInfoProps {
   form: UseFormReturn<ProjectFormValues>;
@@ -51,8 +51,11 @@ export default function ProjectBasicInfo({ form, isLoading }: ProjectBasicInfoPr
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="مدينة مكة">مدينة مكة</SelectItem>
-                <SelectItem value="مدينة جدة">مدينة جدة</SelectItem>
+                {cityTypes.map((city) => (
+                  <SelectItem key={city} value={city}>
+                    {city}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FormMessage />
