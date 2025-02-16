@@ -91,54 +91,35 @@ export default function ProjectDetails() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Project Header Section */}
-      <div className="bg-white shadow-md">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-start">
-              <div className="text-right">
-                <span className="text-sm text-gold">مشروع</span>
-                <h1 className="text-3xl font-bold text-gray-900">{projectData.name}</h1>
-                <p className="text-gray-600 mt-2">{projectData.location}</p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-deepBlue">
-                  {formatPrice(projectData.property_value)}
+      {/* Hero Section with Project Image */}
+      <div className="relative h-[60vh] bg-gray-900">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={projectData.thumbnail_url}
+            alt={projectData.name}
+            className="w-full h-full object-cover opacity-70"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70" />
+        </div>
+
+        {/* Project Info Overlay */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex flex-col gap-6 text-white">
+              <div className="flex justify-between items-end">
+                <div className="text-right">
+                  <span className="inline-block px-3 py-1 bg-gold text-white text-sm rounded-full mb-4">
+                    مشروع
+                  </span>
+                  <h1 className="text-4xl font-bold mb-2">{projectData.name}</h1>
+                  <p className="text-xl opacity-90">{projectData.location}</p>
                 </div>
-                <div className="text-sm text-gray-600 mt-1">{projectData.property_status}</div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-                <Square className="w-5 h-5 text-deepBlue" />
-                <div>
-                  <div className="text-sm text-gray-600">المساحة</div>
-                  <div className="font-semibold">{projectData.area} م²</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-                <Bed className="w-5 h-5 text-deepBlue" />
-                <div>
-                  <div className="text-sm text-gray-600">غرف النوم</div>
-                  <div className="font-semibold">{projectData.rooms}</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-                <Bath className="w-5 h-5 text-deepBlue" />
-                <div>
-                  <div className="text-sm text-gray-600">الحمامات</div>
-                  <div className="font-semibold">{projectData.bathrooms}</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
-                <Building2 className="w-5 h-5 text-deepBlue" />
-                <div>
-                  <div className="text-sm text-gray-600">المنطقة</div>
-                  <div className="font-semibold">{projectData.district}</div>
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-gold">
+                    {formatPrice(projectData.property_value)}
+                  </div>
+                  <div className="text-lg opacity-90 mt-1">{projectData.property_status}</div>
                 </div>
               </div>
             </div>
@@ -146,33 +127,72 @@ export default function ProjectDetails() {
         </div>
       </div>
 
+      {/* Project Stats */}
+      <div className="bg-white shadow-lg relative -mt-10 container mx-auto rounded-xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6">
+          <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg">
+            <Square className="w-6 h-6 text-deepBlue" />
+            <div>
+              <div className="text-sm text-gray-600">المساحة</div>
+              <div className="font-semibold text-lg">{projectData.area} م²</div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg">
+            <Bed className="w-6 h-6 text-deepBlue" />
+            <div>
+              <div className="text-sm text-gray-600">غرف النوم</div>
+              <div className="font-semibold text-lg">{projectData.rooms}</div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg">
+            <Bath className="w-6 h-6 text-deepBlue" />
+            <div>
+              <div className="text-sm text-gray-600">الحمامات</div>
+              <div className="font-semibold text-lg">{projectData.bathrooms}</div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg">
+            <Building2 className="w-6 h-6 text-deepBlue" />
+            <div>
+              <div className="text-sm text-gray-600">المنطقة</div>
+              <div className="font-semibold text-lg">{projectData.district}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Gallery Section */}
-      <div className="py-8">
+      <div className="container mx-auto px-4 py-12">
         <ProjectGallery gallery={galleryItems} />
       </div>
 
       {/* Tabs Section */}
-      <ProjectTabsSection
-        details={projectData.details}
-        rooms={projectData.rooms}
-        bathrooms={projectData.bathrooms}
-        area={projectData.area}
-        features={projectData.features.map(f => `${f.feature_type} (${f.amount})`)}
-        location={projectData.location || ""}
-        lat={projectData.lat}
-        lng={projectData.lng}
-      />
+      <div className="container mx-auto px-4 pb-12">
+        <ProjectTabsSection
+          details={projectData.details}
+          rooms={projectData.rooms}
+          bathrooms={projectData.bathrooms}
+          area={projectData.area}
+          features={projectData.features.map(f => `${f.feature_type} (${f.amount})`)}
+          location={projectData.location || ""}
+          lat={projectData.lat}
+          lng={projectData.lng}
+        />
+      </div>
 
       {/* Contact Section */}
       <div className="bg-white shadow-md mt-12">
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-16">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">هل تريد معرفة المزيد عن هذا المشروع؟</h2>
-            <p className="text-gray-600 mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">هل تريد معرفة المزيد عن هذا المشروع؟</h2>
+            <p className="text-xl text-gray-600 mb-8">
               يمكنك التواصل معنا للحصول على مزيد من المعلومات حول المشروع والحجز
             </p>
-            <RegisterInterestDialog defaultOpen={false} onOpenChange={() => {}}>
-              <Button size="lg" className="bg-deepBlue hover:bg-deepBlue/90">
+            <RegisterInterestDialog>
+              <Button size="lg" className="bg-deepBlue hover:bg-deepBlue/90 text-lg px-8 py-6">
                 تواصل معنا
               </Button>
             </RegisterInterestDialog>
