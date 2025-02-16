@@ -221,7 +221,9 @@ export type Database = {
           bathrooms: number
           city: string
           created_at: string
+          details: string | null
           district: string
+          features: string[] | null
           id: string
           name: string
           property_status: Database["public"]["Enums"]["property_status"]
@@ -234,7 +236,9 @@ export type Database = {
           bathrooms?: number
           city: string
           created_at?: string
+          details?: string | null
           district: string
+          features?: string[] | null
           id?: string
           name: string
           property_status: Database["public"]["Enums"]["property_status"]
@@ -247,7 +251,9 @@ export type Database = {
           bathrooms?: number
           city?: string
           created_at?: string
+          details?: string | null
           district?: string
+          features?: string[] | null
           id?: string
           name?: string
           property_status?: Database["public"]["Enums"]["property_status"]
