@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const phoneNumber = "+966505148231";
-  const whatsappNumber = "966505148231";
+  const phoneNumber = "+966509840546";
+  const whatsappNumber = "966509840546";
   const mapUrl = "https://maps.app.goo.gl/sMQoUi9T15nYNpfo9";
 
   const handleCall = () => {

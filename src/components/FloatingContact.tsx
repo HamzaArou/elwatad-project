@@ -8,8 +8,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 const FloatingContact = () => {
-  const phoneNumber = "+966505148231";
-  const whatsappNumber = "966505148231"; // Removed the + for WhatsApp API format
+  const phoneNumber = "+966509840546";
+  const whatsappNumber = "966509840546"; // Removed the + for WhatsApp API format
 
   const handleCall = () => {
     window.location.href = `tel:${phoneNumber}`;
