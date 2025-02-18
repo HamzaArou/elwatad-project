@@ -10,7 +10,7 @@ const PrivacyPolicy = () => {
         <h1 className="text-3xl font-bold text-deepBlue mb-8">سياسة الخصوصية لـ وتد الكيان العقارية</h1>
         
         <div className="prose prose-lg max-w-none text-right space-y-6">
-          <p className="text-gray-600 leading-relaxed">في وتد الكيان العقارية، نحترم خصوصيتك ونتعامل مع بياناتك الشخصية بمنتهى السرية والحرص. تهدف سياسة الخصوصية هذه إلى توضيح كيفية جمع واستخدام وحماية معلوماتك الشخصية عند زيارتك لموقعنا الإلكتروني www.alfaisalgroup.com.sa أو عند تفاعلك معنا عبر أي من قنواتنا.</p>
+          <p className="text-gray-600 leading-relaxed">في وتد الكيان العقارية، نحترم خصوصيتك ونتعامل مع بياناتك الشخصية بمنتهى السرية والحرص. تهدف سياسة الخصوصية هذه إلى توضيح كيفية جمع واستخدام وحماية معلوماتك الشخصية عند زيارتك لموقعنا الإلكتروني www.wtd.com.sa أو عند تفاعلك معنا عبر أي من قنواتنا.</p>
 
           <section>
             <h2 className="text-2xl font-bold text-deepBlue mb-4">1. جمع المعلومات الشخصية</h2>
