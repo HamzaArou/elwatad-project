@@ -50,7 +50,7 @@ const Hero = () => {
           <div className="uk-position-center uk-position-medium uk-text-center">
             <div className="uk-transition-slide-bottom">
               <h3 className="slide-show__title text-4xl md:text-7xl font-bold text-white mb-8">
-                ثقتك بوابتنا لتحقيق حلمك
+              مع وتد.. تملك أسهل، خيارات أكثر، وخدمات متكاملة
               </h3>
               <a 
                 href="#projects" 
