@@ -123,7 +123,7 @@ const Hero = () => {
           <div className="uk-position-center uk-position-medium uk-text-center">
             <div className="uk-transition-slide-bottom">
               <h3 className="slide-show__title text-4xl md:text-7xl font-bold text-white mb-8">
-                شقة العمر على بعد خطوة
+              عقارات، تمويل، استشارات.. كل ما تحتاجه في مكان واحد
               </h3>
               <a 
                 href="#projects" 
@@ -196,7 +196,7 @@ const Hero = () => {
           <div className="uk-position-center uk-position-medium uk-text-center">
             <div className="uk-transition-slide-bottom">
               <h3 className="slide-show__title text-4xl md:text-7xl font-bold text-white mb-8">
-                خطوتك القادمه تبدا من هنا
+              نصلك بعقارك المناسب.. بأسهل الطرق وأفضل الحلول
               </h3>
               <a 
                 href="#projects" 
@@ -269,7 +269,7 @@ const Hero = () => {
           <div className="uk-position-center uk-position-medium uk-text-center">
             <div className="uk-transition-slide-bottom">
               <h3 className="slide-show__title text-4xl md:text-7xl font-bold text-white mb-8">
-                معنا , لاتبحث فقط اختار
+              نبني لك أساسًا متينًا لمستقبل أكثر استقرارًا
               </h3>
               <a 
                 href="#projects" 
@@ -342,7 +342,7 @@ const Hero = () => {
           <div className="uk-position-center uk-position-medium uk-text-center">
             <div className="uk-transition-slide-bottom">
               <h3 className="slide-show__title text-4xl md:text-7xl font-bold text-white mb-8">
-                جوده العقار هي اولويتنا وراحتك هدفنا
+              نحو آفاق جديدة مع حلول مبتكرة من وتد الكيان
               </h3>
               <a 
                 href="#projects" 
