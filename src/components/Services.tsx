@@ -25,9 +25,7 @@ const Services = () => {
   return <section className="pt-12 pb-16 bg-white">
       <div className="container mx-auto px-[15px] py-[6px]">
         <div className="mb-12 text-right">
-          <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
-            خدمات الوتد
-          </h2>
+          <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">خدمات وتد</h2>
         </div>
 
         {/* Introduction Text */}
