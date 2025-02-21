@@ -37,7 +37,7 @@ const partners = [{
   logo: "/lovable-uploads/e0a99b4a-d030-4902-b5cf-854bd79de304.png"
 }, {
   name: "المبنى الذكي",
-  logo: "/lovable-uploads/image-123456.png"
+  logo: "/lovable-uploads/WhatsApp_Image_2025-02-18_at_13.38.52-removebg-preview.png"
 }, {
   name: "تصاميم",
   logo: "/lovable-uploads/1546fc60-ac3c-42af-9afc-a36b02435325.png"
