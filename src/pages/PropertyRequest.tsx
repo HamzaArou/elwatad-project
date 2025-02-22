@@ -1,13 +1,12 @@
 
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import PhoneInput from "react-phone-input-2";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Building2, MapPin, Phone, User } from "lucide-react";
+import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 const PropertyRequest = () => {
@@ -21,7 +20,6 @@ const PropertyRequest = () => {
   });
 
   useEffect(() => {
-    // Force scroll to top on component mount
     window.scrollTo(0, 0);
   }, []);
 
@@ -30,11 +28,30 @@ const PropertyRequest = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase
-        .from('property_requests')
-        .insert([formData]);
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          service_id: 'service_vsb08u9',
+          template_id: 'template_6akmr1f',
+          user_id: 'DJX_dy28zAjctAAIj',
+          template_params: {
+            to_email: 'pr@wtd.com.sa',
+            from_name: formData.name,
+            phone_number: formData.phone,
+            city: formData.city,
+            property_type: formData.property_type,
+            request_type: 'طلب عقار',
+            message: `طلب ${formData.property_type} في ${formData.city}`
+          }
+        })
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        throw new Error(`EmailJS error: ${response.status}`);
+      }
 
       toast({
         title: "تم إرسال طلبك بنجاح",

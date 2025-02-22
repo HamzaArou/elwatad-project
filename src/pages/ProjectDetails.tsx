@@ -102,15 +102,8 @@ export default function ProjectDetails() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.phone) {
-      toast({
-        title: "خطأ",
-        description: "يرجى إدخال رقم الجوال",
-        variant: "destructive"
-      });
-      return;
-    }
     setIsSubmitting(true);
+
     try {
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
@@ -119,30 +112,35 @@ export default function ProjectDetails() {
         },
         body: JSON.stringify({
           service_id: 'service_vsb08u9',
-          template_id: 'template_31x8lw5',
+          template_id: 'template_6akmr1f',
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
             to_email: 'pr@wtd.com.sa',
             from_name: formData.name,
             phone_number: formData.phone,
-            project: projectData?.name,
+            project: projectData?.name || 'Not specified',
+            request_type: 'استفسار عن مشروع',
             message: formData.message || 'No message provided'
           }
         })
       });
+
       if (!response.ok) {
-        throw new Error(`EmailJS error: ${response.status} ${await response.text()}`);
+        throw new Error(`EmailJS error: ${response.status}`);
       }
+
       toast({
         title: "تم إرسال الطلب بنجاح",
         description: "سنقوم بالتواصل معك قريباً"
       });
-      setDialogOpen(false);
+
       setFormData({
         name: "",
         phone: "",
         message: "",
       });
+
+      setDialogOpen(false);
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
