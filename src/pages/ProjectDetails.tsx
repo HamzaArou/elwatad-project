@@ -115,12 +115,13 @@ export default function ProjectDetails() {
           template_id: 'template_6akmr1f',
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
-            to_email: 'pr@wtd.com.sa',
-            from_name: formData.name,
-            phone_number: formData.phone,
-            project: projectData?.name || 'Not specified',
+            request_title: 'طلب استفسار عن مشروع',
             request_type: 'استفسار عن مشروع',
-            message: formData.message || 'No message provided'
+            customer_name: formData.name,
+            customer_phone: formData.phone,
+            project_name: projectData?.name || 'غير محدد',
+            customer_message: formData.message || 'لا يوجد رسالة',
+            to_email: 'pr@wtd.com.sa'
           }
         })
       });

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -66,12 +65,13 @@ const ContactUs = ({
           template_id: 'template_6akmr1f',
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
-            to_email: 'pr@wtd.com.sa',
-            from_name: formData.name,
-            phone_number: formData.phone,
-            project: projectName || (formData.selectedProject ? projects.find(p => p.id === formData.selectedProject)?.name : ''),
+            request_title: 'طلب استفسار جديد',
             request_type: 'استفسار عام',
-            message: formData.message || 'No message provided'
+            customer_name: formData.name,
+            customer_phone: formData.phone,
+            project_name: projectName || (formData.selectedProject ? projects.find(p => p.id === formData.selectedProject)?.name : 'لم يتم التحديد'),
+            customer_message: formData.message || 'لا يوجد رسالة',
+            to_email: 'pr@wtd.com.sa'
           }
         })
       });

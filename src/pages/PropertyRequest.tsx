@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
@@ -38,13 +37,13 @@ const PropertyRequest = () => {
           template_id: 'template_6akmr1f',
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
-            to_email: 'pr@wtd.com.sa',
-            from_name: formData.name,
-            phone_number: formData.phone,
-            city: formData.city,
-            property_type: formData.property_type,
+            request_title: 'طلب عقار جديد',
             request_type: 'طلب عقار',
-            message: `طلب ${formData.property_type} في ${formData.city}`
+            customer_name: formData.name,
+            customer_phone: formData.phone,
+            property_details: `نوع العقار: ${formData.property_type} - المدينة: ${formData.city}`,
+            customer_message: `يرغب العميل في ${formData.property_type} في مدينة ${formData.city}`,
+            to_email: 'pr@wtd.com.sa'
           }
         })
       });
