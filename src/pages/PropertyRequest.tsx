@@ -37,12 +37,16 @@ const PropertyRequest = () => {
           template_id: 'template_6akmr1f',
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
-            request_title: 'طلب عقار جديد',
-            request_type: 'طلب عقار',
-            customer_name: formData.name,
-            customer_phone: formData.phone,
-            property_details: `نوع العقار: ${formData.property_type} - المدينة: ${formData.city}`,
-            customer_message: `يرغب العميل في ${formData.property_type} في مدينة ${formData.city}`,
+            to_name: "وتد الكيان العقارية",
+            from_name: formData.name,
+            message: `
+نوع الطلب: طلب عقار جديد
+اسم العميل: ${formData.name}
+رقم الجوال: ${formData.phone}
+تفاصيل العقار:
+- نوع العقار: ${formData.property_type}
+- المدينة: ${formData.city}
+          `,
             to_email: 'pr@wtd.com.sa'
           }
         })
@@ -182,7 +186,7 @@ const PropertyRequest = () => {
                   ابحث عن عقارك المثالي معنا
                 </h1>
                 <p className="text-gray-600 leading-relaxed">
-                  نقدم لك مجموعة متميزة من العقارات بمواقع استراتيجية وأسعار تنافسية
+                  نقدم لك م��موعة متميزة من العقارات بمواقع استراتيجية وأسعار تنافسية
                 </p>
               </div>
 

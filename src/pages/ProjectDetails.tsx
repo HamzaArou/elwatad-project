@@ -115,12 +115,15 @@ export default function ProjectDetails() {
           template_id: 'template_6akmr1f',
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
-            request_title: 'طلب استفسار عن مشروع',
-            request_type: 'استفسار عن مشروع',
-            customer_name: formData.name,
-            customer_phone: formData.phone,
-            project_name: projectData?.name || 'غير محدد',
-            customer_message: formData.message || 'لا يوجد رسالة',
+            to_name: "وتد الكيان العقارية",
+            from_name: formData.name,
+            message: `
+نوع الطلب: استفسار عن مشروع محدد
+اسم العميل: ${formData.name}
+رقم الجوال: ${formData.phone}
+المشروع: ${projectData?.name || 'غير محدد'}
+الرسالة: ${formData.message || 'لا يوجد رسالة'}
+          `,
             to_email: 'pr@wtd.com.sa'
           }
         })

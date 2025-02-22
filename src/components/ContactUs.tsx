@@ -55,6 +55,10 @@ const ContactUs = ({
 
     setIsSubmitting(true);
     try {
+      const selectedProject = formData.selectedProject 
+        ? projects.find(p => p.id === formData.selectedProject)?.name 
+        : 'لم يتم التحديد';
+
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
@@ -65,12 +69,15 @@ const ContactUs = ({
           template_id: 'template_6akmr1f',
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
-            request_title: 'طلب استفسار جديد',
-            request_type: 'استفسار عام',
-            customer_name: formData.name,
-            customer_phone: formData.phone,
-            project_name: projectName || (formData.selectedProject ? projects.find(p => p.id === formData.selectedProject)?.name : 'لم يتم التحديد'),
-            customer_message: formData.message || 'لا يوجد رسالة',
+            to_name: "وتد الكيان العقارية",
+            from_name: formData.name,
+            message: `
+نوع الطلب: استفسار عام
+اسم العميل: ${formData.name}
+رقم الجوال: ${formData.phone}
+المشروع: ${projectName || selectedProject}
+الرسالة: ${formData.message || 'لا يوجد رسالة'}
+          `,
             to_email: 'pr@wtd.com.sa'
           }
         })
