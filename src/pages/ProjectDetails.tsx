@@ -116,12 +116,12 @@ export default function ProjectDetails() {
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
             to_name: "وتد الكيان العقارية",
-            to_email: 'pr@wtd.com.sa',
+            from_name: formData.name,
+            phone_number: formData.phone,
             request_type: 'استفسار عن مشروع',
-            name: formData.name,
-            phone: formData.phone,
             project: projectData?.name || 'غير محدد',
-            details: formData.message || 'لا يوجد رسالة'
+            message: formData.message || 'لا يوجد رسالة',
+            to_email: 'pr@wtd.com.sa'
           }
         })
       });

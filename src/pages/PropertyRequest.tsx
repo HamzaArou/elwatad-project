@@ -38,13 +38,13 @@ const PropertyRequest = () => {
           user_id: 'DJX_dy28zAjctAAIj',
           template_params: {
             to_name: "وتد الكيان العقارية",
-            to_email: 'pr@wtd.com.sa',
+            from_name: formData.name,
+            phone_number: formData.phone,
             request_type: 'طلب عقار',
-            name: formData.name,
-            phone: formData.phone,
-            property_type: formData.property_type,
             city: formData.city,
-            details: `العميل يبحث عن ${formData.property_type} في مدينة ${formData.city}`
+            property_type: formData.property_type,
+            message: `العميل يبحث عن ${formData.property_type} في مدينة ${formData.city}`,
+            to_email: 'pr@wtd.com.sa'
           }
         })
       });
