@@ -70,7 +70,7 @@ const ContactUs = ({
           request_type: 'استفسار عام',
           project: projectName || selectedProject,
           message: formData.message || 'لا يوجد رسالة',
-          to_email: 'pr@wtd.com.sa'
+          to_email: 'hamzaaroussi22@gmail.com'
         }
       };
       console.log('Sending email with:', requestBody);
