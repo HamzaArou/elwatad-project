@@ -65,15 +65,15 @@ const ContactUs = ({
         user_id: 'DJX_dy28zAjctAAIj',
         template_params: {
           to_name: "وتد الكيان العقارية",
-          from_name: formData.name || "",
-          phone_number: formData.phone || "",
-          request_type: 'استفسار عام',
-          project: selectedProject || "",
-          message: formData.message || 'لا يوجد رسالة'
+          from_name: String(formData.name || ""),
+          phone_number: String(formData.phone || ""),
+          request_type: "استفسار عام",
+          project: String(selectedProject || ""),
+          message: String(formData.message || "لا يوجد رسالة")
         }
       };
 
-      console.log('Contact Form - Sending email with:', requestBody);
+      console.log('Contact Form - Final request:', JSON.stringify(requestBody, null, 2));
 
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',

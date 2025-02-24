@@ -111,15 +111,15 @@ export default function ProjectDetails() {
         user_id: 'DJX_dy28zAjctAAIj',
         template_params: {
           to_name: "وتد الكيان العقارية",
-          from_name: formData.name || "",
-          phone_number: formData.phone || "",
-          request_type: 'استفسار عن مشروع',
-          project: projectData?.name || "",
-          message: formData.message || 'لا يوجد رسالة'
+          from_name: String(formData.name || ""),
+          phone_number: String(formData.phone || ""),
+          request_type: "استفسار عن مشروع",
+          project: String(projectData?.name || ""),
+          message: String(formData.message || "لا يوجد رسالة")
         }
       };
 
-      console.log('Project Details - Sending email with:', requestBody);
+      console.log('Project Details - Final request:', JSON.stringify(requestBody, null, 2));
 
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
