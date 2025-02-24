@@ -105,17 +105,21 @@ export default function ProjectDetails() {
     setIsSubmitting(true);
 
     try {
+      const content = `
+نوع الطلب: استفسار عن مشروع
+الاسم: ${formData.name || ""}
+رقم الجوال: ${formData.phone || ""}
+المشروع: ${projectData?.name || ""}
+الرسالة: ${formData.message || "لا يوجد رسالة"}
+      `.trim();
+
       const requestBody = {
         service_id: 'service_vsb08u9',
         template_id: 'template_6akmr1f',
         user_id: 'DJX_dy28zAjctAAIj',
         template_params: {
           to_name: "وتد الكيان العقارية",
-          from_name: String(formData.name || ""),
-          phone_number: String(formData.phone || ""),
-          request_type: "استفسار عن مشروع",
-          project: String(projectData?.name || ""),
-          message: String(formData.message || "لا يوجد رسالة")
+          content: content
         }
       };
 

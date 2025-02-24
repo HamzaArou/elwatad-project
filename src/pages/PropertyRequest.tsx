@@ -27,18 +27,22 @@ const PropertyRequest = () => {
     setIsSubmitting(true);
 
     try {
+      const content = `
+نوع الطلب: طلب عقار
+الاسم: ${formData.name || ""}
+رقم الجوال: ${formData.phone || ""}
+المدينة: ${formData.city || ""}
+نوع العقار: ${formData.property_type || ""}
+الطلب: العميل يبحث عن ${formData.property_type} في مدينة ${formData.city}
+      `.trim();
+
       const requestBody = {
         service_id: 'service_vsb08u9',
         template_id: 'template_6akmr1f',
         user_id: 'DJX_dy28zAjctAAIj',
         template_params: {
           to_name: "وتد الكيان العقارية",
-          from_name: String(formData.name || ""),
-          phone_number: String(formData.phone || ""),
-          request_type: "طلب عقار",
-          city: String(formData.city || ""),
-          property_type: String(formData.property_type || ""),
-          message: String(`العميل يبحث عن ${formData.property_type} في مدينة ${formData.city}`)
+          content: content
         }
       };
 

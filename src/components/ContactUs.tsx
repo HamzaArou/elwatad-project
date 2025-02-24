@@ -59,17 +59,21 @@ const ContactUs = ({
         ? projects.find(p => p.id === formData.selectedProject)?.name 
         : projectName;
 
+      const content = `
+نوع الطلب: استفسار عام
+الاسم: ${formData.name || ""}
+رقم الجوال: ${formData.phone || ""}
+${selectedProject ? `المشروع: ${selectedProject}` : ""}
+الرسالة: ${formData.message || "لا يوجد رسالة"}
+      `.trim();
+
       const requestBody = {
         service_id: 'service_vsb08u9',
         template_id: 'template_6akmr1f',
         user_id: 'DJX_dy28zAjctAAIj',
         template_params: {
           to_name: "وتد الكيان العقارية",
-          from_name: String(formData.name || ""),
-          phone_number: String(formData.phone || ""),
-          request_type: "استفسار عام",
-          project: String(selectedProject || ""),
-          message: String(formData.message || "لا يوجد رسالة")
+          content: content
         }
       };
 
