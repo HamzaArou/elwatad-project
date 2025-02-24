@@ -114,13 +114,12 @@ export default function ProjectDetails() {
           from_name: formData.name || "",
           phone_number: formData.phone || "",
           request_type: 'استفسار عن مشروع',
-          project: projectData?.name,
-          message: formData.message || 'لا يوجد رسالة',
-          reply_to: 'hamzaaroussi22@gmail.com'
+          project: projectData?.name || "",
+          message: formData.message || 'لا يوجد رسالة'
         }
       };
 
-      console.log('Sending email with:', requestBody);
+      console.log('Project Details - Sending email with:', requestBody);
 
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',

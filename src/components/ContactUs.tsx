@@ -57,7 +57,7 @@ const ContactUs = ({
     try {
       const selectedProject = formData.selectedProject 
         ? projects.find(p => p.id === formData.selectedProject)?.name 
-        : undefined;
+        : projectName;
 
       const requestBody = {
         service_id: 'service_vsb08u9',
@@ -68,13 +68,12 @@ const ContactUs = ({
           from_name: formData.name || "",
           phone_number: formData.phone || "",
           request_type: 'استفسار عام',
-          project: selectedProject || projectName,
-          message: formData.message || 'لا يوجد رسالة',
-          reply_to: 'hamzaaroussi22@gmail.com'
+          project: selectedProject || "",
+          message: formData.message || 'لا يوجد رسالة'
         }
       };
 
-      console.log('Sending email with:', requestBody);
+      console.log('Contact Form - Sending email with:', requestBody);
 
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',

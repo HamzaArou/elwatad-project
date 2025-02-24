@@ -36,14 +36,13 @@ const PropertyRequest = () => {
           from_name: formData.name || "",
           phone_number: formData.phone || "",
           request_type: 'طلب عقار',
-          city: formData.city,
-          property_type: formData.property_type,
-          message: `العميل يبحث عن ${formData.property_type} في مدينة ${formData.city}`,
-          reply_to: 'hamzaaroussi22@gmail.com'
+          city: formData.city || "",
+          property_type: formData.property_type || "",
+          message: `العميل يبحث عن ${formData.property_type} في مدينة ${formData.city}`
         }
       };
 
-      console.log('Sending email with:', requestBody);
+      console.log('Property Request - Sending email with:', requestBody);
 
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
