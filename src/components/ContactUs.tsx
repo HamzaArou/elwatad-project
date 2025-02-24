@@ -57,7 +57,7 @@ const ContactUs = ({
     try {
       const selectedProject = formData.selectedProject 
         ? projects.find(p => p.id === formData.selectedProject)?.name 
-        : 'لم يتم التحديد';
+        : undefined;
 
       const requestBody = {
         service_id: 'service_vsb08u9',
@@ -65,14 +65,15 @@ const ContactUs = ({
         user_id: 'DJX_dy28zAjctAAIj',
         template_params: {
           to_name: "وتد الكيان العقارية",
-          from_name: formData.name,
-          phone_number: formData.phone,
+          from_name: formData.name || "",
+          phone_number: formData.phone || "",
           request_type: 'استفسار عام',
-          project: projectName || selectedProject,
+          project: selectedProject || projectName,
           message: formData.message || 'لا يوجد رسالة',
-          to_email: 'hamzaaroussi22@gmail.com'
+          reply_to: 'hamzaaroussi22@gmail.com'
         }
       };
+
       console.log('Sending email with:', requestBody);
 
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
