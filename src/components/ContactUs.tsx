@@ -59,29 +59,32 @@ const ContactUs = ({
         ? projects.find(p => p.id === formData.selectedProject)?.name 
         : 'لم يتم التحديد';
 
+      const requestBody = {
+        service_id: 'service_vsb08u9',
+        template_id: 'template_6akmr1f',
+        user_id: 'DJX_dy28zAjctAAIj',
+        template_params: {
+          to_name: "وتد الكيان العقارية",
+          from_name: formData.name,
+          phone_number: formData.phone,
+          request_type: 'استفسار عام',
+          project: projectName || selectedProject,
+          message: formData.message || 'لا يوجد رسالة',
+          to_email: 'pr@wtd.com.sa'
+        }
+      };
+      console.log('Sending email with:', requestBody);
+
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          service_id: 'service_vsb08u9',
-          template_id: 'template_6akmr1f',
-          user_id: 'DJX_dy28zAjctAAIj',
-          template_params: {
-            to_name: "وتد الكيان العقارية",
-            from_name: formData.name,
-            phone_number: formData.phone,
-            request_type: 'استفسار عام',
-            project: projectName || selectedProject,
-            message: formData.message || 'لا يوجد رسالة',
-            to_email: 'pr@wtd.com.sa'
-          }
-        })
+        body: JSON.stringify(requestBody)
       });
 
       if (!response.ok) {
-        throw new Error(`EmailJS error: ${response.status} ${await response.text()}`);
+        throw new Error(`EmailJS error: ${response.status}`);
       }
 
       toast({
