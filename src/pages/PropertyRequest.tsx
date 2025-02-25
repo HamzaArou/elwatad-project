@@ -7,9 +7,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Building2, MapPin, Phone, User } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-
 const PropertyRequest = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -17,15 +18,12 @@ const PropertyRequest = () => {
     city: "جدة",
     property_type: "فيلا"
   });
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
       const content = `
 نوع الطلب: طلب عقار
@@ -35,7 +33,6 @@ const PropertyRequest = () => {
 نوع العقار: ${formData.property_type || ""}
 الطلب: العميل يبحث عن ${formData.property_type} في مدينة ${formData.city}
       `.trim();
-
       const requestBody = {
         service_id: 'service_vsb08u9',
         template_id: 'template_6akmr1f',
@@ -45,9 +42,7 @@ const PropertyRequest = () => {
           content: content
         }
       };
-
       console.log('Property Request - Final request:', JSON.stringify(requestBody, null, 2));
-
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
@@ -55,16 +50,13 @@ const PropertyRequest = () => {
         },
         body: JSON.stringify(requestBody)
       });
-
       if (!response.ok) {
         throw new Error(`EmailJS error: ${response.status}`);
       }
-
       toast({
         title: "تم إرسال طلبك بنجاح",
         description: "سنتواصل معك في أقرب وقت ممكن"
       });
-
       setFormData({
         name: "",
         phone: "",
@@ -82,9 +74,7 @@ const PropertyRequest = () => {
       setIsSubmitting(false);
     }
   };
-
-  return (
-    <div className="min-h-screen bg-white pt-[120px]">
+  return <div className="min-h-screen bg-white pt-[120px]">
       <div className="container mx-auto px-4 pb-12">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -98,13 +88,10 @@ const PropertyRequest = () => {
                         <User className="inline-block w-4 h-4 ml-2 text-gold" />
                         الاسم
                       </Label>
-                      <Input
-                        id="name"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="text-right mt-1"
-                        required
-                      />
+                      <Input id="name" value={formData.name} onChange={e => setFormData({
+                      ...formData,
+                      name: e.target.value
+                    })} className="text-right mt-1" required />
                     </div>
 
                     <div>
@@ -112,18 +99,13 @@ const PropertyRequest = () => {
                         <Phone className="inline-block w-4 h-4 ml-2 text-gold" />
                         رقم الجوال
                       </Label>
-                      <PhoneInput
-                        country="sa"
-                        value={formData.phone}
-                        onChange={(phone) => setFormData({ ...formData, phone })}
-                        inputProps={{
-                          required: true,
-                          id: "phone"
-                        }}
-                        containerClass="!w-full mt-1"
-                        inputClass="!w-full !h-10 !text-right !pr-[48px]"
-                        buttonClass="!border-input"
-                      />
+                      <PhoneInput country="sa" value={formData.phone} onChange={phone => setFormData({
+                      ...formData,
+                      phone
+                    })} inputProps={{
+                      required: true,
+                      id: "phone"
+                    }} containerClass="!w-full mt-1" inputClass="!w-full !h-10 !text-right !pr-[48px]" buttonClass="!border-input" />
                     </div>
 
                     <div>
@@ -132,20 +114,12 @@ const PropertyRequest = () => {
                         مدينة العقار
                       </Label>
                       <div className="grid grid-cols-2 gap-4 mt-2">
-                        {["جدة", "مكة"].map((city) => (
-                          <button
-                            key={city}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, city })}
-                            className={`py-3 px-6 text-center rounded-lg border-2 transition-all duration-300 ${
-                              formData.city === city
-                                ? "border-gold bg-gold text-white"
-                                : "border-gray-200 hover:border-gold text-gray-600"
-                            }`}
-                          >
+                        {["جدة", "مكة"].map(city => <button key={city} type="button" onClick={() => setFormData({
+                        ...formData,
+                        city
+                      })} className={`py-3 px-6 text-center rounded-lg border-2 transition-all duration-300 ${formData.city === city ? "border-gold bg-gold text-white" : "border-gray-200 hover:border-gold text-gray-600"}`}>
                             {city}
-                          </button>
-                        ))}
+                          </button>)}
                       </div>
                     </div>
 
@@ -155,29 +129,17 @@ const PropertyRequest = () => {
                         نوع العقار
                       </Label>
                       <div className="grid grid-cols-2 gap-4 mt-2">
-                        {["فيلا", "شقة", "روف", "أرض"].map((type) => (
-                          <button
-                            key={type}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, property_type: type })}
-                            className={`py-3 px-6 text-center rounded-lg border-2 transition-all duration-300 ${
-                              formData.property_type === type
-                                ? "border-gold bg-gold text-white"
-                                : "border-gray-200 hover:border-gold text-gray-600"
-                            }`}
-                          >
+                        {["فيلا", "شقة", "روف", "أرض"].map(type => <button key={type} type="button" onClick={() => setFormData({
+                        ...formData,
+                        property_type: type
+                      })} className={`py-3 px-6 text-center rounded-lg border-2 transition-all duration-300 ${formData.property_type === type ? "border-gold bg-gold text-white" : "border-gray-200 hover:border-gold text-gray-600"}`}>
                             {type}
-                          </button>
-                        ))}
+                          </button>)}
                       </div>
                     </div>
                   </div>
 
-                  <Button
-                    type="submit"
-                    className="w-full bg-gold hover:bg-gold/90 text-white text-lg h-12 mt-6"
-                    disabled={isSubmitting}
-                  >
+                  <Button type="submit" className="w-full bg-gold hover:bg-gold/90 text-white text-lg h-12 mt-6" disabled={isSubmitting}>
                     {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
                   </Button>
                 </form>
@@ -189,9 +151,7 @@ const PropertyRequest = () => {
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">
                   ابحث عن عقارك المثالي معنا
                 </h1>
-                <p className="text-gray-600 leading-relaxed">
-                  نقدم لك م��موعة متميزة من العقارات بمواقع استراتيجية وأسعار تنافسية
-                </p>
+                <p className="text-gray-600 leading-relaxed">نقدم لك مجموعة متميزة من العقارات بمواقع استراتيجية وأسعار تنافسية</p>
               </div>
 
               <Card className="border-0 shadow-lg bg-[#2F4447] text-white">
@@ -234,8 +194,6 @@ const PropertyRequest = () => {
           left: auto;
         }
       `}</style>
-    </div>
-  );
+    </div>;
 };
-
 export default PropertyRequest;
