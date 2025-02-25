@@ -53,7 +53,7 @@ const FeaturedProjects = () => {
       </div>;
   }
   return <section id="projects" className="pt-8 pb-2 bg-white">
-      <div className="container px-[13px] py-0 mx-0 my-0">
+      <div className="container px-[13px] py-0 mx-auto my-0">
         <div className="mb-6 text-right my-[32px]">
           <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">مشاريع وتد</h2>
         </div>
