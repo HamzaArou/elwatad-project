@@ -5,7 +5,6 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import ProjectsMap from "./ProjectsMap";
 
 const ContactUs = ({
   projectId,
@@ -116,14 +115,13 @@ ${selectedProject ? `المشروع: ${selectedProject}` : ""}
 
   return (
     <section className="bg-offWhite px-0 py-[70px]">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Contact Form Section with Title */}
-          <div className="space-y-6 h-[600px] flex flex-col">
-            <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665] mx-[74px]">
+      <div className="container mx-auto px-4 max-w-3xl">
+        <div className="flex justify-center">
+          <div className="space-y-6 w-full max-w-xl">
+            <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665] mx-auto">
               {projectId ? "سجل اهتمامك بهذا المشروع" : "سجل اهتمامك"}
             </h2>
-            <div className="bg-white shadow-lg p-8 flex-1 overflow-y-auto px-[30px] mx-0 rounded-2xl">
+            <div className="bg-white shadow-lg p-8 rounded-2xl">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <input 
