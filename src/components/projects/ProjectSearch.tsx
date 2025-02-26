@@ -3,16 +3,16 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Slider } from "../ui/slider";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
 export interface SearchFilters {
-  city: string;
+  cities: string[];
   district: string;
-  propertyType: string;
-  rooms: number | null;
-  bathrooms: number | null;
+  propertyTypes: string[];
+  rooms: number[];
+  bathrooms: number[];
   areaRange: [number, number];
   valueRange: [number, number];
 }
@@ -22,26 +22,26 @@ interface ProjectSearchProps {
 }
 
 const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
-  const [selectedCity, setSelectedCity] = useState<string>("");
-  const [selectedType, setSelectedType] = useState<string>("");
-  const [roomCount, setRoomCount] = useState<number | null>(null);
-  const [bathroomCount, setBathroomCount] = useState<number | null>(null);
+  const [selectedCities, setSelectedCities] = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedRooms, setSelectedRooms] = useState<number[]>([]);
+  const [selectedBathrooms, setSelectedBathrooms] = useState<number[]>([]);
   const [district, setDistrict] = useState("");
   const [areaRange, setAreaRange] = useState<[number, number]>([0, 1000]);
   const [valueRange, setValueRange] = useState<[number, number]>([0, 10000000]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const cities = ["جدة", "مكه"];
+  const cities = ["مدينة جدة", "مدينة مكة"];
   const propertyTypes = ["فيلا", "شقة", "روف", "أرض"];
   const numbers = Array.from({ length: 9 }, (_, i) => i + 1);
 
   const handleSearch = () => {
     onSearch({
-      city: selectedCity,
+      cities: selectedCities,
       district,
-      propertyType: selectedType,
-      rooms: roomCount,
-      bathrooms: bathroomCount,
+      propertyTypes: selectedTypes,
+      rooms: selectedRooms,
+      bathrooms: selectedBathrooms,
       areaRange,
       valueRange
     });
@@ -49,14 +49,20 @@ const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
   };
 
   const handleClearFilters = () => {
-    setSelectedCity("");
-    setSelectedType("");
-    setRoomCount(null);
-    setBathroomCount(null);
+    setSelectedCities([]);
+    setSelectedTypes([]);
+    setSelectedRooms([]);
+    setSelectedBathrooms([]);
     setDistrict("");
     setAreaRange([0, 1000]);
     setValueRange([0, 10000000]);
     onSearch(null);
+  };
+
+  const toggleArrayValue = <T,>(array: T[], value: T): T[] => {
+    return array.includes(value)
+      ? array.filter(item => item !== value)
+      : [...array, value];
   };
 
   return (
@@ -76,13 +82,13 @@ const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
                 {cities.map(city => (
                   <button
                     key={city}
-                    onClick={() => setSelectedCity(city)}
+                    onClick={() => setSelectedCities(prev => toggleArrayValue(prev, city))}
                     className={cn(
                       "py-2 px-4 rounded-full border border-white/20 transition-colors",
-                      selectedCity === city ? "bg-white text-black" : "hover:bg-white/10"
+                      selectedCities.includes(city) ? "bg-white text-black" : "hover:bg-white/10"
                     )}
                   >
-                    {city}
+                    {city.replace('مدينة ', '')}
                   </button>
                 ))}
               </div>
@@ -107,10 +113,10 @@ const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
                 {propertyTypes.map(type => (
                   <button
                     key={type}
-                    onClick={() => setSelectedType(type)}
+                    onClick={() => setSelectedTypes(prev => toggleArrayValue(prev, type))}
                     className={cn(
                       "py-2 px-4 rounded-full border border-white/20 transition-colors",
-                      selectedType === type ? "bg-white text-black" : "hover:bg-white/10"
+                      selectedTypes.includes(type) ? "bg-white text-black" : "hover:bg-white/10"
                     )}
                   >
                     {type}
@@ -126,10 +132,10 @@ const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
                 {numbers.map(num => (
                   <button
                     key={num}
-                    onClick={() => setRoomCount(num)}
+                    onClick={() => setSelectedRooms(prev => toggleArrayValue(prev, num))}
                     className={cn(
                       "py-2 px-4 rounded-full border border-white/20 transition-colors",
-                      roomCount === num ? "bg-white text-black" : "hover:bg-white/10"
+                      selectedRooms.includes(num) ? "bg-white text-black" : "hover:bg-white/10"
                     )}
                   >
                     {num}
@@ -145,10 +151,10 @@ const ProjectSearch = ({ onSearch }: ProjectSearchProps) => {
                 {numbers.map(num => (
                   <button
                     key={num}
-                    onClick={() => setBathroomCount(num)}
+                    onClick={() => setSelectedBathrooms(prev => toggleArrayValue(prev, num))}
                     className={cn(
                       "py-2 px-4 rounded-full border border-white/20 transition-colors",
-                      bathroomCount === num ? "bg-white text-black" : "hover:bg-white/10"
+                      selectedBathrooms.includes(num) ? "bg-white text-black" : "hover:bg-white/10"
                     )}
                   >
                     {num}

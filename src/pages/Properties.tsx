@@ -4,6 +4,8 @@ import ProjectCard from "@/components/projects/ProjectCard";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
 
 const Properties = () => {
   const [filters, setFilters] = useState<SearchFilters | null>(null);
@@ -38,23 +40,24 @@ const Properties = () => {
     if (!filters) return projects;
 
     return projects.filter(project => {
-      // City filter
-      if (filters.city && filters.city !== project.city) return false;
+      // City filter - check if any selected city matches
+      if (filters.cities.length > 0 && !filters.cities.includes(project.city))
+        return false;
 
       // District filter - case-insensitive partial match
       if (filters.district && !project.district.toLowerCase().includes(filters.district.toLowerCase()))
         return false;
 
-      // Property type filter
-      if (filters.propertyType && project.property_status !== filters.propertyType)
+      // Property type filter - check if any selected type matches
+      if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes(project.property_status))
         return false;
 
-      // Rooms filter - exact match
-      if (filters.rooms !== null && project.rooms !== filters.rooms)
+      // Rooms filter - check if any selected room count matches
+      if (filters.rooms.length > 0 && !filters.rooms.includes(project.rooms))
         return false;
 
-      // Bathrooms filter - exact match
-      if (filters.bathrooms !== null && project.bathrooms !== filters.bathrooms)
+      // Bathrooms filter - check if any selected bathroom count matches
+      if (filters.bathrooms.length > 0 && !filters.bathrooms.includes(project.bathrooms))
         return false;
 
       // Area range filter
@@ -72,6 +75,10 @@ const Properties = () => {
       return true;
     });
   }, [projects, filters]);
+
+  const handleClearFilters = () => {
+    setFilters(null);
+  };
 
   if (isLoading) {
     return (
@@ -102,7 +109,15 @@ const Properties = () => {
           ) : (
             <div className="text-center py-12">
               <p className="text-xl text-gray-600">لا توجد نتائج تطابق معايير البحث</p>
-              <p className="text-gray-500 mt-2">يرجى تعديل الفلترات والمحاولة مرة أخرى</p>
+              <p className="text-gray-500 mt-2 mb-6">يرجى تعديل الفلترات والمحاولة مرة أخرى</p>
+              <Button
+                onClick={handleClearFilters}
+                variant="outline"
+                className="mx-auto flex items-center gap-2"
+              >
+                <RotateCcw className="w-4 h-4" />
+                مسح الفلتر
+              </Button>
             </div>
           )}
         </div>
