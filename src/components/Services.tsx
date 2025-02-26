@@ -1,5 +1,7 @@
+
 import { Building2, Store, Wrench, Headphones, Building, CircleDollarSign, BrainCircuit, Home, Calculator, Sparkles } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
+
 const services = [{
   icon: Store,
   title: "التسويق العقاري",
@@ -13,14 +15,11 @@ const services = [{
   title: "إدارة الأملاك",
   description: "خدمات متكاملة لإدارة وتأجير عقاراتك بكل احترافية، لضمان أعلى عائد استثماري"
 }, {
-  icon: Calculator,
-  title: "التقييم العقاري",
-  description: "تقييم دقيق لقيمة العقار بناءً على دراسات سوقية متخصصة"
-}, {
   icon: Sparkles,
   title: "خدمات ما بعد البيع",
   description: "متابعة الإجراءات، الصيانة، وتجهيز العقارات لتجربة سلسة ومرضية"
 }];
+
 const Services = () => {
   return <section className="pt-12 pb-16 bg-white">
       <div className="container mx-auto px-[15px] py-[6px]">
@@ -39,8 +38,9 @@ const Services = () => {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {services.map((service, index) => <Card key={index} className="bg-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border-2 hover:border-[#B69665]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {services.map((service, index) => (
+            <Card key={index} className="bg-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border-2 hover:border-[#B69665]">
               <CardContent className="p-6 text-center">
                 <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#234F27]/10 to-[#234F27]/20 flex items-center justify-center">
                   <service.icon className="w-7 h-7 text-[#234F27]" />
@@ -52,9 +52,11 @@ const Services = () => {
                   {service.description}
                 </p>
               </CardContent>
-            </Card>)}
+            </Card>
+          ))}
         </div>
       </div>
     </section>;
 };
+
 export default Services;
