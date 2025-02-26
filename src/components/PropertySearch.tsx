@@ -116,10 +116,7 @@ const PropertySearch = () => {
                     <button 
                       key={type.id}
                       onClick={() => handleTypeSelect(type.name)}
-                      className={cn(
-                        "py-3 px-4 rounded-lg text-center transition-all duration-300 w-full",
-                        selectedType === type.name ? "bg-gold text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                      )}
+                      className="py-3 px-4 rounded-lg text-center transition-all duration-300 w-full bg-gold text-white hover:bg-gold/90"
                     >
                       <span className="text-lg font-semibold whitespace-nowrap">{type.name}</span>
                     </button>
