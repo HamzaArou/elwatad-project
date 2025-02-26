@@ -5,6 +5,15 @@ import { useNavigate } from "react-router-dom";
 const AboutUs = () => {
   const navigate = useNavigate();
 
+  const handleNavigate = () => {
+    // Navigate to About page and scroll to top
+    navigate('/about');
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return <section className="py-16 overflow-hidden bg-[#2f4447]">
       <div className="container mx-auto px-4 max-w-[1200px]">
         {/* Title visible only on mobile */}
@@ -30,7 +39,7 @@ const AboutUs = () => {
 
               <div className="text-center">
                 <Button 
-                  onClick={() => navigate('/about')}
+                  onClick={handleNavigate}
                   className="bg-[#B69665] hover:bg-[#B69665]/90 text-white font-bold text-lg rounded-full shadow-lg transition duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-105 px-8 py-6"
                 >
                   اعرف المزيد عن وتد
