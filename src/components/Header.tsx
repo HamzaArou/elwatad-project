@@ -34,7 +34,7 @@ const Header = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      if (!location.pathname.includes('/project/')) {
+      if (location.pathname === '/') {
         const newsSection = document.querySelector('section:nth-of-type(2)');
         const header = document.querySelector('header');
         
@@ -43,9 +43,9 @@ const Header = () => {
           const newsSectionTop = newsSection.getBoundingClientRect().top + window.scrollY;
           setIsVisible(currentScrollY + headerBottom <= newsSectionTop);
         }
+        setIsScrolled(currentScrollY > 50);
       }
-
-      setIsScrolled(currentScrollY > 50);
+      
       setLastScrollY(currentScrollY);
     };
 
@@ -62,7 +62,6 @@ const Header = () => {
   const scrollToSection = async (sectionId: string) => {
     setIsMobileMenuOpen(false);
 
-    // Handle special navigation cases
     if (sectionId === 'about') {
       handleNavigation('/about');
       return;
@@ -76,10 +75,8 @@ const Header = () => {
       return;
     }
 
-    // If we're not on the home page, navigate there first
     if (location.pathname !== '/') {
       navigate('/');
-      // Wait for navigation to complete
       setTimeout(() => {
         const section = document.getElementById(sectionId);
         if (section) {
@@ -130,19 +127,20 @@ const Header = () => {
     { href: "services", text: "خدماتنا" },
   ];
 
+  const isHomePage = location.pathname === '/';
   const isProjectPage = location.pathname.includes('/project/');
   const isPrivacyPage = location.pathname === '/privacy-policy';
   const isPropertyRequestPage = location.pathname === '/property-request';
   const isPropertiesPage = location.pathname === '/properties';
   const shouldUseGoldText = (isPropertyRequestPage || isPropertiesPage) && !isScrolled;
 
+  const headerBackground = isHomePage 
+    ? isScrolled ? "bg-black/80 backdrop-blur-sm" : "bg-transparent"
+    : "bg-black";
+
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-black/80 backdrop-blur-sm" : "bg-transparent"
-      } h-[120px] transform ${
-        !isProjectPage && !isVisible ? "-translate-y-full" : "translate-y-0"
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-colors duration-300 ${headerBackground} h-[120px]`}
     >
       <div className="w-full h-full flex items-center justify-between px-6 md:px-10" dir="ltr">
         <div className="flex items-center gap-4">
