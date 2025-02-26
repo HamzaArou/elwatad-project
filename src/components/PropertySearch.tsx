@@ -33,38 +33,37 @@ const PropertySearch = () => {
     name: "أرض"
   }];
 
+  const navigateToProperties = (filters: any) => {
+    navigate('/properties', { 
+      state: { initialFilters: filters }
+    });
+    window.scrollTo(0, 0);
+  };
+
   const handleCitySelect = (cityName: string) => {
     setSelectedCity(cityName);
     const fullCityName = `مدينة ${cityName}`;
-    navigate('/properties', { 
-      state: { 
-        initialFilters: {
-          cities: [fullCityName],
-          district: "",
-          propertyTypes: [],
-          rooms: [],
-          bathrooms: [],
-          areaRange: [0, 1000],
-          valueRange: [0, 10000000]
-        }
-      }
+    navigateToProperties({
+      cities: [fullCityName],
+      district: "",
+      propertyTypes: [],
+      rooms: [],
+      bathrooms: [],
+      areaRange: [0, 1000],
+      valueRange: [0, 10000000]
     });
   };
 
   const handleTypeSelect = (typeName: string) => {
     setSelectedType(typeName);
-    navigate('/properties', { 
-      state: { 
-        initialFilters: {
-          cities: [],
-          district: "",
-          propertyTypes: [typeName],
-          rooms: [],
-          bathrooms: [],
-          areaRange: [0, 1000],
-          valueRange: [0, 10000000]
-        }
-      }
+    navigateToProperties({
+      cities: [],
+      district: "",
+      propertyTypes: [typeName],
+      rooms: [],
+      bathrooms: [],
+      areaRange: [0, 1000],
+      valueRange: [0, 10000000]
     });
   };
 
