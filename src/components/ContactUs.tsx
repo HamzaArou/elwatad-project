@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -6,7 +5,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { SplashCursor } from "./ui/splash-cursor";
+import ProjectsMap from "./ProjectsMap";
 
 const ContactUs = ({
   projectId,
@@ -17,6 +16,7 @@ const ContactUs = ({
 }) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -115,8 +115,8 @@ ${selectedProject ? `المشروع: ${selectedProject}` : ""}
   };
 
   return (
-    <section className="bg-offWhite px-0 py-[70px] relative overflow-hidden">
-      <div className="container mx-auto px-4 max-w-6xl relative z-10">
+    <section className="bg-offWhite px-0 py-[70px]">
+      <div className="container mx-auto px-4 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Form Section with Title */}
           <div className="space-y-6 h-[600px] flex flex-col">
@@ -208,10 +208,6 @@ ${selectedProject ? `المشروع: ${selectedProject}` : ""}
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="absolute inset-0 z-0">
-        <SplashCursor />
       </div>
 
       <style>{`
