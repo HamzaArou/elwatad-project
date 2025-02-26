@@ -8,10 +8,9 @@ const AboutUs = () => {
   const handleNavigate = () => {
     // Navigate to About page and scroll to top
     navigate('/about');
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 0);
   };
 
   return <section className="py-16 overflow-hidden bg-[#2f4447]">
