@@ -39,9 +39,9 @@ const Properties = () => {
 
     return projects.filter(project => {
       // City filter
-      if (filters.city && `مدينة ${filters.city}` !== project.city) return false;
+      if (filters.city && filters.city !== project.city) return false;
 
-      // District filter
+      // District filter - case-insensitive partial match
       if (filters.district && !project.district.toLowerCase().includes(filters.district.toLowerCase()))
         return false;
 
@@ -49,21 +49,25 @@ const Properties = () => {
       if (filters.propertyType && project.property_status !== filters.propertyType)
         return false;
 
-      // Rooms filter
+      // Rooms filter - exact match
       if (filters.rooms !== null && project.rooms !== filters.rooms)
         return false;
 
-      // Bathrooms filter
+      // Bathrooms filter - exact match
       if (filters.bathrooms !== null && project.bathrooms !== filters.bathrooms)
         return false;
 
       // Area range filter
-      if (project.area < filters.areaRange[0] || project.area > filters.areaRange[1])
-        return false;
+      if (filters.areaRange && (
+        project.area < filters.areaRange[0] ||
+        project.area > filters.areaRange[1]
+      )) return false;
 
       // Value range filter
-      if (project.property_value < filters.valueRange[0] || project.property_value > filters.valueRange[1])
-        return false;
+      if (filters.valueRange && (
+        project.property_value < filters.valueRange[0] ||
+        project.property_value > filters.valueRange[1]
+      )) return false;
 
       return true;
     });
