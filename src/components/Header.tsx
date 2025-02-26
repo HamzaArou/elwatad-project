@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Menu, X, Phone, Heart, UserRound } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -134,7 +133,8 @@ const Header = () => {
   const isProjectPage = location.pathname.includes('/project/');
   const isPrivacyPage = location.pathname === '/privacy-policy';
   const isPropertyRequestPage = location.pathname === '/property-request';
-  const shouldUseGoldText = isPropertyRequestPage && !isScrolled;
+  const isPropertiesPage = location.pathname === '/properties';
+  const shouldUseGoldText = (isPropertyRequestPage || isPropertiesPage) && !isScrolled;
 
   return (
     <header
@@ -149,7 +149,9 @@ const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:text-gold transition-colors"
+            className={`${shouldUseGoldText ? 'text-[#B69665]' : 
+              isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'} 
+              hover:text-gold transition-colors`}
             onClick={handleAuthClick}
           >
             <UserRound className="h-6 w-6" />
@@ -157,7 +159,9 @@ const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:text-gold transition-colors"
+            className={`${shouldUseGoldText ? 'text-[#B69665]' : 
+              isProjectPage || isPrivacyPage && !isScrolled ? 'text-black' : 'text-white'} 
+              hover:text-gold transition-colors`}
             onClick={handleFavoritesClick}
           >
             <Heart className="h-6 w-6" />
