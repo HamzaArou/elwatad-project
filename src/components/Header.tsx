@@ -135,7 +135,11 @@ const Header = () => {
   const isPrivacyPage = location.pathname === '/privacy-policy';
   const isPropertyRequestPage = location.pathname === '/property-request';
   const isPropertiesPage = location.pathname === '/properties';
-  const shouldUseGoldText = (isPropertyRequestPage || isPropertiesPage) && !isScrolled;
+  const isRegisterPage = location.pathname === '/register';
+  const isProfilePage = location.pathname === '/profile';
+  
+  // Apply gold text for property pages, register, and profile pages
+  const shouldUseGoldText = (isPropertyRequestPage || isPropertiesPage || isRegisterPage || isProfilePage) && !isScrolled;
 
   return (
     <header

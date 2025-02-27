@@ -46,7 +46,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen pt-32 px-4">
+    <div className="min-h-screen pt-32 px-4 mt-[120px]">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold text-right mb-8">الملف الشخصي</h1>
         
