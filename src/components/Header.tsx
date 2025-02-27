@@ -125,7 +125,7 @@ const Header = () => {
 
   const navLinks = [
     { href: "hero", text: "الرئيسية" },
-    { href: "projects", text: "العقارات" },
+    { href: "properties", text: "العقارات" },
     { href: "about", text: "من نحن" },
     { href: "request", text: "اطلب عقارك" },
     { href: "services", text: "خدماتنا" },

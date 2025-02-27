@@ -92,7 +92,7 @@ const Footer = () => {
                   id: 'hero',
                   text: 'الرئيسية'
                 }, {
-                  id: 'projects',
+                  id: 'properties',
                   text: 'العقارات'
                 }, {
                   id: 'about',
