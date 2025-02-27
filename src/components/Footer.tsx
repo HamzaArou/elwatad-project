@@ -1,3 +1,4 @@
+
 import { Twitter, Instagram, Mail, Phone } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -91,7 +92,7 @@ const Footer = () => {
                   id: 'hero',
                   text: 'الرئيسية'
                 }, {
-                  id: 'properties',
+                  id: 'projects',
                   text: 'العقارات'
                 }, {
                   id: 'about',

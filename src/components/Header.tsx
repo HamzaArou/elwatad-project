@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Menu, X, Phone, Heart, UserRound } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -124,7 +125,7 @@ const Header = () => {
 
   const navLinks = [
     { href: "hero", text: "الرئيسية" },
-    { href: "properties", text: "العقارات" },
+    { href: "projects", text: "العقارات" },
     { href: "about", text: "من نحن" },
     { href: "request", text: "اطلب عقارك" },
     { href: "services", text: "خدماتنا" },
