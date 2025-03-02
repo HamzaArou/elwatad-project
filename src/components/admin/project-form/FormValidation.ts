@@ -1,4 +1,3 @@
-
 import { UseFormReturn } from "react-hook-form";
 import { ProjectFormValues, TabType } from "@/types/project";
 import { useToast } from "@/hooks/use-toast";
@@ -43,16 +42,7 @@ export const useFormValidation = (
         break;
 
       case "location":
-        isValid = await form.trigger(["address", "lat", "lng"]);
-        
-        if (!values.lat || !values.lng) {
-          toast({
-            title: "خطأ",
-            description: "الرجاء تحديد إحداثيات الموقع (خط العرض وخط الطول)",
-            variant: "destructive",
-          });
-          return false;
-        }
+        isValid = await form.trigger("address");
         break;
 
       case "360views":

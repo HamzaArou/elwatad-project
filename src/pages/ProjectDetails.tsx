@@ -12,7 +12,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useToast } from "@/hooks/use-toast";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import ProjectsMap from "@/components/ProjectsMap";
 
 export default function ProjectDetails() {
   const { id } = useParams<{ id: string; }>();
@@ -48,9 +47,7 @@ export default function ProjectDetails() {
           rooms,
           bathrooms,
           area,
-          thumbnail_url,
-          lat,
-          lng
+          thumbnail_url
         `).eq("id", id).single();
       if (projectError) throw projectError;
       const {
@@ -71,8 +68,8 @@ export default function ProjectDetails() {
       return {
         ...project,
         details: details?.details,
-        lat: project?.lat || details?.lat,
-        lng: project?.lng || details?.lng,
+        lat: details?.lat,
+        lng: details?.lng,
         media: media || [],
         features: features || []
       };
@@ -217,15 +214,6 @@ export default function ProjectDetails() {
     return <div>Project not found</div>;
   }
 
-  const locationForMap = projectData.lat && projectData.lng 
-    ? {
-        lat: projectData.lat,
-        lng: projectData.lng,
-        name: projectData.name,
-        location: projectData.location || projectData.district || 'مكة المكرمة'
-      } 
-    : undefined;
-
   const galleryItems = projectData.media.map(item => ({
     id: item.id,
     url: item.media_url,
@@ -294,11 +282,6 @@ export default function ProjectDetails() {
 
       <div className="container mx-auto px-4 py-8">
         <ProjectGallery gallery={galleryItems} />
-      </div>
-
-      <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-4 text-right">موقع المشروع</h2>
-        <ProjectsMap specificLocation={locationForMap} />
       </div>
 
       <div className="container mx-auto px-4 pb-12">

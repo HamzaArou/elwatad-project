@@ -50,7 +50,7 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
   return (
     <div className="space-y-4">
       <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`}
+        src="https://maps.googleapis.com/maps/api/js?libraries=places"
         onLoad={() => setScriptLoaded(true)}
       />
 

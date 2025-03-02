@@ -1,7 +1,8 @@
 
 import { MapPin } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import Script from "@/components/ui/script";
+import { useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 interface ProjectLocationProps {
   location: string;
@@ -11,225 +12,84 @@ interface ProjectLocationProps {
 
 export default function ProjectLocation({ location, lat, lng }: ProjectLocationProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [districtName, setDistrictName] = useState<string>(location);
-  const mapInstance = useRef<google.maps.Map | null>(null);
-  const districtPolygon = useRef<google.maps.Polygon | null>(null);
+  const mapInstance = useRef<L.Map | null>(null);
+  const markerRef = useRef<L.Marker | null>(null);
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ", Saudi Arabia")}`;
 
-  // Initialize and setup the map
-  const initializeMap = () => {
-    if (!mapContainer.current || !lat || !lng || !window.google) return;
-
-    const center = { lat, lng };
-    
-    // Create the map
-    const mapOptions: google.maps.MapOptions = {
-      center,
-      zoom: 14,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: true,
-      zoomControl: true,
-      scrollwheel: false,
-      gestureHandling: 'cooperative',
-      styles: [
-        { 
-          featureType: "administrative",
-          elementType: "labels.text",
-          stylers: [{ color: "#333333" }]
-        },
-        {
-          featureType: "administrative",
-          elementType: "geometry.fill",
-          stylers: [{ visibility: "on" }]
-        },
-        {
-          featureType: "administrative.locality",
-          elementType: "labels",
-          stylers: [{ visibility: "on" }]
-        },
-        {
-          featureType: "administrative.neighborhood",
-          elementType: "labels",
-          stylers: [{ visibility: "on" }]
-        },
-        {
-          featureType: "poi",
-          elementType: "labels",
-          stylers: [{ visibility: "off" }]
-        }
-      ]
-    };
-
-    // Create map instance
-    mapInstance.current = new google.maps.Map(mapContainer.current, mapOptions);
-
-    // Get district information using Geocoding API
-    getDistrictInfo(lat, lng);
-  };
-
-  // Get district information from latitude and longitude
-  const getDistrictInfo = (lat: number, lng: number) => {
-    const geocoder = new google.maps.Geocoder();
-    const latlng = { lat, lng };
-
-    geocoder.geocode({ location: latlng }, (results, status) => {
-      if (status === "OK" && results) {
-        // Process through results to find district/neighborhood level
-        let district = "";
-        let foundDistrict = false;
-        
-        // Find the most specific area (neighborhood or sublocality)
-        for (const result of results) {
-          // Check for neighborhood first (most specific)
-          for (const component of result.address_components) {
-            if (component.types.includes("neighborhood")) {
-              district = component.long_name;
-              foundDistrict = true;
-              break;
-            }
-          }
-          
-          // If no neighborhood found, check for sublocality
-          if (!foundDistrict) {
-            for (const component of result.address_components) {
-              if (component.types.includes("sublocality") || 
-                  component.types.includes("sublocality_level_1")) {
-                district = component.long_name;
-                foundDistrict = true;
-                break;
-              }
-            }
-          }
-          
-          if (foundDistrict) break;
-        }
-        
-        // If still no district found, use locality or administrative_area_level_3
-        if (!foundDistrict) {
-          for (const result of results) {
-            for (const component of result.address_components) {
-              if (component.types.includes("locality") || 
-                  component.types.includes("administrative_area_level_3")) {
-                district = component.long_name;
-                foundDistrict = true;
-                break;
-              }
-            }
-            if (foundDistrict) break;
-          }
-        }
-        
-        // Update district name if found
-        if (district) {
-          setDistrictName(district);
-        }
-        
-        // Try to find the district boundary using the Places API
-        fetchDistrictBoundary(district || location, lat, lng);
-      } else {
-        console.error("Geocoder failed due to: " + status);
-      }
-    });
-  };
-  
-  // Fetch the boundary of the district and display it on the map
-  const fetchDistrictBoundary = (districtName: string, lat: number, lng: number) => {
-    if (!mapInstance.current) return;
-    
-    // For now, simulate district boundary with an irregular polygon
-    // In production, you would use the Google Maps Data Layer or Geometry Library
-    // to fetch actual boundaries through the Places API
-    
-    const center = new google.maps.LatLng(lat, lng);
-    
-    // Create an irregular polygon around the center
-    // This is a placeholder - real implementation would use actual district boundaries
-    const points = 8;
-    const radius = 800; // meters
-    const irregularity = 0.4; // 0-1, how irregular the shape is
-    
-    const polygonCoords = [];
-    const angleStep = (Math.PI * 2) / points;
-    
-    for (let i = 0; i < points; i++) {
-      const angle = i * angleStep;
-      const radiusVariation = (1 - (Math.random() * irregularity * 2));
-      const currentRadius = radius * radiusVariation;
-      
-      // Calculate point coordinates
-      const x = lng + (Math.cos(angle) * currentRadius / 111320); // 1 degree ~ 111,320 meters
-      const y = lat + (Math.sin(angle) * currentRadius / (111320 * Math.cos(lat * (Math.PI / 180))));
-      
-      polygonCoords.push({ lat: y, lng: x });
-    }
-    
-    // Close the polygon
-    polygonCoords.push(polygonCoords[0]);
-    
-    // Remove existing polygon if any
-    if (districtPolygon.current) {
-      districtPolygon.current.setMap(null);
-    }
-    
-    // Create new polygon
-    districtPolygon.current = new google.maps.Polygon({
-      paths: polygonCoords,
-      strokeColor: "#e74c3c",
-      strokeOpacity: 0.8,
-      strokeWeight: 3,
-      fillColor: "#B69665",
-      fillOpacity: 0.35,
-      map: mapInstance.current,
-      geodesic: true
-    });
-    
-    // Fit bounds to the polygon
-    const bounds = new google.maps.LatLngBounds();
-    polygonCoords.forEach(coord => bounds.extend(coord));
-    mapInstance.current.fitBounds(bounds);
-    
-    // Add a label for the district
-    const labelMarker = new google.maps.Marker({
-      position: bounds.getCenter(),
-      map: mapInstance.current,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 0, // Makes the marker itself invisible
-      },
-      label: {
-        text: districtName,
-        color: "#000000",
-        fontWeight: "bold",
-        fontSize: "16px",
-        className: "district-label"
-      }
-    });
-  };
-
   useEffect(() => {
-    if (mapLoaded && lat && lng) {
-      initializeMap();
+    if (!mapContainer.current || !lat || !lng) return;
+
+    // Initialize map if it doesn't exist
+    if (!mapInstance.current) {
+      const map = L.map(mapContainer.current, {
+        center: [lat, lng],
+        zoom: 15,
+        scrollWheelZoom: false
+      });
+
+      L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=0xThwp5hzLtXF2Nvi1LZ&language=ar', {
+        attribution: '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e',
+        maxZoom: 18,
+      }).addTo(map);
+
+      mapInstance.current = map;
+
+      // Create custom icon
+      const customIcon = L.icon({
+        iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+          <svg width="40" height="50" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 0C8.954 0 0 8.954 0 20c0 15 20 30 20 30s20-15 20-30c0-11.046-8.954-20-20-20z" fill="#000000"/>
+            <path d="M20 4C10.059 4 2 12.059 2 22c0 13 18 26 18 26s18-13 18-26c0-9.941-8.059-18-18-18z" fill="#606060"/>
+            <circle cx="20" cy="20" r="12" fill="white"/>
+            <image 
+              href="/lovable-uploads/f4db9871-8689-4fc8-be39-f46dfdcd8609.png" 
+              x="8" 
+              y="8" 
+              width="24" 
+              height="24" 
+              preserveAspectRatio="xMidYMid meet"
+            />
+          </svg>
+        `),
+        iconSize: [40, 50],
+        iconAnchor: [20, 50],
+        popupAnchor: [0, -45],
+      });
+
+      // Add marker
+      const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+      markerRef.current = marker;
+
+      // Add popup with location name
+      const popupContent = document.createElement('div');
+      popupContent.className = 'rtl-popup';
+      popupContent.innerHTML = `
+        <div style="direction: rtl; text-align: right; font-family: 'IBM Plex Sans Arabic', sans-serif;">
+          <p style="font-size: 1rem; margin: 0;">${location}</p>
+        </div>
+      `;
+      marker.bindPopup(popupContent);
+    } else {
+      // Update existing map view
+      mapInstance.current.setView([lat, lng], 15);
+      if (markerRef.current) {
+        markerRef.current.setLatLng([lat, lng]);
+      }
     }
-    
+
     // Cleanup
     return () => {
-      if (districtPolygon.current) {
-        districtPolygon.current.setMap(null);
+      if (mapInstance.current) {
+        mapInstance.current.remove();
+        mapInstance.current = null;
+        markerRef.current = null;
       }
     };
-  }, [mapLoaded, lat, lng, location]);
+  }, [lat, lng, location]);
 
   return (
     <div className="space-y-4">
-      <Script 
-        src={`https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places,geometry`}
-        onLoad={() => setMapLoaded(true)}
-      />
-      
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold">الموقع</h3>
         <a
@@ -242,7 +102,7 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
           فتح في خريطة جوجل
         </a>
       </div>
-      <p className="text-gray-600 mb-4">{districtName}</p>
+      <p className="text-gray-600 mb-4">{location}</p>
       <div className="h-[400px] w-full rounded-lg overflow-hidden shadow-lg">
         {(!lat || !lng) ? (
           <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500">
@@ -253,23 +113,14 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
         )}
       </div>
       <style>{`
-        .district-label {
-          background-color: rgba(255, 255, 255, 0.9);
-          padding: 6px 12px;
-          border-radius: 4px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        .rtl-popup .leaflet-popup-content {
           direction: rtl;
+          text-align: right;
           font-family: 'IBM Plex Sans Arabic', sans-serif;
-          border: 2px solid #B69665;
-          z-index: 1000;
+          margin: 0.5rem;
         }
-        .district-label-container {
-          white-space: nowrap;
-          color: #000;
-          font-weight: bold;
-          font-size: 1.2rem;
-          text-align: center;
-          direction: rtl;
+        .leaflet-container {
+          font: 16px/1.5 "IBM Plex Sans Arabic", sans-serif !important;
         }
       `}</style>
     </div>
