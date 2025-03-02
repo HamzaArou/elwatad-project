@@ -78,43 +78,11 @@ const DISTRICT_POLYGONS: Record<string, { name: string; arabicName: string; coor
       [21.5320, 39.1780], [21.5370, 39.1850], [21.5310, 39.1900], 
       [21.5260, 39.1840], [21.5320, 39.1780]
     ]
-  },
-  // Adding more districts for common postal codes
-  'حي الخالدية': {
-    name: 'Al Khalidiyyah',
-    arabicName: 'حي الخالدية',
-    coords: [
-      [21.5433, 39.1682], [21.5483, 39.1732], [21.5413, 39.1782], 
-      [21.5363, 39.1732], [21.5433, 39.1682]
-    ]
-  },
-  'حي البوادي': {
-    name: 'Al Bawadi',
-    arabicName: 'حي البوادي',
-    coords: [
-      [21.4240, 39.8320], [21.4290, 39.8370], [21.4220, 39.8420], 
-      [21.4170, 39.8370], [21.4240, 39.8320]
-    ]
-  },
-  'حي الشاطئ': {
-    name: 'Al Shatie',
-    arabicName: 'حي الشاطئ',
-    coords: [
-      [21.5930, 39.1130], [21.5980, 39.1180], [21.5910, 39.1230], 
-      [21.5860, 39.1180], [21.5930, 39.1130]
-    ]
-  },
-  'حي الحمراء': {
-    name: 'Al Hamra',
-    arabicName: 'حي الحمراء',
-    coords: [
-      [21.5730, 39.1330], [21.5780, 39.1380], [21.5710, 39.1430], 
-      [21.5660, 39.1380], [21.5730, 39.1330]
-    ]
   }
 };
 
 // Expanded mapping of postal codes to district names
+// This is a simplified example, would need a more comprehensive database for production
 const POSTAL_CODE_TO_DISTRICT: Record<string, string> = {
   // Makkah postal codes
   '21955': 'منى',
@@ -127,28 +95,19 @@ const POSTAL_CODE_TO_DISTRICT: Record<string, string> = {
   '12211': 'السليمانية',
   // Jeddah postal codes
   '23434': 'الروضة',
-  '23433': 'حي الخالدية',
-  '23435': 'حي الشاطئ',
-  '23436': 'حي الحمراء',
-  // Additional postal codes
+  // Additional postal codes - cover more areas
   '21411': 'العزيزية',
   '21442': 'منى',
   '21452': 'المسفلة',
   '11511': 'النرجس',
   '12222': 'السليمانية',
-  '12344': 'حي البوادي',
-  '12411': 'النرجس',  // Adding the postal code from your example
-  // Fallbacks for testing
-  '12345': 'النرجس',
-  '54321': 'الملز',
+  '23435': 'الروضة',
+  '12345': 'النرجس',  // Fallback for testing
+  '54321': 'الملز',    // Fallback for testing
 };
 
 // Add a default district for unknown postal codes
-const DEFAULT_DISTRICT: {
-  name: string;
-  arabicName: string;
-  coords: [number, number][];
-} = {
+const DEFAULT_DISTRICT = {
   name: 'Default District',
   arabicName: 'المنطقة الافتراضية',
   coords: [
@@ -173,13 +132,8 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ", Saudi Arabia")}`;
 
   // Find district based on postal code
-  const findDistrictByPostalCode = (code: string): {
-    name: string;
-    arabicName: string;
-    coords: [number, number][];
-  } | null => {
+  const findDistrictByPostalCode = (code: string) => {
     console.log("Finding district for postal code:", code);
-    
     // Try exact match first
     const districtKey = POSTAL_CODE_TO_DISTRICT[code];
     
@@ -191,8 +145,6 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
     // If no exact match, try to find a postal code with the same prefix (first 3 digits)
     if (code.length >= 3) {
       const prefix = code.substring(0, 3);
-      console.log("Trying prefix match with:", prefix);
-      
       for (const [postalCode, district] of Object.entries(POSTAL_CODE_TO_DISTRICT)) {
         if (postalCode.startsWith(prefix) && DISTRICT_POLYGONS[district]) {
           console.log("Found district by prefix match:", district);
@@ -211,11 +163,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
   };
 
   // Function to find the nearest district based on lat/lng
-  const findNearestDistrict = async (latitude: number, longitude: number): Promise<{
-    name: string;
-    arabicName: string;
-    coords: [number, number][];
-  } | null> => {
+  const findNearestDistrict = async (latitude: number, longitude: number) => {
     console.log("Finding nearest district for:", latitude, longitude);
 
     try {
@@ -269,76 +217,43 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       }
       
       console.log("Closest district:", closestDistrict?.name);
-      
-      if (closestDistrict) {
-        return closestDistrict;
-      }
-      
-      // If all else fails, generate a district around the coordinates
-      return generateDistrictAroundCoordinates(latitude, longitude);
-      
+      return closestDistrict;
     } catch (error) {
       console.error("Error finding district:", error);
       
       // Fallback: generate a district based on coordinates
-      return generateDistrictAroundCoordinates(latitude, longitude);
+      return {
+        name: `Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
+        arabicName: `الموقع (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
+        coords: [
+          [latitude - 0.01, longitude - 0.01],
+          [latitude + 0.01, longitude - 0.01],
+          [latitude + 0.01, longitude + 0.01],
+          [latitude - 0.01, longitude + 0.01],
+          [latitude - 0.01, longitude - 0.01]
+        ]
+      };
     }
-  };
-  
-  // Create a district polygon around coordinates when no district is found
-  const generateDistrictAroundCoordinates = (latitude: number, longitude: number): {
-    name: string;
-    arabicName: string;
-    coords: [number, number][];
-  } => {
-    console.log("Generating district around coordinates:", latitude, longitude);
-    
-    // Create a polygon around the coordinates
-    const offset = 0.01; // About 1km
-    const district: {
-      name: string;
-      arabicName: string;
-      coords: [number, number][];
-    } = {
-      name: `Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-      arabicName: `الموقع (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-      coords: [
-        [latitude - offset, longitude - offset],
-        [latitude + offset, longitude - offset],
-        [latitude + offset, longitude + offset],
-        [latitude - offset, longitude + offset],
-        [latitude - offset, longitude - offset]
-      ]
-    };
-    
-    console.log("Generated district:", district);
-    return district;
   };
 
   const handlePostalCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
     
-    try {
-      const district = findDistrictByPostalCode(inputPostalCode);
-      if (district) {
-        setDistrictData(district);
-        setShowPostalCodeInput(false);
-        
-        // Initialize map with the district
-        if (mapContainer.current) {
-          initializeMap(district);
-        }
-      } else {
-        setError("لم يتم العثور على منطقة لهذا الرمز البريدي");
+    const district = findDistrictByPostalCode(inputPostalCode);
+    if (district) {
+      setDistrictData(district);
+      setShowPostalCodeInput(false);
+      
+      // Initialize map with the district
+      if (mapContainer.current) {
+        initializeMap(district);
       }
-    } catch (err) {
-      console.error("Error processing postal code:", err);
-      setError("حدث خطأ أثناء معالجة الرمز البريدي");
-    } finally {
-      setIsLoading(false);
+    } else {
+      setError("لم يتم العثور على منطقة لهذا الرمز البريدي");
     }
+    
+    setIsLoading(false);
   };
 
   const initializeMap = (district: { name: string; arabicName: string; coords: [number, number][] }) => {

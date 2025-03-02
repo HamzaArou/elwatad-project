@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,14 +39,6 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
       gallery_type: "coming_soon",
       views360: [],
       plans: [],
-      // Add missing default values to fix type errors
-      postalCode: "",
-      district: "غير محدد",
-      rooms: 0,
-      bathrooms: 0,
-      area: 0,
-      price: 0,
-      details: "",
     },
     mode: "onChange",
   });
