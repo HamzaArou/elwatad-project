@@ -1,4 +1,3 @@
-
 import { MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
@@ -8,6 +7,7 @@ interface ProjectLocationProps {
   location: string;
   lat?: number | null;
   lng?: number | null;
+  postalCode?: string;
 }
 
 // District polygons for common areas in Makkah
@@ -48,7 +48,17 @@ const DISTRICT_POLYGONS: Record<string, { name: string; arabicName: string; coor
   }
 };
 
-export default function ProjectLocation({ location, lat, lng }: ProjectLocationProps) {
+// Mapping of postal codes to district names
+// This is a simplified example, would need a more comprehensive database for production
+const POSTAL_CODE_TO_DISTRICT: Record<string, string> = {
+  '21955': 'منى',
+  '21912': 'العزيزية',
+  '21961': 'المسفلة',
+  '21421': 'الحجاز',
+  // Add more postal codes as needed
+};
+
+export default function ProjectLocation({ location, lat, lng, postalCode }: ProjectLocationProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const [districtData, setDistrictData] = useState<{
@@ -58,8 +68,24 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [inputPostalCode, setInputPostalCode] = useState(postalCode || '');
+  const [showPostalCodeInput, setShowPostalCodeInput] = useState(!lat && !lng && !postalCode);
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ", Saudi Arabia")}`;
+
+  // Find district based on postal code
+  const findDistrictByPostalCode = (code: string) => {
+    console.log("Finding district for postal code:", code);
+    const districtKey = POSTAL_CODE_TO_DISTRICT[code];
+    
+    if (districtKey && DISTRICT_POLYGONS[districtKey]) {
+      console.log("Found district:", districtKey);
+      return DISTRICT_POLYGONS[districtKey];
+    }
+    
+    console.log("District not found for postal code:", code);
+    return null;
+  };
 
   // Function to find the nearest district based on lat/lng
   const findNearestDistrict = async (latitude: number, longitude: number) => {
@@ -126,9 +152,76 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
       return firstDistrict;
     }
   };
+
+  const handlePostalCodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    const district = findDistrictByPostalCode(inputPostalCode);
+    if (district) {
+      setDistrictData(district);
+      setShowPostalCodeInput(false);
+      
+      // Initialize map with the district
+      if (mapContainer.current) {
+        initializeMap(district);
+      }
+    } else {
+      setError("لم يتم العثور على منطقة لهذا الرمز البريدي");
+    }
+    
+    setIsLoading(false);
+  };
+
+  const initializeMap = (district: { name: string; arabicName: string; coords: [number, number][] }) => {
+    if (!mapContainer.current) return;
+    
+    // Calculate center of district polygon
+    const centerLat = district.coords.reduce((sum, coord) => sum + coord[0], 0) / district.coords.length;
+    const centerLng = district.coords.reduce((sum, coord) => sum + coord[1], 0) / district.coords.length;
+    
+    // Initialize map
+    if (!mapInstance.current) {
+      const map = L.map(mapContainer.current, {
+        center: [centerLat, centerLng],
+        zoom: 14,
+        scrollWheelZoom: false,
+        zoomControl: true
+      });
+      
+      L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=0xThwp5hzLtXF2Nvi1LZ&language=ar', {
+        attribution: '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e',
+        maxZoom: 18,
+      }).addTo(map);
+      
+      mapInstance.current = map;
+      
+      // Add district polygon
+      const polygon = L.polygon(district.coords, {
+        color: '#B69665',
+        weight: 3,
+        opacity: 0.7,
+        fillColor: '#B69665',
+        fillOpacity: 0.3
+      }).addTo(map);
+      
+      // Add text label for district name
+      const labelIcon = L.divIcon({
+        className: 'district-label',
+        html: `<div class="district-name">${district.arabicName}</div>`,
+        iconSize: [120, 40],
+        iconAnchor: [60, 20]
+      });
+      
+      L.marker([centerLat, centerLng], { icon: labelIcon }).addTo(map);
+      
+      // Fit bounds to polygon
+      map.fitBounds(polygon.getBounds(), { padding: [50, 50] });
+    }
+  };
   
   useEffect(() => {
-    if (!mapContainer.current || !lat || !lng) {
+    if (!mapContainer.current) {
       setIsLoading(false);
       return;
     }
@@ -137,55 +230,30 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
       try {
         setIsLoading(true);
         
-        // Find nearest district
-        const district = await findNearestDistrict(lat, lng);
-        if (!district) {
-          throw new Error("Could not determine district");
+        // If we have a postal code, use that
+        if (postalCode) {
+          const district = findDistrictByPostalCode(postalCode);
+          if (district) {
+            setDistrictData(district);
+            initializeMap(district);
+            setIsLoading(false);
+            return;
+          }
         }
         
-        setDistrictData(district);
-        
-        // Calculate center of district polygon
-        const centerLat = district.coords.reduce((sum, coord) => sum + coord[0], 0) / district.coords.length;
-        const centerLng = district.coords.reduce((sum, coord) => sum + coord[1], 0) / district.coords.length;
-        
-        // Initialize map
-        if (!mapInstance.current) {
-          const map = L.map(mapContainer.current, {
-            center: [centerLat, centerLng],
-            zoom: 14,
-            scrollWheelZoom: false,
-            zoomControl: true
-          });
+        // Otherwise use lat/lng if available
+        if (lat && lng) {
+          // Find nearest district
+          const district = await findNearestDistrict(lat, lng);
+          if (!district) {
+            throw new Error("Could not determine district");
+          }
           
-          L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=0xThwp5hzLtXF2Nvi1LZ&language=ar', {
-            attribution: '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e',
-            maxZoom: 18,
-          }).addTo(map);
-          
-          mapInstance.current = map;
-          
-          // Add district polygon
-          const polygon = L.polygon(district.coords, {
-            color: '#B69665',
-            weight: 3,
-            opacity: 0.7,
-            fillColor: '#B69665',
-            fillOpacity: 0.3
-          }).addTo(map);
-          
-          // Add text label for district name
-          const labelIcon = L.divIcon({
-            className: 'district-label',
-            html: `<div class="district-name">${district.arabicName}</div>`,
-            iconSize: [120, 40],
-            iconAnchor: [60, 20]
-          });
-          
-          L.marker([centerLat, centerLng], { icon: labelIcon }).addTo(map);
-          
-          // Fit bounds to polygon
-          map.fitBounds(polygon.getBounds(), { padding: [50, 50] });
+          setDistrictData(district);
+          initializeMap(district);
+        } else {
+          // If neither postal code nor coordinates are provided, show input form
+          setShowPostalCodeInput(true);
         }
         
         setIsLoading(false);
@@ -205,7 +273,7 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
         mapInstance.current = null;
       }
     };
-  }, [lat, lng]);
+  }, [lat, lng, postalCode]);
 
   return (
     <div className="space-y-4">
@@ -222,10 +290,40 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
         </a>
       </div>
       <p className="text-gray-600 mb-4">{location}</p>
+      
+      {showPostalCodeInput && (
+        <form onSubmit={handlePostalCodeSubmit} className="mb-4">
+          <div className="flex flex-col space-y-2">
+            <label htmlFor="postalCode" className="font-medium text-gray-700">
+              أدخل الرمز البريدي للمنطقة
+            </label>
+            <div className="flex space-x-2 flex-row-reverse">
+              <input
+                id="postalCode"
+                type="text"
+                value={inputPostalCode}
+                onChange={(e) => setInputPostalCode(e.target.value)}
+                placeholder="21955"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-right"
+                maxLength={5}
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-[#B69665] text-white rounded-md hover:bg-[#A58655]"
+                disabled={isLoading}
+              >
+                {isLoading ? "جاري البحث..." : "عرض"}
+              </button>
+            </div>
+            {error && <p className="text-red-500 mt-1">{error}</p>}
+          </div>
+        </form>
+      )}
+      
       <div className="h-[400px] w-full rounded-lg overflow-hidden shadow-lg">
-        {(!lat || !lng) ? (
+        {showPostalCodeInput && !districtData ? (
           <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500">
-            لم يتم تحديد موقع المشروع على الخريطة
+            الرجاء إدخال الرمز البريدي للمنطقة
           </div>
         ) : isLoading ? (
           <div className="w-full h-full flex items-center justify-center bg-gray-100">

@@ -79,7 +79,7 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
         )}
       />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <FormField
           control={form.control}
           name="lat"
@@ -122,6 +122,28 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="postalCode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>الرمز البريدي</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  disabled={isLoading}
+                  placeholder="21955"
+                  className="text-right"
+                  dir="rtl"
+                  maxLength={5}
+                />
+              </FormControl>
+              <FormMessage />
+              <p className="text-xs text-gray-500">أدخل الرمز البريدي بدلاً من الإحداثيات لتحديد المنطقة</p>
             </FormItem>
           )}
         />

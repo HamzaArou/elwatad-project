@@ -1,111 +1,149 @@
 
-import { Building2, Info, MapPin, Bed, Bath, Square, User, Waves, Car, UserCheck, Sofa } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
 import ProjectLocation from "./ProjectLocation";
-import { cn } from "@/lib/utils";
+import Project360Views from "./Project360Views";
+import ProjectUnits from "./ProjectUnits";
+import ProjectUpdates from "./ProjectUpdates";
+import { Building2, Bed, Bath, Square } from "lucide-react";
 
 interface ProjectTabsSectionProps {
-  details?: string | null;
-  rooms?: number;
-  bathrooms?: number;
-  area?: number;
-  features?: string[];
+  details: string;
+  rooms: number;
+  bathrooms: number;
+  area: number;
+  features: string[];
   location: string;
   lat?: number | null;
   lng?: number | null;
+  postalCode?: string;
 }
-
-const FEATURE_ICONS: Record<string, any> = {
-  "غرفة خادمة": <User className="w-5 h-5" />,
-  "بها مصعد": <Building2 className="w-5 h-5" />,
-  "بدون مسبح": <Waves className="w-5 h-5" />,
-  "بدون جراج": <Car className="w-5 h-5" />,
-  "موقف خاص": <Car className="w-5 h-5" />,
-  "غرفة سائق": <UserCheck className="w-5 h-5" />,
-  "غير مفروشة": <Sofa className="w-5 h-5" />
-};
 
 export default function ProjectTabsSection({
   details,
-  rooms = 0,
-  bathrooms = 0,
-  area = 0,
-  features = [],
+  rooms,
+  bathrooms,
+  area,
+  features,
   location,
   lat,
-  lng
+  lng,
+  postalCode
 }: ProjectTabsSectionProps) {
-  return <div className="relative py-16 bg-gradient-to-b from-deepBlue/5 to-deepBlue/0 rounded-3xl mb-12">
-      <div className="container mx-auto px-4">
-        <Tabs defaultValue="details" className="w-full" dir="rtl">
-          <div className="flex justify-center mb-12 py-0">
-            <TabsList className="bg-white/80 backdrop-blur-lg shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 rounded-2xl w-full md:w-auto flex flex-col md:flex-row gap-2 md:gap-0 p-2 md:p-[13px]">
-              <TabsTrigger 
-                value="details" 
-                className="gap-3 px-4 md:px-6 py-3 text-base font-medium transition-all duration-300 data-[state=active]:bg-deepBlue data-[state=active]:text-white w-full md:w-auto"
-              >
-                <Info className="w-5 h-5" />
-                تفاصيل
-              </TabsTrigger>
-              <TabsTrigger 
-                value="features" 
-                className="gap-3 px-4 md:px-6 py-3 text-base font-medium transition-all duration-300 data-[state=active]:bg-deepBlue data-[state=active]:text-white w-full md:w-auto"
-              >
-                <Building2 className="w-5 h-5" />
-                مكونات المشروع
-              </TabsTrigger>
-              <TabsTrigger 
-                value="location" 
-                className="gap-3 px-4 md:px-6 py-3 text-base font-medium transition-all duration-300 data-[state=active]:bg-deepBlue data-[state=active]:text-white w-full md:w-auto"
-              >
-                <MapPin className="w-5 h-5" />
-                الموقع والمجاورة
-              </TabsTrigger>
-            </TabsList>
-          </div>
+  return (
+    <div className="mt-12 mb-16">
+      <Tabs defaultValue="details" dir="rtl">
+        <TabsList className="w-full justify-start mb-6 bg-transparent border-b border-gray-200 p-0 h-auto overflow-x-auto no-scrollbar">
+          <TabsTrigger
+            value="details"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
+            التفاصيل
+          </TabsTrigger>
+          <TabsTrigger
+            value="location"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
+            الموقع
+          </TabsTrigger>
+          <TabsTrigger
+            value="360views"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
+            جولة 360
+          </TabsTrigger>
+          <TabsTrigger
+            value="units"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
+            الوحدات السكنية
+          </TabsTrigger>
+          <TabsTrigger
+            value="updates"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
+            تحديثات المشروع
+          </TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="details" className="mt-6 focus-visible:outline-none focus-visible:ring-0">
-            <div className="bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-              {details ? <p className="text-lg leading-relaxed text-gray-700 text-right">{details}</p> : <p className="text-center text-gray-500 py-8">لا توجد تفاصيل متاحة</p>}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="features" className="mt-6 focus-visible:outline-none focus-visible:ring-0">
-            <div className="bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {/* Essential features */}
-                <div className={cn("flex items-center gap-3 p-4 rounded-xl", "bg-white shadow-md border border-gray-100", "transform transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5")}>
-                  <Square className="w-6 h-6 text-deepBlue" />
-                  <span className="text-gray-700 text-lg">مساحة {area} م²</span>
+        <TabsContent value="details" className="pt-2">
+          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
+            <h3 className="text-xl font-semibold mb-6">نظرة عامة</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+              <div className="flex items-center gap-3">
+                <Square className="h-5 w-5 text-[#B69665]" />
+                <div>
+                  <div className="text-sm text-gray-500">المساحة</div>
+                  <div className="font-semibold">{area} م²</div>
                 </div>
-
-                <div className={cn("flex items-center gap-3 p-4 rounded-xl", "bg-white shadow-md border border-gray-100", "transform transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5")}>
-                  <Bed className="w-6 h-6 text-deepBlue" />
-                  <span className="text-gray-700 text-lg">غرف ({rooms})</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Bed className="h-5 w-5 text-[#B69665]" />
+                <div>
+                  <div className="text-sm text-gray-500">غرف النوم</div>
+                  <div className="font-semibold">{rooms}</div>
                 </div>
-                
-                <div className={cn("flex items-center gap-3 p-4 rounded-xl", "bg-white shadow-md border border-gray-100", "transform transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5")}>
-                  <Bath className="w-6 h-6 text-deepBlue" />
-                  <span className="text-gray-700 text-lg">حمام ({bathrooms})</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Bath className="h-5 w-5 text-[#B69665]" />
+                <div>
+                  <div className="text-sm text-gray-500">الحمامات</div>
+                  <div className="font-semibold">{bathrooms}</div>
                 </div>
-
-                {/* Additional features */}
-                {features.map((feature, index) => (
-                  <div key={index} className={cn("flex items-center gap-3 p-4 rounded-xl", "bg-white shadow-md border border-gray-100", "transform transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5")}>
-                    {FEATURE_ICONS[feature] || <Building2 className="w-6 h-6 text-deepBlue" />}
-                    <span className="text-gray-700 text-lg">{feature}</span>
-                  </div>
-                ))}
+              </div>
+              <div className="flex items-center gap-3">
+                <Building2 className="h-5 w-5 text-[#B69665]" />
+                <div>
+                  <div className="text-sm text-gray-500">النوع</div>
+                  <div className="font-semibold">شقة</div>
+                </div>
               </div>
             </div>
-          </TabsContent>
 
-          <TabsContent value="location" className="mt-6 focus-visible:outline-none focus-visible:ring-0">
-            <div className="bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-              <ProjectLocation location={location} lat={lat} lng={lng} />
+            <h3 className="text-xl font-semibold mb-4">وصف المشروع</h3>
+            <div className="mb-8 text-gray-600 whitespace-pre-line">{details}</div>
+
+            <h3 className="text-xl font-semibold mb-4">المميزات</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {features.map((feature, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-[#B69665]"></div>
+                  <div className="text-gray-600">{feature}</div>
+                </div>
+              ))}
             </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>;
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="location" className="pt-2">
+          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
+            <ProjectLocation 
+              location={location} 
+              lat={lat} 
+              lng={lng} 
+              postalCode={postalCode}
+            />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="360views" className="pt-2">
+          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
+            <Project360Views projectId="placeholder-id" />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="units" className="pt-2">
+          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
+            <ProjectUnits projectId="placeholder-id" />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="updates" className="pt-2">
+          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
+            <ProjectUpdates projectId="placeholder-id" />
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 }

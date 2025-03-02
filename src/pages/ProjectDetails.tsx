@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,11 +66,16 @@ export default function ProjectDetails() {
         error: featuresError
       } = await supabase.from("project_features").select("*").eq("project_id", id);
       if (featuresError) throw featuresError;
+      
+      // Get postal code if available
+      const postalCode = details?.postal_code || null;
+      
       return {
         ...project,
         details: details?.details,
         lat: details?.lat,
         lng: details?.lng,
+        postalCode,
         media: media || [],
         features: features || []
       };
@@ -294,6 +300,7 @@ export default function ProjectDetails() {
           location={projectData.location || ""} 
           lat={projectData.lat} 
           lng={projectData.lng} 
+          postalCode={projectData.postalCode}
         />
       </div>
 
