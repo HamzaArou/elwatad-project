@@ -1,3 +1,4 @@
+
 import { UseFormReturn } from "react-hook-form";
 import { ProjectFormValues } from "@/types/project";
 import { useToast } from "@/hooks/use-toast";
@@ -39,6 +40,7 @@ export const useFormSubmission = (
         address: data.address || null,
         lat: data.lat || null,
         lng: data.lng || null,
+        postalCode: data.postalCode || null,
         floors: data.floors,
         units: data.units,
         status: data.status,
@@ -65,6 +67,24 @@ export const useFormSubmission = (
 
       const projectId = newProject.id;
       console.log("New project created with ID:", projectId);
+
+      // Handle project details with postal code
+      const projectDetailsData = {
+        project_id: projectId,
+        lat: data.lat || null,
+        lng: data.lng || null,
+        postal_code: data.postalCode || null
+      };
+
+      console.log("Inserting project details:", projectDetailsData);
+      const { error: detailsError } = await supabase
+        .from("project_details")
+        .insert(projectDetailsData);
+
+      if (detailsError) {
+        console.error("Error inserting project details:", detailsError);
+        throw detailsError;
+      }
 
       // Handle units
       if (data.project_units && data.project_units.length > 0) {
@@ -100,7 +120,7 @@ export const useFormSubmission = (
         
         console.log("Inserting gallery images...");
         const { error: imagesError } = await supabase
-          .from("project_images")
+          .from("project_media")
           .insert(
             urls.map(url => ({
               project_id: projectId,

@@ -96,6 +96,7 @@ export type Database = {
           id: string
           lat: number | null
           lng: number | null
+          postal_code: string | null
           project_id: string
         }
         Insert: {
@@ -104,6 +105,7 @@ export type Database = {
           id?: string
           lat?: number | null
           lng?: number | null
+          postal_code?: string | null
           project_id: string
         }
         Update: {
@@ -112,6 +114,7 @@ export type Database = {
           id?: string
           lat?: number | null
           lng?: number | null
+          postal_code?: string | null
           project_id?: string
         }
         Relationships: [

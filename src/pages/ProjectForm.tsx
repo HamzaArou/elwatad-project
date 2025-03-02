@@ -1,3 +1,4 @@
+
 import AdminLayout from "@/components/admin/AdminLayout";
 import ProjectForm from "@/components/admin/ProjectForm";
 import { useParams } from "react-router-dom";
@@ -11,14 +12,34 @@ export default function ProjectFormPage() {
     queryKey: ["project", id],
     queryFn: async () => {
       if (!id) return null;
-      const { data, error } = await supabase
+      
+      // Get project data
+      const { data: projectData, error: projectError } = await supabase
         .from("projects")
         .select("*")
         .eq("id", id)
         .single();
 
-      if (error) throw error;
-      return data;
+      if (projectError) throw projectError;
+      
+      // Get project details including postal code
+      const { data: projectDetails, error: detailsError } = await supabase
+        .from("project_details")
+        .select("*")
+        .eq("project_id", id)
+        .single();
+
+      if (detailsError && detailsError.code !== 'PGRST116') {
+        console.error("Error fetching project details:", detailsError);
+      }
+
+      // Combine project data with details, if available
+      const combinedData = {
+        ...projectData,
+        postalCode: projectDetails?.postal_code || null
+      };
+
+      return combinedData;
     },
     enabled: !!id,
   });
