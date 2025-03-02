@@ -1,11 +1,9 @@
 import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones, Quote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef, useState } from "react";
-
 const About = () => {
   const observerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
-  
   useEffect(() => {
     const observers = observerRefs.current.map((ref, index) => {
       if (!ref) return null;
@@ -23,7 +21,6 @@ const About = () => {
       observer.observe(ref);
       return observer;
     });
-
     return () => {
       observers.forEach(observer => observer?.disconnect());
     };
@@ -62,7 +59,7 @@ const About = () => {
     avatar: "E"
   }, {
     author: "Mohammed Zaman",
-    rating: 5, 
+    rating: 5,
     date: "قبل سنة واحدة",
     text: "شركة ممتازة واسعارهم مناسبة ويتميزون بالمصداقية والامانة",
     avatar: "M"
@@ -97,7 +94,6 @@ const About = () => {
     text: "تجربتي معهم ممتازة.. مصداقية وشفافية وخدمة راقية.",
     avatar: "ا"
   }];
-
   const futureFeatures = [{
     title: "خدمة التنبيهات الذكية",
     description: "تنبيه المستخدمين عند إضافة عقارات جديدة تلبي مواصفاتهم عبر البريد الإلكتروني أو تطبيق الجوال"
@@ -126,15 +122,12 @@ const About = () => {
     title: "خريطة ذكية لتحديد العقار المثالي",
     description: "عرض أفضل أماكن الاستثمار أو السكن بناءً على معايير مثل التعليم، النقل، والمرافق"
   }];
-
   const nextReview = () => {
     setActiveReviewIndex(prev => prev === reviews.length - 1 ? 0 : prev + 1);
   };
-  
   const prevReview = () => {
     setActiveReviewIndex(prev => prev === 0 ? reviews.length - 1 : prev - 1);
   };
-
   return <main className="min-h-screen bg-white">
       <section className="relative h-[60vh] md:h-screen flex items-center justify-center">
         <div className="absolute inset-0">
@@ -298,7 +291,7 @@ const About = () => {
           </div>
           
           <div className="max-w-4xl mx-auto mb-12 text-center">
-            <p className="text-lg text-gray-700 leading-relaxed animate-fade-in">
+            <p className="text-gray-700 leading-relaxed animate-fade-in font-extralight text-2xl">
               نفخر بثقة عملائنا الكرام ونسعد بمشاركة تجاربهم مع وتد الكيان العقارية
             </p>
           </div>
