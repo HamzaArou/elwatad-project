@@ -1,9 +1,11 @@
 import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones, Quote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef, useState } from "react";
+
 const About = () => {
   const observerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
+  
   useEffect(() => {
     const observers = observerRefs.current.map((ref, index) => {
       if (!ref) return null;
@@ -21,12 +23,21 @@ const About = () => {
       observer.observe(ref);
       return observer;
     });
+
     return () => {
       observers.forEach(observer => observer?.disconnect());
     };
   }, []);
+
+  // Updated with real Google Maps reviews
   const reviews = [{
-    author: "سعد بن حمد",
+    author: "Saeed Althobaiti",
+    rating: 5,
+    date: "قبل 2 أشهر",
+    text: "افضل مكتب عقاري بجدة ممتاز جدا خدمتهم ممتازه والأخ كمال الفرج كان متعاون معي وقت انتظاري للمبني كان يعطيني نسبة البنيان وكم نسبة الإنجاز بس شكرًا له ولأعضاء وتد الكيان العقاريه، وصارلي عميل معهم من سنتين وانصح الكل بالتعامل معهم.",
+    avatar: "S"
+  }, {
+    author: "Saad H",
     rating: 5,
     date: "قبل شهر واحد",
     text: "سعدت بالتعامل مع وتد الكيان العقارية، كادر احترافي وموثوق، حيث ساعدوني في اختيار وشراء منزل أحلامي بكل سهولة ويسر. أنصح بالتعامل معهم للباحثين عن عقارات مميزة.",
@@ -51,7 +62,7 @@ const About = () => {
     avatar: "E"
   }, {
     author: "Mohammed Zaman",
-    rating: 5,
+    rating: 5, 
     date: "قبل سنة واحدة",
     text: "شركة ممتازة واسعارهم مناسبة ويتميزون بالمصداقية والامانة",
     avatar: "M"
@@ -67,7 +78,26 @@ const About = () => {
     date: "قبل سنة واحدة",
     text: "عمل محترف وخدمة عملاء ممتازة.",
     avatar: "س"
+  }, {
+    author: "محمد المطيري",
+    rating: 5,
+    date: "قبل سنة واحدة",
+    text: "شركة محترمة وتتعامل بمصداقية وشفافية",
+    avatar: "م"
+  }, {
+    author: "منصور المنصور",
+    rating: 5,
+    date: "قبل سنة واحدة",
+    text: "تجربة رائعة وخدمة احترافية ، وفرو علي الكثير من الوقت و الجهد",
+    avatar: "م"
+  }, {
+    author: "ابراهيم قاضي",
+    rating: 5,
+    date: "قبل سنة واحدة",
+    text: "تجربتي معهم ممتازة.. مصداقية وشفافية وخدمة راقية.",
+    avatar: "ا"
   }];
+
   const futureFeatures = [{
     title: "خدمة التنبيهات الذكية",
     description: "تنبيه المستخدمين عند إضافة عقارات جديدة تلبي مواصفاتهم عبر البريد الإلكتروني أو تطبيق الجوال"
@@ -96,12 +126,15 @@ const About = () => {
     title: "خريطة ذكية لتحديد العقار المثالي",
     description: "عرض أفضل أماكن الاستثمار أو السكن بناءً على معايير مثل التعليم، النقل، والمرافق"
   }];
+
   const nextReview = () => {
     setActiveReviewIndex(prev => prev === reviews.length - 1 ? 0 : prev + 1);
   };
+  
   const prevReview = () => {
     setActiveReviewIndex(prev => prev === 0 ? reviews.length - 1 : prev - 1);
   };
+
   return <main className="min-h-screen bg-white">
       <section className="relative h-[60vh] md:h-screen flex items-center justify-center">
         <div className="absolute inset-0">
@@ -313,8 +346,6 @@ const About = () => {
               </div>
             </div>
           </div>
-          
-          
           
           <div className="flex justify-center mt-12">
             <a href="https://www.google.com/maps/place/وتد+الكيان+العقارية%E2%80%AD/@21.3662659,39.824284,911m/data=!3m1!1e3!4m8!3m7!1s0x15c205cb08a7e865:0x8c5783c3906c45b1!8m2!3d21.3662659!4d39.824284!9m1!1b1!16s%2Fg%2F11w1xtszq3?entry=ttu" target="_blank" rel="noopener noreferrer" className="bg-white text-[#2F4447] border-2 border-[#B69665] hover:bg-[#B69665] hover:text-white px-6 py-3 rounded-full font-bold transition-all duration-300 flex items-center gap-2 shadow-md">
