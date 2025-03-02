@@ -1,7 +1,8 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectLocation from "./ProjectLocation";
 import Project360Views from "./Project360Views";
-import { ProjectUnits } from "./ProjectUnits";
+import ProjectUnits from "./ProjectUnits";
 
 interface ProjectTabsSectionProps {
   details?: string;
@@ -14,10 +15,6 @@ interface ProjectTabsSectionProps {
   lng?: number | null;
   postalCode?: string | null;
   projectId: string;
-}
-
-interface ProjectUnitsProps {
-  projectId: string; // Added projectId prop to match how it's used
 }
 
 export default function ProjectTabsSection({ 
@@ -77,6 +74,7 @@ export default function ProjectTabsSection({
             lat={lat} 
             lng={lng}
             postalCode={postalCode}
+            projectId={projectId}
           />
         </TabsContent>
         
