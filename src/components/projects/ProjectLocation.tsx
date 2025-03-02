@@ -13,7 +13,7 @@ interface ProjectLocationProps {
 export default function ProjectLocation({ location, lat, lng }: ProjectLocationProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
-  const markerRef = useRef<L.Marker | null>(null);
+  const areaRef = useRef<L.Circle | null>(null);
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ", Saudi Arabia")}`;
 
@@ -24,8 +24,10 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
     if (!mapInstance.current) {
       const map = L.map(mapContainer.current, {
         center: [lat, lng],
-        zoom: 15,
-        scrollWheelZoom: false
+        zoom: 14, // Slightly zoomed out to show the area
+        scrollWheelZoom: false,
+        zoomControl: true,
+        attributionControl: true,
       });
 
       L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=0xThwp5hzLtXF2Nvi1LZ&language=ar', {
@@ -35,46 +37,54 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
 
       mapInstance.current = map;
 
-      // Create custom icon
-      const customIcon = L.icon({
-        iconUrl: 'data:image/svg+xml;base64,' + btoa(`
-          <svg width="40" height="50" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 0C8.954 0 0 8.954 0 20c0 15 20 30 20 30s20-15 20-30c0-11.046-8.954-20-20-20z" fill="#000000"/>
-            <path d="M20 4C10.059 4 2 12.059 2 22c0 13 18 26 18 26s18-13 18-26c0-9.941-8.059-18-18-18z" fill="#606060"/>
-            <circle cx="20" cy="20" r="12" fill="white"/>
-            <image 
-              href="/lovable-uploads/f4db9871-8689-4fc8-be39-f46dfdcd8609.png" 
-              x="8" 
-              y="8" 
-              width="24" 
-              height="24" 
-              preserveAspectRatio="xMidYMid meet"
-            />
-          </svg>
-        `),
-        iconSize: [40, 50],
-        iconAnchor: [20, 50],
-        popupAnchor: [0, -45],
-      });
+      // Create a circular area around the coordinates
+      // Radius is in meters - 500m is roughly a neighborhood/small district size
+      const areaOptions = {
+        color: '#000000',
+        fillColor: '#B69665',
+        fillOpacity: 0.4,
+        weight: 2,
+      };
+      
+      const area = L.circle([lat, lng], {
+        radius: 500, // 500 meters radius
+        ...areaOptions
+      }).addTo(map);
+      
+      areaRef.current = area;
 
-      // Add marker
-      const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
-      markerRef.current = marker;
-
-      // Add popup with location name
-      const popupContent = document.createElement('div');
-      popupContent.className = 'rtl-popup';
-      popupContent.innerHTML = `
+      // Add a tooltip with the district name that appears when hovering over the area
+      const tooltipContent = document.createElement('div');
+      tooltipContent.className = 'area-tooltip';
+      tooltipContent.innerHTML = `
         <div style="direction: rtl; text-align: right; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-          <p style="font-size: 1rem; margin: 0;">${location}</p>
+          <p style="font-size: 1rem; margin: 0; font-weight: bold;">${location}</p>
         </div>
       `;
-      marker.bindPopup(popupContent);
+      area.bindTooltip(tooltipContent, { 
+        direction: 'top',
+        permanent: false,
+        className: 'leaflet-tooltip-custom'
+      });
+      
+      // Add label for the area that's always visible
+      const divIcon = L.divIcon({
+        className: 'area-label-icon',
+        html: `<div class="area-label">${location}</div>`,
+        iconSize: [120, 40],
+        iconAnchor: [60, 20]
+      });
+      
+      L.marker([lat, lng], { 
+        icon: divIcon, 
+        interactive: false, 
+        zIndexOffset: 1000 
+      }).addTo(map);
     } else {
       // Update existing map view
-      mapInstance.current.setView([lat, lng], 15);
-      if (markerRef.current) {
-        markerRef.current.setLatLng([lat, lng]);
+      mapInstance.current.setView([lat, lng], 14);
+      if (areaRef.current) {
+        areaRef.current.setLatLng([lat, lng]);
       }
     }
 
@@ -83,7 +93,7 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
       if (mapInstance.current) {
         mapInstance.current.remove();
         mapInstance.current = null;
-        markerRef.current = null;
+        areaRef.current = null;
       }
     };
   }, [lat, lng, location]);
@@ -121,6 +131,31 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
         }
         .leaflet-container {
           font: 16px/1.5 "IBM Plex Sans Arabic", sans-serif !important;
+        }
+        .area-label-icon {
+          background: none;
+          border: none;
+        }
+        .area-label {
+          white-space: nowrap;
+          color: #000;
+          font-weight: bold;
+          font-size: 14px;
+          text-align: center;
+          background-color: rgba(255, 255, 255, 0.8);
+          padding: 4px 8px;
+          border-radius: 4px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+          direction: rtl;
+          font-family: 'IBM Plex Sans Arabic', sans-serif;
+        }
+        .leaflet-tooltip-custom {
+          background-color: white;
+          border: 1px solid #B69665;
+          border-radius: 4px;
+          padding: 5px 10px;
+          font-family: 'IBM Plex Sans Arabic', sans-serif;
+          direction: rtl;
         }
       `}</style>
     </div>
