@@ -1,3 +1,4 @@
+
 import { UseFormReturn } from "react-hook-form";
 import { ProjectFormValues } from "@/types/project";
 import { useToast } from "@/hooks/use-toast";
@@ -36,6 +37,7 @@ export const useFormSubmission = (
       const projectData = {
         name: data.name,
         location: data.location,
+        city: data.city,
         address: data.address || null,
         lat: data.lat || null,
         lng: data.lng || null,
@@ -43,6 +45,10 @@ export const useFormSubmission = (
         units: data.units,
         status: data.status,
         thumbnail_url: thumbnailUrl,
+        area: 0, // Required field
+        district: data.location, // Required field
+        property_status: "active", // Required field
+        property_value: 0, // Required field
       };
 
       console.log("Project data to be inserted:", projectData);
@@ -96,17 +102,16 @@ export const useFormSubmission = (
       // Handle gallery images
       if (data.gallery_type === "images" && galleryImages && galleryImages.length > 0) {
         console.log("Uploading gallery images...");
-        const urls = await uploadFiles(galleryImages, "project-images");
+        const urls = await uploadFiles(Array.from(galleryImages), "project-images");
         
         console.log("Inserting gallery images...");
         const { error: imagesError } = await supabase
-          .from("project_images")
+          .from("project_media")
           .insert(
             urls.map(url => ({
               project_id: projectId,
               media_url: url,
-              content_type: "gallery",
-              media_type: "image"
+              media_type: "image",
             }))
           );
 
@@ -119,15 +124,16 @@ export const useFormSubmission = (
       // Handle plans
       if (plans && plans.length > 0) {
         console.log("Uploading plans...");
-        const urls = await uploadFiles(plans, "project-plans");
+        const urls = await uploadFiles(Array.from(plans), "project-plans");
         
         console.log("Inserting plans...");
         const { error: plansError } = await supabase
-          .from("project_plans")
+          .from("project_media")
           .insert(
             urls.map(url => ({
               project_id: projectId,
-              file_url: url,
+              media_url: url,
+              media_type: "plan",
             }))
           );
 

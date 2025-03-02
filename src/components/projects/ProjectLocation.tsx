@@ -22,7 +22,7 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
   const initializeMap = () => {
     if (!mapContainer.current || !lat || !lng || !window.google) return;
 
-    const center = { lat, lng };
+    const center = new google.maps.LatLng(lat, lng);
     
     // Create the map
     const mapOptions: google.maps.MapOptions = {
@@ -152,7 +152,7 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
     const radius = 800; // meters
     const irregularity = 0.4; // 0-1, how irregular the shape is
     
-    const polygonCoords = [];
+    const polygonCoords: google.maps.LatLngLiteral[] = [];
     const angleStep = (Math.PI * 2) / points;
     
     for (let i = 0; i < points; i++) {
@@ -189,11 +189,11 @@ export default function ProjectLocation({ location, lat, lng }: ProjectLocationP
     
     // Fit bounds to the polygon
     const bounds = new google.maps.LatLngBounds();
-    polygonCoords.forEach(coord => bounds.extend(coord));
+    polygonCoords.forEach(coord => bounds.extend(new google.maps.LatLng(coord.lat, coord.lng)));
     mapInstance.current.fitBounds(bounds);
     
     // Add a label for the district
-    const labelMarker = new google.maps.Marker({
+    new google.maps.Marker({
       position: bounds.getCenter(),
       map: mapInstance.current,
       icon: {

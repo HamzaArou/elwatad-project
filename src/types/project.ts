@@ -116,4 +116,4 @@ export interface ProjectFormProps {
   };
 }
 
-export type TabType = "basic" | "gallery" | "location" | "360views" | "units";
+export type TabType = "basic" | "gallery" | "location" | "360views" | "units" | "plans";
