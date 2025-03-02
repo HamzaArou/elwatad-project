@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,7 +29,6 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
     resolver: zodResolver(projectFormSchema),
     defaultValues: initialData || {
       name: "",
-      city: "مدينة مكة",
       location: "",
       address: "",
       floors: 1,
@@ -45,7 +43,7 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
     mode: "onChange",
   });
 
-  const { validateTab } = useFormValidation(form, thumbnail, initialData, galleryImages, form.watch("views360"));
+  const { validateTab } = useFormValidation(form, thumbnail, initialData, galleryImages, plans);
   const { submitForm } = useFormSubmission(form, thumbnail, galleryImages, plans, initialData, navigate, setIsLoading);
 
   const currentTabIndex = TABS.indexOf(currentTab);
