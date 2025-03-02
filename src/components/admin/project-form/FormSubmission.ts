@@ -1,6 +1,5 @@
-
 import { UseFormReturn } from "react-hook-form";
-import { ProjectFormValues, ProjectUnit, View360 } from "@/types/project";
+import { ProjectFormValues } from "@/types/project";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { uploadFile, uploadFiles } from "./FileUploadHandler";
@@ -60,7 +59,6 @@ export const useFormSubmission = (
         area: data.area || 0,
         property_value: data.price || 0,
         thumbnail_url: thumbnailUrl,
-        city: data.city,
       };
 
       let projectId = initialData?.id;
@@ -69,7 +67,7 @@ export const useFormSubmission = (
       if (!projectId) {
         const { data: newProject, error: projectError } = await supabase
           .from("projects")
-          .insert(projectData)
+          .insert([projectData])
           .select("id")
           .single();
 
@@ -131,50 +129,23 @@ export const useFormSubmission = (
 
   // Helper function for handling gallery images
   const handleGalleryImages = async (images: FileList, projectId: string) => {
-    const uploadPromises = [];
-    const mediaToInsert = [];
+    const urls = await uploadFiles(images, "project-images");
     
-    for (let i = 0; i < images.length; i++) {
-      const file = images[i];
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-      const filePath = fileName;
-
-      uploadPromises.push(
-        supabase.storage
-          .from("project-images")
-          .upload(filePath, file)
-          .then(({ error, data }) => {
-            if (error) throw error;
-            
-            return supabase.storage
-              .from("project-images")
-              .getPublicUrl(filePath);
-          })
-          .then(({ data }) => {
-            mediaToInsert.push({
-              project_id: projectId,
-              media_url: data.publicUrl,
-              media_type: "image",
-              display_order: i,
-              content_type: "gallery"
-            });
-          })
+    console.log("Inserting gallery images...");
+    const { error: imagesError } = await supabase
+      .from("project_media")
+      .insert(
+        urls.map(url => ({
+          project_id: projectId,
+          media_url: url,
+          content_type: "gallery",
+          media_type: "image"
+        }))
       );
-    }
-    
-    await Promise.all(uploadPromises);
-    
-    if (mediaToInsert.length > 0) {
-      console.log("Inserting gallery images...");
-      const { error: imagesError } = await supabase
-        .from("project_media")
-        .insert(mediaToInsert);
 
-      if (imagesError) {
-        console.error("Error inserting gallery images:", imagesError);
-        throw imagesError;
-      }
+    if (imagesError) {
+      console.error("Error inserting gallery images:", imagesError);
+      throw imagesError;
     }
   };
 

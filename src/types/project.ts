@@ -48,8 +48,6 @@ export const view360Schema = z.object({
   url: z.string().url("الرجاء إدخال رابط صحيح")
 });
 
-export type View360 = z.infer<typeof view360Schema>;
-
 export type ProjectUnit = {
   id: string;
   unit_number: number;
@@ -71,9 +69,6 @@ export type ProjectUnit = {
 export const cityTypes = ["مدينة مكة", "مدينة جدة"] as const;
 export type CityType = typeof cityTypes[number];
 
-export const propertyStatusTypes = ["بدأ البيع", "تم البيع بالكامل", "قريباً"] as const;
-export type PropertyStatusType = typeof propertyStatusTypes[number];
-
 export const projectFormSchema = z.object({
   name: z.string().min(1, "اسم المشروع مطلوب"),
   city: z.enum(cityTypes, {
@@ -81,23 +76,17 @@ export const projectFormSchema = z.object({
   }),
   location: z.string().min(1, "الموقع مطلوب"),
   address: z.string().optional(),
-  lat: z.number().optional().nullable(),
-  lng: z.number().optional().nullable(),
-  postalCode: z.string().optional().nullable(),
-  district: z.string().optional().nullable(),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+  postalCode: z.string().optional(),
   floors: z.number().min(1, "عدد الطوابق يجب أن يكون أكبر من 0"),
   units: z.number().min(1, "عدد الشقق يجب أن يكون أكبر من 0"),
-  status: z.enum(propertyStatusTypes),
+  status: z.enum(["بدأ البيع", "تم البيع بالكامل", "قريباً"] as const),
   thumbnail_url: z.string().optional(),
   description: z.string().optional(),
   features: z.array(z.string()).optional(),
   specifications: z.array(z.string()).optional(),
   plans: z.array(z.string()).optional(),
-  rooms: z.number().optional().default(0),
-  bathrooms: z.number().optional().default(0),
-  area: z.number().optional().default(0),
-  price: z.number().optional().default(0),
-  details: z.string().optional(),
   project_units: z.array(z.object({
     id: z.string(),
     unit_number: z.number().min(1, "رقم الوحدة مطلوب"),
@@ -129,23 +118,4 @@ export interface ProjectFormProps {
   };
 }
 
-export type TabType = "basic" | "gallery" | "location" | "360views" | "units" | "plans";
-
-export type Project = {
-  id: string;
-  name: string;
-  location: string;
-  thumbnail_url: string;
-  property_status: PropertyStatusType;
-  rooms: number;
-  bathrooms: number;
-  area: number;
-  property_value: number;
-  features: string[];
-  city: CityType;
-  district: string;
-  created_at: string;
-  details?: string;
-  lat?: number | null;
-  lng?: number | null;
-};
+export type TabType = "basic" | "gallery" | "location" | "360views" | "units";
