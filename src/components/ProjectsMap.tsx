@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -31,7 +32,11 @@ const FIXED_LOCATIONS = [
   { lat: 21.335788, lng: 39.695381, name: 'مشروع الفيصل السادس عشر', location: 'مكة المكرمة' },
 ];
 
-const ProjectsMap = () => {
+interface ProjectsMapProps {
+  specificLocation?: { lat: number; lng: number; name: string; location: string };
+}
+
+const ProjectsMap = ({ specificLocation }: ProjectsMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
@@ -49,25 +54,44 @@ const ProjectsMap = () => {
   });
 
   useEffect(() => {
-    if (!mapContainer.current || mapInstance.current) return;
+    // Ensure the map container is in the DOM and no map is already initialized
+    if (!mapContainer.current) {
+      console.error("Map container not found in DOM");
+      return;
+    }
+    
+    if (mapInstance.current) {
+      console.log("Map already initialized, removing old instance");
+      mapInstance.current.remove();
+      mapInstance.current = null;
+    }
 
-    const initializeMap = () => {
+    // Add a small delay to ensure the DOM is fully rendered
+    const initializeMapTimer = setTimeout(() => {
       try {
-        const map = L.map(mapContainer.current, {
+        console.log("Initializing map...");
+        
+        // Create the map instance
+        const map = L.map(mapContainer.current!, {
           center: [21.4225, 39.8256], // Makkah coordinates
           zoom: 11,
           zoomControl: true,
-          minZoom: 10,
+          minZoom: 8,
           maxZoom: 18,
         });
 
+        console.log("Map created successfully");
         mapInstance.current = map;
 
+        // Add the tile layer (OpenStreetMap)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          maxZoom: 18,
+          maxZoom: 19,
         }).addTo(map);
 
+        console.log("Tile layer added");
+
+        // Create custom icon for markers
         const customIcon = L.icon({
           iconUrl: '/lovable-uploads/f4db9871-8689-4fc8-be39-f46dfdcd8609.png',
           iconSize: [40, 50],
@@ -75,52 +99,88 @@ const ProjectsMap = () => {
           popupAnchor: [0, -45],
         });
 
+        // Clear any existing markers
         markersRef.current.forEach(marker => marker.remove());
         markersRef.current = [];
 
-        const allLocations = [...projects, ...FIXED_LOCATIONS].filter(loc => loc.lat && loc.lng);
+        // Determine which locations to show
+        let allLocations: any[] = [];
         
+        if (specificLocation && specificLocation.lat && specificLocation.lng) {
+          console.log("Adding specific location to map:", specificLocation);
+          allLocations = [specificLocation];
+        } else {
+          console.log("Adding all projects and fixed locations to map");
+          allLocations = [...projects, ...FIXED_LOCATIONS].filter(loc => loc.lat && loc.lng);
+        }
+        
+        console.log("Locations to show on map:", allLocations.length);
+        
+        // Add markers for each location
         allLocations.forEach(location => {
-          const marker = L.marker([location.lat!, location.lng!], { icon: customIcon })
-            .addTo(map);
+          if (!location.lat || !location.lng) {
+            console.warn("Location missing coordinates:", location);
+            return;
+          }
+          
+          try {
+            const marker = L.marker([location.lat, location.lng], { icon: customIcon })
+              .addTo(map);
 
-          const popupContent = document.createElement('div');
-          popupContent.className = 'rtl-popup';
-          popupContent.innerHTML = `
-            <div style="direction: rtl; text-align: right; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-              <h3 style="font-weight: bold; font-size: 1.125rem; margin-bottom: 0.25rem; color: #1a1a1a;">${location.name}</h3>
-              <p style="font-size: 1rem; color: #4a5568;">المنطقة: ${location.location}</p>
-              <p style="font-size: 0.875rem; color: #718096;">الإحداثيات: ${location.lat}, ${location.lng}</p>
-            </div>
-          `;
+            const popupContent = document.createElement('div');
+            popupContent.className = 'rtl-popup';
+            popupContent.innerHTML = `
+              <div style="direction: rtl; text-align: right; font-family: 'IBM Plex Sans Arabic', sans-serif;">
+                <h3 style="font-weight: bold; font-size: 1.125rem; margin-bottom: 0.25rem; color: #1a1a1a;">${location.name}</h3>
+                <p style="font-size: 1rem; color: #4a5568;">المنطقة: ${location.location}</p>
+                <p style="font-size: 0.875rem; color: #718096;">الإحداثيات: ${location.lat}, ${location.lng}</p>
+              </div>
+            `;
 
-          marker.bindPopup(popupContent);
-          markersRef.current.push(marker);
+            marker.bindPopup(popupContent);
+            markersRef.current.push(marker);
+          } catch (err) {
+            console.error("Error adding marker:", err);
+          }
         });
 
+        // Fit bounds if we have locations
         if (allLocations.length > 0) {
-          const bounds = L.latLngBounds(allLocations.map(loc => [loc.lat!, loc.lng!]));
-          map.fitBounds(bounds, { padding: [50, 50] });
+          try {
+            const bounds = L.latLngBounds(allLocations.map(loc => [loc.lat, loc.lng]));
+            map.fitBounds(bounds, { padding: [50, 50] });
+            console.log("Map bounds set");
+          } catch (err) {
+            console.error("Error setting map bounds:", err);
+          }
         }
+        
+        // Force a redraw of the map
+        setTimeout(() => {
+          map.invalidateSize();
+          console.log("Map size invalidated for redraw");
+        }, 100);
+        
       } catch (error) {
         console.error('Error initializing map:', error);
       }
-    };
+    }, 300); // Delay of 300ms to ensure the DOM is ready
 
-    setTimeout(initializeMap, 100);
-
+    // Clean up function
     return () => {
+      clearTimeout(initializeMapTimer);
       if (mapInstance.current) {
+        console.log("Cleaning up map instance");
         mapInstance.current.remove();
         mapInstance.current = null;
         markersRef.current = [];
       }
     };
-  }, [projects]);
+  }, [projects, specificLocation]); // Re-run when projects or specificLocation changes
 
   return (
-    <div className="h-[600px] w-full rounded-2xl overflow-hidden relative">
-      <div ref={mapContainer} className="w-full h-full" />
+    <div className="h-[600px] w-full rounded-2xl overflow-hidden relative border border-gray-300 shadow-md">
+      <div ref={mapContainer} className="w-full h-full bg-gray-100" />
       <style>{`
         .rtl-popup .leaflet-popup-content {
           direction: rtl;

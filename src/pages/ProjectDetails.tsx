@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -49,7 +48,9 @@ export default function ProjectDetails() {
           rooms,
           bathrooms,
           area,
-          thumbnail_url
+          thumbnail_url,
+          lat,
+          lng
         `).eq("id", id).single();
       if (projectError) throw projectError;
       const {
@@ -70,8 +71,8 @@ export default function ProjectDetails() {
       return {
         ...project,
         details: details?.details,
-        lat: details?.lat,
-        lng: details?.lng,
+        lat: project?.lat || details?.lat,
+        lng: project?.lng || details?.lng,
         media: media || [],
         features: features || []
       };
@@ -216,6 +217,15 @@ export default function ProjectDetails() {
     return <div>Project not found</div>;
   }
 
+  const locationForMap = projectData.lat && projectData.lng 
+    ? {
+        lat: projectData.lat,
+        lng: projectData.lng,
+        name: projectData.name,
+        location: projectData.location || projectData.district || 'مكة المكرمة'
+      } 
+    : undefined;
+
   const galleryItems = projectData.media.map(item => ({
     id: item.id,
     url: item.media_url,
@@ -284,6 +294,11 @@ export default function ProjectDetails() {
 
       <div className="container mx-auto px-4 py-8">
         <ProjectGallery gallery={galleryItems} />
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold mb-4 text-right">موقع المشروع</h2>
+        <ProjectsMap specificLocation={locationForMap} />
       </div>
 
       <div className="container mx-auto px-4 pb-12">
