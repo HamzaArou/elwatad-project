@@ -1,66 +1,87 @@
 
-import { Rotate3d } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
-interface Project360View {
-  id: string;
-  title: string;
-  url: string;
-}
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Project360ViewsProps {
-  projectId: string | undefined;
+  projectId: string;
 }
 
 export default function Project360Views({ projectId }: Project360ViewsProps) {
-  const { data: views, isLoading } = useQuery({
-    queryKey: ['project-views360', projectId],
-    queryFn: async () => {
-      if (!projectId) return [];
-      const { data: projectDetails, error } = await supabase
-        .from('project_details')
-        .select('views360')
-        .eq('project_id', projectId)
-        .single();
+  const [activeView, setActiveView] = useState<string | null>(null);
 
-      if (error) throw error;
-      return (projectDetails?.views360 || []) as Project360View[];
+  const { data: views360, isLoading } = useQuery({
+    queryKey: ["views360", projectId],
+    queryFn: async () => {
+      try {
+        // First try to get from project_media table
+        const { data, error } = await supabase
+          .from("project_media")
+          .select("id, media_url, media_type")
+          .eq("project_id", projectId)
+          .eq("media_type", "view360");
+
+        if (error) throw error;
+        
+        // Return the array of views or empty array if none found
+        return data || [];
+      } catch (error) {
+        console.error("Error fetching 360 views:", error);
+        return [];
+      }
     },
-    enabled: !!projectId,
   });
 
-  if (isLoading || !views?.length) return null;
+  if (isLoading) {
+    return <div className="text-center py-12">جاري تحميل الجولة...</div>;
+  }
+
+  if (!views360 || views360.length === 0) {
+    return (
+      <div className="text-center py-12 text-gray-500">
+        لا يوجد جولة افتراضية متاحة لهذا المشروع حالياً
+      </div>
+    );
+  }
+
+  // Set first view as active if none selected
+  if (!activeView && views360.length > 0) {
+    setActiveView(views360[0].id);
+  }
 
   return (
-    <div className="relative py-12 bg-gradient-to-b from-deepBlue/10 to-deepBlue/5 rounded-3xl mb-12">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-center mb-6">
-          <h2 className="text-3xl font-bold text-white bg-deepBlue py-2 px-8 rounded-tr-[5px] rounded-tl-[100px] rounded-br-[100px] rounded-bl-[5px] inline-block">
-            جولة افتراضية 360° للمشروع
-          </h2>
-        </div>
+    <div className="space-y-6">
+      <h3 className="text-xl font-semibold mb-4">جولة افتراضية 360°</h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-          {views.map((view) => (
-            <a
+      <Tabs value={activeView || undefined} onValueChange={setActiveView} className="w-full">
+        <TabsList className="flex overflow-x-auto py-2 mb-4">
+          {views360.map((view) => (
+            <TabsTrigger
               key={view.id}
-              href={view.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group bg-white rounded-lg p-3 shadow-lg hover:shadow-xl transition-all duration-300 text-center"
+              value={view.id}
+              className="px-4 py-2 text-sm whitespace-nowrap"
             >
-              <div className="flex justify-center mb-3">
-                <Rotate3d className="w-10 h-10 text-gold group-hover:scale-110 transition-transform duration-300" />
-              </div>
-              <h3 className="text-lg font-bold text-deepBlue mb-1">{view.title}</h3>
-              <p className="text-gray-600 text-sm">
-                انقر لمشاهدة جولة افتراضية 360° درجة
-              </p>
-            </a>
+              {view.id}
+            </TabsTrigger>
           ))}
-        </div>
-      </div>
+        </TabsList>
+
+        {views360.map((view) => (
+          <TabsContent key={view.id} value={view.id} className="pt-4">
+            <Card className="overflow-hidden rounded-lg">
+              <iframe
+                title={`360 View ${view.id}`}
+                src={view.media_url}
+                className="w-full h-[500px] border-0"
+                allowFullScreen
+                loading="lazy"
+              />
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
     </div>
   );
 }
