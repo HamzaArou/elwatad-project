@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import ProjectLocation from "./ProjectLocation";
 import Project360Views from "./Project360Views";
+import ProjectUnits from "./ProjectUnits";
 import ProjectUpdates from "./ProjectUpdates";
 import { Building2, Bed, Bath, Square } from "lucide-react";
 
@@ -52,6 +53,12 @@ export default function ProjectTabsSection({
             className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
           >
             جولة 360
+          </TabsTrigger>
+          <TabsTrigger
+            value="units"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
+            الوحدات السكنية
           </TabsTrigger>
           <TabsTrigger
             value="updates"
@@ -126,13 +133,19 @@ export default function ProjectTabsSection({
 
         <TabsContent value="360views" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <Project360Views projectId="placeholder-id" />
+            <Project360Views projectId={id || "placeholder-id"} />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="units" className="pt-2">
+          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
+            <ProjectUnits projectId={id || "placeholder-id"} />
           </Card>
         </TabsContent>
 
         <TabsContent value="updates" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectUpdates projectId="placeholder-id" />
+            <ProjectUpdates projectId={id || "placeholder-id"} />
           </Card>
         </TabsContent>
       </Tabs>
