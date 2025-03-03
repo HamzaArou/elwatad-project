@@ -50,33 +50,37 @@ export default function ProjectDetails() {
           thumbnail_url
         `).eq("id", id).single();
       if (projectError) throw projectError;
+
       const {
         data: details,
         error: detailsError
       } = await supabase.from("project_details").select("*").eq("project_id", id).single();
-      if (detailsError && detailsError.code !== 'PGRST116') throw detailsError;
+      
+      if (detailsError && detailsError.code !== 'PGRST116') {
+        console.error("Error fetching project details:", detailsError);
+      }
+
       const {
         data: media,
         error: mediaError
       } = await supabase.from("project_media").select("*").eq("project_id", id).order("display_order");
       if (mediaError) throw mediaError;
+
       const {
         data: features,
         error: featuresError
       } = await supabase.from("project_features").select("*").eq("project_id", id);
       if (featuresError) throw featuresError;
       
-      // Get postal code if available
-      const postalCode = details?.postal_code || null;
-      const featuresDescription = details?.features_description || null;
+      console.log("Project details:", details);
       
       return {
         ...project,
         details: details?.details,
         lat: details?.lat,
         lng: details?.lng,
-        postalCode,
-        featuresDescription,
+        postalCode: details?.postal_code || null,
+        featuresDescription: details?.features_description || null,
         media: media || [],
         features: features || []
       };

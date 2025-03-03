@@ -133,19 +133,19 @@ export default function ProjectTabsSection({
 
         <TabsContent value="360views" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <Project360Views projectId="placeholder-id" />
+            <Project360Views projectId={id || "placeholder-id"} />
           </Card>
         </TabsContent>
 
         <TabsContent value="units" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectUnits projectId="placeholder-id" />
+            <ProjectUnits projectId={id || "placeholder-id"} />
           </Card>
         </TabsContent>
 
         <TabsContent value="updates" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectUpdates projectId="placeholder-id" />
+            <ProjectUpdates projectId={id || "placeholder-id"} />
           </Card>
         </TabsContent>
       </Tabs>

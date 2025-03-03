@@ -40,6 +40,8 @@ export default function ProjectFormPage() {
         featuresDescription: projectDetails?.features_description || null
       };
 
+      console.log("Combined project data:", combinedData);
+      
       return combinedData;
     },
     enabled: !!id,

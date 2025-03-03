@@ -36,15 +36,22 @@ export const useFormSubmission = (
       // Prepare project data
       const projectData = {
         name: data.name,
+        city: data.city,
         location: data.location,
         address: data.address || null,
         lat: data.lat || null,
         lng: data.lng || null,
-        postalCode: data.postalCode || null,
         floors: data.floors,
         units: data.units,
         status: data.status,
         thumbnail_url: thumbnailUrl,
+        description: data.description,
+        property_status: 'Available', // Default value
+        property_value: 0, // Default value
+        area: data.area || 0, // Added default value
+        rooms: data.rooms || 0, // Added default value
+        bathrooms: data.bathrooms || 0, // Added default value
+        district: data.location || 'Unknown' // Using location as district
       };
 
       console.log("Project data to be inserted:", projectData);
@@ -68,7 +75,7 @@ export const useFormSubmission = (
       const projectId = newProject.id;
       console.log("New project created with ID:", projectId);
 
-      // Handle project details with postal code
+      // Handle project details with postal code and features description
       const projectDetailsData = {
         project_id: projectId,
         lat: data.lat || null,
@@ -117,7 +124,8 @@ export const useFormSubmission = (
       // Handle gallery images
       if (data.gallery_type === "images" && galleryImages && galleryImages.length > 0) {
         console.log("Uploading gallery images...");
-        const urls = await uploadFiles(galleryImages, "project-images");
+        const galleryImageArray = Array.from(galleryImages);
+        const urls = await uploadFiles(galleryImageArray, "project-images");
         
         console.log("Inserting gallery images...");
         const { error: imagesError } = await supabase
@@ -134,27 +142,6 @@ export const useFormSubmission = (
         if (imagesError) {
           console.error("Error inserting gallery images:", imagesError);
           throw imagesError;
-        }
-      }
-
-      // Handle plans
-      if (plans && plans.length > 0) {
-        console.log("Uploading plans...");
-        const urls = await uploadFiles(plans, "project-plans");
-        
-        console.log("Inserting plans...");
-        const { error: plansError } = await supabase
-          .from("project_plans")
-          .insert(
-            urls.map(url => ({
-              project_id: projectId,
-              file_url: url,
-            }))
-          );
-
-        if (plansError) {
-          console.error("Error inserting plans:", plansError);
-          throw plansError;
         }
       }
 
