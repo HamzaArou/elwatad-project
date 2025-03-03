@@ -1,3 +1,4 @@
+
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const TABS = ["basic", "gallery", "location", "360views", "units"] as const;
