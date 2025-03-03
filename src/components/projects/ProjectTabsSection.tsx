@@ -13,6 +13,7 @@ interface ProjectTabsSectionProps {
   bathrooms: number;
   area: number;
   features: string[];
+  featuresDescription?: string;
   location: string;
   lat?: number | null;
   lng?: number | null;
@@ -25,6 +26,7 @@ export default function ProjectTabsSection({
   bathrooms,
   area,
   features,
+  featuresDescription,
   location,
   lat,
   lng,
@@ -104,6 +106,9 @@ export default function ProjectTabsSection({
             <div className="mb-8 text-gray-600 whitespace-pre-line">{details}</div>
 
             <h3 className="text-xl font-semibold mb-4">المميزات</h3>
+            {featuresDescription && (
+              <div className="mb-6 text-gray-600 whitespace-pre-line">{featuresDescription}</div>
+            )}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-2">

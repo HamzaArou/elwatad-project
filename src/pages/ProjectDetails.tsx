@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -69,6 +68,7 @@ export default function ProjectDetails() {
       
       // Get postal code if available
       const postalCode = details?.postal_code || null;
+      const featuresDescription = details?.features_description || null;
       
       return {
         ...project,
@@ -76,6 +76,7 @@ export default function ProjectDetails() {
         lat: details?.lat,
         lng: details?.lng,
         postalCode,
+        featuresDescription,
         media: media || [],
         features: features || []
       };
@@ -297,6 +298,7 @@ export default function ProjectDetails() {
           bathrooms={projectData.bathrooms} 
           area={projectData.area} 
           features={projectData.features.map(f => `${f.feature_type} (${f.amount})`)} 
+          featuresDescription={projectData.featuresDescription}
           location={projectData.location || ""} 
           lat={projectData.lat} 
           lng={projectData.lng} 

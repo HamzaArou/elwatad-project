@@ -73,7 +73,8 @@ export const useFormSubmission = (
         project_id: projectId,
         lat: data.lat || null,
         lng: data.lng || null,
-        postal_code: data.postalCode || null
+        postal_code: data.postalCode || null,
+        features_description: data.featuresDescription || null
       };
 
       console.log("Inserting project details:", projectDetailsData);

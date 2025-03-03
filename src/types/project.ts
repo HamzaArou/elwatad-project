@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 export const projectFeatureTypes = [
@@ -84,6 +83,7 @@ export const projectFormSchema = z.object({
   status: z.enum(["بدأ البيع", "تم البيع بالكامل", "قريباً"] as const),
   thumbnail_url: z.string().optional(),
   description: z.string().optional(),
+  featuresDescription: z.string().optional(),
   features: z.array(z.string()).optional(),
   specifications: z.array(z.string()).optional(),
   plans: z.array(z.string()).optional(),
