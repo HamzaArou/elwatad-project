@@ -40,7 +40,6 @@ export const useFormSubmission = (
         address: data.address || null,
         lat: data.lat || null,
         lng: data.lng || null,
-        postalCode: data.postalCode || null,
         floors: data.floors,
         units: data.units,
         status: data.status,
@@ -68,12 +67,13 @@ export const useFormSubmission = (
       const projectId = newProject.id;
       console.log("New project created with ID:", projectId);
 
-      // Handle project details with postal code
+      // Handle project details with postal code and status
       const projectDetailsData = {
         project_id: projectId,
         lat: data.lat || null,
         lng: data.lng || null,
-        postal_code: data.postalCode || null
+        postal_code: data.postalCode || null,
+        status: data.projectStatus || "متاح"
       };
 
       console.log("Inserting project details:", projectDetailsData);

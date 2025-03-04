@@ -10,15 +10,15 @@ interface ProjectUpdatesProps {
 }
 
 export default function ProjectUpdates({ projectId }: ProjectUpdatesProps) {
-  const { data: project, isLoading } = useQuery({
+  const { data: projectDetails, isLoading } = useQuery({
     queryKey: ['project-status', projectId],
     queryFn: async () => {
       console.log('Fetching project status for:', projectId);
       const { data, error } = await supabase
-        .from('projects')
+        .from('project_details')
         .select('status')
-        .eq('id', projectId)
-        .single();
+        .eq('project_id', projectId)
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching project status:', error);
@@ -31,7 +31,7 @@ export default function ProjectUpdates({ projectId }: ProjectUpdatesProps) {
   });
 
   // Default to "متاح" if no status is found
-  const projectStatus = project?.status || "متاح";
+  const projectStatus = projectDetails?.status || "متاح";
 
   if (isLoading) {
     return (

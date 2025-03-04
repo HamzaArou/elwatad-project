@@ -17,6 +17,7 @@ interface ProjectTabsSectionProps {
   lat?: number | null;
   lng?: number | null;
   postalCode?: string;
+  projectId: string; // Add projectId prop
 }
 
 export default function ProjectTabsSection({
@@ -28,7 +29,8 @@ export default function ProjectTabsSection({
   location,
   lat,
   lng,
-  postalCode
+  postalCode,
+  projectId
 }: ProjectTabsSectionProps) {
   return (
     <div className="mt-12 mb-16">
@@ -122,19 +124,19 @@ export default function ProjectTabsSection({
 
         <TabsContent value="360views" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <Project360Views projectId="placeholder-id" />
+            <Project360Views projectId={projectId} />
           </Card>
         </TabsContent>
 
         <TabsContent value="units" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectUnits projectId="placeholder-id" />
+            <ProjectUnits projectId={projectId} />
           </Card>
         </TabsContent>
 
         <TabsContent value="updates" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectUpdates projectId="placeholder-id" />
+            <ProjectUpdates projectId={projectId} />
           </Card>
         </TabsContent>
       </Tabs>

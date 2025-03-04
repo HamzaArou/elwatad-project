@@ -54,7 +54,7 @@ export default function ProjectDetails() {
       const {
         data: details,
         error: detailsError
-      } = await supabase.from("project_details").select("*").eq("project_id", id).single();
+      } = await supabase.from("project_details").select("*").eq("project_id", id).maybeSingle();
       if (detailsError && detailsError.code !== 'PGRST116') throw detailsError;
       const {
         data: media,
@@ -301,6 +301,7 @@ export default function ProjectDetails() {
           lat={projectData.lat} 
           lng={projectData.lng} 
           postalCode={projectData.postalCode}
+          projectId={id || ""}
         />
       </div>
 

@@ -99,6 +99,7 @@ export type Database = {
           lng: number | null
           postal_code: string | null
           project_id: string
+          status: string
         }
         Insert: {
           created_at?: string
@@ -109,6 +110,7 @@ export type Database = {
           lng?: number | null
           postal_code?: string | null
           project_id: string
+          status?: string
         }
         Update: {
           created_at?: string
@@ -119,6 +121,7 @@ export type Database = {
           lng?: number | null
           postal_code?: string | null
           project_id?: string
+          status?: string
         }
         Relationships: [
           {

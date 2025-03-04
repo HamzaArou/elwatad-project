@@ -6,6 +6,7 @@ import { ProjectFormValues } from "@/types/project";
 import { useState, useEffect, useRef } from "react";
 import { MapPin } from "lucide-react";
 import Script from "@/components/ui/script";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface ProjectLocationProps {
   form: UseFormReturn<ProjectFormValues>;
@@ -148,6 +149,35 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
           )}
         />
       </div>
+
+      {/* Add the project status selection field */}
+      <FormField
+        control={form.control}
+        name="projectStatus"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>حالة المشروع</FormLabel>
+            <Select
+              disabled={isLoading}
+              onValueChange={field.onChange}
+              defaultValue={field.value || "متاح"}
+              value={field.value}
+            >
+              <FormControl>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="اختر حالة المشروع" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="متاح">متاح</SelectItem>
+                <SelectItem value="محجوز">محجوز</SelectItem>
+                <SelectItem value="مباع">مباع</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       {previewUrl && (
         <div className="mt-4">

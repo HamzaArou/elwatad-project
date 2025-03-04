@@ -69,6 +69,9 @@ export type ProjectUnit = {
 export const cityTypes = ["مدينة مكة", "مدينة جدة"] as const;
 export type CityType = typeof cityTypes[number];
 
+export const projectStatusTypes = ["متاح", "محجوز", "مباع"] as const;
+export type ProjectStatusType = typeof projectStatusTypes[number];
+
 export const projectFormSchema = z.object({
   name: z.string().min(1, "اسم المشروع مطلوب"),
   city: z.enum(cityTypes, {
@@ -79,6 +82,7 @@ export const projectFormSchema = z.object({
   lat: z.number().optional(),
   lng: z.number().optional(),
   postalCode: z.string().optional(),
+  projectStatus: z.enum(projectStatusTypes).default("متاح"),
   floors: z.number().min(1, "عدد الطوابق يجب أن يكون أكبر من 0"),
   units: z.number().min(1, "عدد الشقق يجب أن يكون أكبر من 0"),
   status: z.enum(["بدأ البيع", "تم البيع بالكامل", "قريباً"] as const),
