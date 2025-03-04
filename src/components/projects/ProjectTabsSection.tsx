@@ -82,7 +82,7 @@ export default function ProjectTabsSection({
             <h3 className="text-xl font-semibold mb-4">وصف المشروع</h3>
             <div className="mb-8 text-gray-600 whitespace-pre-line">{details}</div>
 
-            <h3 className="text-xl font-semibold mb-4">المميزات</h3>
+            
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {features.map((feature, index) => <div key={index} className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-[#B69665]"></div>
