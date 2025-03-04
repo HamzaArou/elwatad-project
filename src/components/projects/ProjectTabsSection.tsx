@@ -53,12 +53,6 @@ export default function ProjectTabsSection({
             جولة 360
           </TabsTrigger>
           <TabsTrigger
-            value="units"
-            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
-          >
-            الوحدات السكنية
-          </TabsTrigger>
-          <TabsTrigger
             value="updates"
             className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
           >
