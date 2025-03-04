@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import ProjectLocation from "./ProjectLocation";
@@ -5,6 +6,7 @@ import Project360Views from "./Project360Views";
 import ProjectUnits from "./ProjectUnits";
 import ProjectUpdates from "./ProjectUpdates";
 import { Building2, Bed, Bath, Square } from "lucide-react";
+
 interface ProjectTabsSectionProps {
   details: string;
   rooms: number;
@@ -16,6 +18,7 @@ interface ProjectTabsSectionProps {
   lng?: number | null;
   postalCode?: string;
 }
+
 export default function ProjectTabsSection({
   details,
   rooms,
@@ -27,20 +30,38 @@ export default function ProjectTabsSection({
   lng,
   postalCode
 }: ProjectTabsSectionProps) {
-  return <div className="mt-12 mb-16">
+  return (
+    <div className="mt-12 mb-16">
       <Tabs defaultValue="details" dir="rtl">
         <TabsList className="w-full justify-start mb-6 bg-transparent border-b border-gray-200 p-0 h-auto overflow-x-auto no-scrollbar">
-          <TabsTrigger value="details" className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base">
+          <TabsTrigger
+            value="details"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
             التفاصيل
           </TabsTrigger>
-          <TabsTrigger value="location" className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base">
+          <TabsTrigger
+            value="location"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
             الموقع
           </TabsTrigger>
-          
-          <TabsTrigger value="units" className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base">
+          <TabsTrigger
+            value="360views"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
+            جولة 360
+          </TabsTrigger>
+          <TabsTrigger
+            value="units"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
             الوحدات السكنية
           </TabsTrigger>
-          <TabsTrigger value="updates" className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base">
+          <TabsTrigger
+            value="updates"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
             تحديثات المشروع
           </TabsTrigger>
         </TabsList>
@@ -84,17 +105,24 @@ export default function ProjectTabsSection({
 
             <h3 className="text-xl font-semibold mb-4">المميزات</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {features.map((feature, index) => <div key={index} className="flex items-center gap-2">
+              {features.map((feature, index) => (
+                <div key={index} className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-[#B69665]"></div>
                   <div className="text-gray-600">{feature}</div>
-                </div>)}
+                </div>
+              ))}
             </div>
           </Card>
         </TabsContent>
 
         <TabsContent value="location" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectLocation location={location} lat={lat} lng={lng} postalCode={postalCode} />
+            <ProjectLocation 
+              location={location} 
+              lat={lat} 
+              lng={lng} 
+              postalCode={postalCode}
+            />
           </Card>
         </TabsContent>
 
@@ -116,5 +144,6 @@ export default function ProjectTabsSection({
           </Card>
         </TabsContent>
       </Tabs>
-    </div>;
+    </div>
+  );
 }
