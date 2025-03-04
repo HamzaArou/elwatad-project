@@ -1,3 +1,4 @@
+
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -16,7 +17,7 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
     const currentViews = form.getValues("views360") || [];
     form.setValue("views360", [
       ...currentViews,
-      { title: "", url: "" }
+      { id: crypto.randomUUID(), title: "", url: "" }
     ]);
   };
 

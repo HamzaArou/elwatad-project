@@ -1,4 +1,3 @@
-
 import { UseFormReturn } from "react-hook-form";
 import { ProjectFormValues } from "@/types/project";
 import { useToast } from "@/hooks/use-toast";
@@ -67,13 +66,14 @@ export const useFormSubmission = (
       const projectId = newProject.id;
       console.log("New project created with ID:", projectId);
 
-      // Handle project details with postal code and status
+      // Handle project details with postal code, status, and 360 views
       const projectDetailsData = {
         project_id: projectId,
         lat: data.lat || null,
         lng: data.lng || null,
         postal_code: data.postalCode || null,
-        status: data.projectStatus || "متاح"
+        status: data.projectStatus || "متاح",
+        views360: data.views360 || []
       };
 
       console.log("Inserting project details:", projectDetailsData);

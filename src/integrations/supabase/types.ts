@@ -100,6 +100,7 @@ export type Database = {
           postal_code: string | null
           project_id: string
           status: string
+          views360: Json | null
         }
         Insert: {
           created_at?: string
@@ -111,6 +112,7 @@ export type Database = {
           postal_code?: string | null
           project_id: string
           status?: string
+          views360?: Json | null
         }
         Update: {
           created_at?: string
@@ -122,6 +124,7 @@ export type Database = {
           postal_code?: string | null
           project_id?: string
           status?: string
+          views360?: Json | null
         }
         Relationships: [
           {
