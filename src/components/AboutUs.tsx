@@ -49,7 +49,7 @@ const AboutUs = () => {
           
           <div className="order-1 md:order-2">
             <div className="relative overflow-hidden rounded-[50px] shadow-2xl">
-              <img src="/lovable-uploads/Screenshot 2025-03-04 at 15.20.55.png" alt="مجموعة الفيصل العقارية - نموذج معماري" className="w-full h-auto object-cover" />
+              <img src="/lovable-uploads/Screenshot 2025-03-04 at 15.27.52.png" alt="مجموعة الفيصل العقارية - نموذج معماري" className="w-full h-auto object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
           </div>
