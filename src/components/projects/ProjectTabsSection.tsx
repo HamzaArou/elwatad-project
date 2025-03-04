@@ -17,7 +17,7 @@ interface ProjectTabsSectionProps {
   lat?: number | null;
   lng?: number | null;
   postalCode?: string;
-  projectId?: string; // Adding proper projectId prop
+  projectId?: string;
 }
 
 export default function ProjectTabsSection({
@@ -31,7 +31,7 @@ export default function ProjectTabsSection({
   lat,
   lng,
   postalCode,
-  projectId = "placeholder-id" // Providing a default value
+  projectId = "placeholder-id"
 }: ProjectTabsSectionProps) {
   return (
     <div className="mt-12 mb-16">
