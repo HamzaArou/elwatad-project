@@ -46,12 +46,7 @@ export default function ProjectUpdates({ projectId }: ProjectUpdatesProps) {
       <div className="flex justify-center items-center py-8">
         <ProjectStatusCard status={projectStatus} />
       </div>
-      
-      <div className="text-center p-8 rounded-lg border border-dashed border-gray-300">
-        <h3 className="text-xl font-medium text-gray-500">
-          لا توجد وحدات متاحة حالياً
-        </h3>
-      </div>
+      {/* Removed the "No units available" message section */}
     </div>
   );
 }
