@@ -93,7 +93,6 @@ export type Database = {
         Row: {
           created_at: string
           details: string | null
-          features_description: string | null
           id: string
           lat: number | null
           lng: number | null
@@ -103,7 +102,6 @@ export type Database = {
         Insert: {
           created_at?: string
           details?: string | null
-          features_description?: string | null
           id?: string
           lat?: number | null
           lng?: number | null
@@ -113,7 +111,6 @@ export type Database = {
         Update: {
           created_at?: string
           details?: string | null
-          features_description?: string | null
           id?: string
           lat?: number | null
           lng?: number | null

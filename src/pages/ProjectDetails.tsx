@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
-const ProjectDetails = () => {
+export default function ProjectDetails() {
   const { id } = useParams<{ id: string; }>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(true);
@@ -50,37 +51,31 @@ const ProjectDetails = () => {
           thumbnail_url
         `).eq("id", id).single();
       if (projectError) throw projectError;
-
       const {
         data: details,
         error: detailsError
       } = await supabase.from("project_details").select("*").eq("project_id", id).single();
-      
-      if (detailsError && detailsError.code !== 'PGRST116') {
-        console.error("Error fetching project details:", detailsError);
-      }
-
+      if (detailsError && detailsError.code !== 'PGRST116') throw detailsError;
       const {
         data: media,
         error: mediaError
       } = await supabase.from("project_media").select("*").eq("project_id", id).order("display_order");
       if (mediaError) throw mediaError;
-
       const {
         data: features,
         error: featuresError
       } = await supabase.from("project_features").select("*").eq("project_id", id);
       if (featuresError) throw featuresError;
       
-      console.log("Project details:", details);
+      // Get postal code if available
+      const postalCode = details?.postal_code || null;
       
       return {
         ...project,
         details: details?.details,
         lat: details?.lat,
         lng: details?.lng,
-        postalCode: details?.postal_code || null,
-        featuresDescription: details?.features_description || null,
+        postalCode,
         media: media || [],
         features: features || []
       };
@@ -117,7 +112,7 @@ const ProjectDetails = () => {
 
     try {
       const content = `
-نوع الطلب: استفسار عن م��روع
+نوع الطلب: استفسار عن مشروع
 الاسم: ${formData.name || ""}
 رقم الجوال: ${formData.phone || ""}
 المشروع: ${projectData?.name || ""}
@@ -302,12 +297,10 @@ const ProjectDetails = () => {
           bathrooms={projectData.bathrooms} 
           area={projectData.area} 
           features={projectData.features.map(f => `${f.feature_type} (${f.amount})`)} 
-          featuresDescription={projectData.featuresDescription}
           location={projectData.location || ""} 
           lat={projectData.lat} 
           lng={projectData.lng} 
           postalCode={projectData.postalCode}
-          projectId={id}
         />
       </div>
 
@@ -420,5 +413,3 @@ const ProjectDetails = () => {
       `}</style>
     </div>;
 }
-
-export default ProjectDetails;

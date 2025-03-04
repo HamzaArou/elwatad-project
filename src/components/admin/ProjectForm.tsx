@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +9,7 @@ import { ProjectFormProps, projectFormSchema, ProjectFormValues } from "@/types/
 import ProjectBasicInfo from "./project-form/ProjectBasicInfo";
 import ProjectLocation from "./project-form/ProjectLocation";
 import Project360Views from "./project-form/Project360Views";
+import ProjectUnits from "./project-form/ProjectUnits";
 import ProjectGallery from "./project-form/ProjectGallery";
 import ProjectPlans from "./project-form/ProjectPlans";
 import FormNavigation from "./project-form/FormNavigation";
@@ -116,6 +116,38 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
 
           <TabsContent value="360views">
             <Project360Views form={form} isLoading={isLoading} />
+          </TabsContent>
+
+          <TabsContent value="units">
+            <ProjectUnits
+              form={form}
+              isLoading={isLoading}
+              onAddUnit={() => {
+                const currentUnits = form.getValues("project_units") || [];
+                form.setValue("project_units", [
+                  ...currentUnits,
+                  {
+                    id: crypto.randomUUID(),
+                    unit_number: currentUnits.length + 1,
+                    name: `Unit ${currentUnits.length + 1}`,
+                    status: "للبيع",
+                    unit_type: "",
+                    area: 0,
+                    floor_number: 1,
+                    side: "شمال",
+                    rooms: 1,
+                    bathrooms: 1,
+                  },
+                ]);
+              }}
+              onRemoveUnit={(index: number) => {
+                const currentUnits = form.getValues("project_units") || [];
+                form.setValue(
+                  "project_units",
+                  currentUnits.filter((_, i) => i !== index)
+                );
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="plans">

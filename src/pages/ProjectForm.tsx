@@ -22,7 +22,7 @@ export default function ProjectFormPage() {
 
       if (projectError) throw projectError;
       
-      // Get project details including postal code and features description
+      // Get project details including postal code
       const { data: projectDetails, error: detailsError } = await supabase
         .from("project_details")
         .select("*")
@@ -36,12 +36,9 @@ export default function ProjectFormPage() {
       // Combine project data with details, if available
       const combinedData = {
         ...projectData,
-        postalCode: projectDetails?.postal_code || null,
-        featuresDescription: projectDetails?.features_description || null
+        postalCode: projectDetails?.postal_code || null
       };
 
-      console.log("Combined project data:", combinedData);
-      
       return combinedData;
     },
     enabled: !!id,

@@ -79,7 +79,6 @@ export const projectFormSchema = z.object({
   lat: z.number().optional(),
   lng: z.number().optional(),
   postalCode: z.string().optional(),
-  featuresDescription: z.string().optional(),
   floors: z.number().min(1, "عدد الطوابق يجب أن يكون أكبر من 0"),
   units: z.number().min(1, "عدد الشقق يجب أن يكون أكبر من 0"),
   status: z.enum(["بدأ البيع", "تم البيع بالكامل", "قريباً"] as const),
@@ -88,9 +87,6 @@ export const projectFormSchema = z.object({
   features: z.array(z.string()).optional(),
   specifications: z.array(z.string()).optional(),
   plans: z.array(z.string()).optional(),
-  area: z.number().optional(),
-  rooms: z.number().optional(),
-  bathrooms: z.number().optional(),
   project_units: z.array(z.object({
     id: z.string(),
     unit_number: z.number().min(1, "رقم الوحدة مطلوب"),

@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import ProjectLocation from "./ProjectLocation";
 import Project360Views from "./Project360Views";
+import ProjectUnits from "./ProjectUnits";
 import ProjectUpdates from "./ProjectUpdates";
 import { Building2, Bed, Bath, Square } from "lucide-react";
 
@@ -12,12 +13,10 @@ interface ProjectTabsSectionProps {
   bathrooms: number;
   area: number;
   features: string[];
-  featuresDescription?: string;
   location: string;
   lat?: number | null;
   lng?: number | null;
   postalCode?: string;
-  projectId?: string;
 }
 
 export default function ProjectTabsSection({
@@ -26,12 +25,10 @@ export default function ProjectTabsSection({
   bathrooms,
   area,
   features,
-  featuresDescription,
   location,
   lat,
   lng,
-  postalCode,
-  projectId = "placeholder-id"
+  postalCode
 }: ProjectTabsSectionProps) {
   return (
     <div className="mt-12 mb-16">
@@ -54,6 +51,12 @@ export default function ProjectTabsSection({
             className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
           >
             جولة 360
+          </TabsTrigger>
+          <TabsTrigger
+            value="units"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 text-base"
+          >
+            الوحدات السكنية
           </TabsTrigger>
           <TabsTrigger
             value="updates"
@@ -101,9 +104,6 @@ export default function ProjectTabsSection({
             <div className="mb-8 text-gray-600 whitespace-pre-line">{details}</div>
 
             <h3 className="text-xl font-semibold mb-4">المميزات</h3>
-            {featuresDescription && (
-              <div className="mb-6 text-gray-600 whitespace-pre-line">{featuresDescription}</div>
-            )}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-2">
@@ -128,13 +128,19 @@ export default function ProjectTabsSection({
 
         <TabsContent value="360views" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <Project360Views projectId={projectId} />
+            <Project360Views projectId="placeholder-id" />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="units" className="pt-2">
+          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
+            <ProjectUnits projectId="placeholder-id" />
           </Card>
         </TabsContent>
 
         <TabsContent value="updates" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectUpdates projectId={projectId} />
+            <ProjectUpdates projectId="placeholder-id" />
           </Card>
         </TabsContent>
       </Tabs>
