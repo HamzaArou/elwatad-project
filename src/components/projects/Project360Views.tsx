@@ -30,7 +30,25 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
     enabled: !!projectId,
   });
 
-  if (isLoading || !views?.length) return null;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-deepBlue"></div>
+      </div>
+    );
+  }
+
+  if (!views?.length) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <Rotate3d className="w-16 h-16 text-gray-300 mb-4" />
+        <h3 className="text-xl font-bold text-gray-500 mb-2">لا توجد جولات افتراضية</h3>
+        <p className="text-gray-400">
+          هذا المشروع لا يحتوي على جولات افتراضية 360° في الوقت الحالي
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative py-12 bg-gradient-to-b from-deepBlue/10 to-deepBlue/5 rounded-3xl mb-12">
