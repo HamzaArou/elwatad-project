@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
-export default function ProjectDetails() {
+const ProjectDetails = () => {
   const { id } = useParams<{ id: string; }>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(true);
@@ -117,7 +117,7 @@ export default function ProjectDetails() {
 
     try {
       const content = `
-نوع الطلب: استفسار عن مشروع
+نوع الطلب: استفسار عن م��روع
 الاسم: ${formData.name || ""}
 رقم الجوال: ${formData.phone || ""}
 المشروع: ${projectData?.name || ""}
@@ -307,6 +307,7 @@ export default function ProjectDetails() {
           lat={projectData.lat} 
           lng={projectData.lng} 
           postalCode={projectData.postalCode}
+          projectId={id}
         />
       </div>
 
@@ -419,3 +420,5 @@ export default function ProjectDetails() {
       `}</style>
     </div>;
 }
+
+export default ProjectDetails;
