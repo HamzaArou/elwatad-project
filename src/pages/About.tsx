@@ -1,4 +1,5 @@
-import { Building2, Shield, Star, MapPin, Search, Zap, Headphones, Quote, MessageCircleQuestion } from "lucide-react";
+
+import { Building2, Shield, Star, MapPin, Search, Zap, Headphones, Quote, MessageCircleQuestion, Briefcase } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
