@@ -1,6 +1,7 @@
-import { Building2, Shield, Star, SparklesIcon, Briefcase, MapPin, Search, Zap, Headphones, Quote } from "lucide-react";
+import { Building2, Shield, Star, MapPin, Search, Zap, Headphones, Quote, MessageCircleQuestion } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef, useState } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const About = () => {
   const observerRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -102,34 +103,21 @@ const About = () => {
     }
   ];
 
-  const futureFeatures = [{
-    title: "خدمة التنبيهات الذكية",
-    description: "تنبيه المستخدمين عند إضافة عقارات جديدة تلبي مواصفاتهم عبر البريد الإلكتروني أو تطبيق الجوال"
-  }, {
-    title: "الأسئلة المتكررة",
-    description: "قسم للإجابة على الاستفسارات الشائعة"
-  }, {
-    title: "أحدث العروض العقارية",
-    description: "البقاء على تواصل معنا، مع عرض آخر العروض على الموقع"
-  }, {
-    title: "طلب استشارتك المجانية الآن",
-    description: "إبراز قسم الاستشارة"
-  }, {
-    title: "خدمات التقييم العقاري",
-    description: "قسم يتيح للمستخدمين تقييم العقارات بناءً على معايير مثل الموقع، الأسعار، الجودة"
-  }, {
-    title: "تقارير السوق العقاري",
-    description: "نشر تقارير دورية عن حالة السوق والتوجهات الحديثة لتحليل الأسعار"
-  }, {
-    title: "تجارب العملاء",
-    description: "قسم لقصص النجاح أو تقييمات العملاء لبناء الثقة مع الزوار الجدد"
-  }, {
-    title: "خاصية البحث المتقدم",
-    description: "تحسين محرك البحث ليشمل فلاتر متعددة مثل الموقع، السعر، المساحة، نوع العقار، إلخ"
-  }, {
-    title: "خريطة ذكية لتحديد العقار المثالي",
-    description: "عرض أفضل أماكن الاستثمار أو السكن بناءً على معايير مثل التعليم، النقل، والمرافق"
-  }];
+  const faqItems = [
+    {
+      question: "هل تقوم شركة وتد الكيان بالتمويل العقاري لعملائها ؟",
+      answer: "وتد الكيان شركة عقارية لا تقوم بالتمويل بل تقوم بالتعاون مع الجهات التمويلية كالبنوك وشركات التمويل لتوفير أفضل الحلول التمويلية المناسبة لعملائها"
+    },
+    {
+      question: "هل تقدم وتد الكيان خدمات استشارية للعملاء المهتمين بشراء العقارات؟",
+      answer: "نعم، نقدم استشارات مجانية لمساعدة العملاء على اختيار العقار المناسب بناءً على احتياجاتهم وميزانيتهم، مع تقديم معلومات تفصيلية حول المواقع والمشاريع المتاحة"
+    },
+    {
+      question: "ماهي شروط التملك بنظام التمويل العقاري ؟",
+      answer: "يشترط للتملك بنظام التمويل العقاري أن يكون - سعودي الجنسية - موظف حكومي - قطاع خاص معتمد."
+    }
+  ];
+
   const nextReview = () => {
     setActiveReviewIndex(prev => prev === reviews.length - 1 ? 0 : prev + 1);
   };
@@ -361,30 +349,50 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="mb-12 text-right">
             <h2 className="inline-block bg-white px-6 py-3 rounded-tl-[100px] rounded-tr-[5px] rounded-br-[100px] rounded-bl-[5px] text-[#2F4447] font-extrabold text-4xl -mt-12 shadow-lg border-2 border-[#B69665]">
-              آفاق نضيفها
+              الأسئلة الشائعة
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {futureFeatures.map((feature, index) => <div key={index} className="flip-card h-[200px] perspective">
-                <div className="flip-card-inner relative w-full h-full transition-transform duration-500 transform-style-3d">
-                  <div className="flip-card-front absolute w-full h-full backface-hidden">
-                    <Card className="h-full bg-white hover:shadow-lg transition-all duration-300">
-                      <CardContent className="p-6 text-center h-full flex flex-col items-center justify-center">
-                        <SparklesIcon className="w-8 h-8 text-[#B69665] mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-[#2F4447]">{feature.title}</h3>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
-                    <Card className="h-full bg-gradient-to-br from-[#2F4447] to-[#B69665]">
-                      <CardContent className="p-6 text-center h-full flex flex-col items-center justify-center space-y-3">
-                        <h3 className="text-xl font-extrabold text-white border-b-2 border-white/30 pb-2">{feature.title}</h3>
-                        <p className="text-white text-sm leading-relaxed">{feature.description}</p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>)}
+          
+          <div className="max-w-4xl mx-auto text-center mb-10">
+            <p className="text-lg text-gray-700 leading-relaxed">
+              إليك إجابات على بعض الأسئلة الأكثر شيوعًا حول خدماتنا العقارية
+            </p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-500 hover:shadow-xl">
+            <div className="p-1">
+              <Accordion type="single" collapsible className="w-full" dir="rtl">
+                {faqItems.map((item, index) => (
+                  <AccordionItem key={index} value={`item-${index}`} className="border-b border-[#B69665]/30 last:border-0">
+                    <AccordionTrigger className="py-5 px-6 text-right hover:no-underline hover:bg-[#F7E4C8]/10 transition-all duration-300 group text-lg font-bold text-[#2F4447]">
+                      <div className="flex items-center gap-3 w-full">
+                        <MessageCircleQuestion className="flex-shrink-0 w-6 h-6 text-[#B69665] group-hover:text-[#2F4447] transition-colors duration-300" />
+                        <span className="flex-1 text-right">{item.question}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 pb-5 pt-2 text-gray-700 leading-relaxed text-right bg-gradient-to-r from-[#F7E4C8]/5 to-transparent">
+                      <div className="flex gap-3">
+                        <div className="flex-shrink-0 w-6">
+                          {/* Empty div for alignment */}
+                        </div>
+                        <div className="flex-1">
+                          {item.answer}
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+            
+            <div className="h-2 bg-gradient-to-r from-[#B69665] to-[#2F4447]"></div>
+          </div>
+          
+          <div className="mt-10 text-center">
+            <a href="mailto:info@watadalkayan.com" className="inline-flex items-center gap-2 bg-white text-[#2F4447] hover:text-[#B69665] border-2 border-[#B69665] px-6 py-3 rounded-full font-bold transition-all duration-300">
+              <span>هل لديك سؤال آخر؟ راسلنا</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 6.1H3"></path><path d="M21 12.1H3"></path><path d="M15.1 18H3"></path></svg>
+            </a>
           </div>
         </div>
       </section>
@@ -411,20 +419,6 @@ const About = () => {
 
           .rotate-y-180 {
             transform: rotateY(180deg);
-          }
-
-          .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-          }
-
-          @media (hover: none) {
-            .flip-card-inner {
-              transition: transform 0.3s ease;
-            }
-            
-            .flip-card:active .flip-card-inner {
-              transform: rotateY(180deg);
-            }
           }
 
           @keyframes fadeInUp {
