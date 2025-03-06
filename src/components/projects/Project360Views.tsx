@@ -26,8 +26,29 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
 
       if (error) throw error;
       
-      // Cast the JSON data to the correct type
-      return (projectDetails?.views360 || []) as Project360View[];
+      // Handle different possible data formats safely
+      const views360Data = projectDetails?.views360;
+      
+      // If data is null or undefined, return empty array
+      if (!views360Data) return [];
+      
+      try {
+        // If the data is a string (which would be invalid), try to parse it
+        if (typeof views360Data === 'string') {
+          return JSON.parse(views360Data) as Project360View[];
+        }
+        
+        // If the data is already an array, return it
+        if (Array.isArray(views360Data)) {
+          return views360Data as Project360View[];
+        }
+        
+        // For any other case, return empty array
+        return [];
+      } catch (err) {
+        console.error("Error parsing views360 data:", err);
+        return [];
+      }
     },
     enabled: !!projectId,
   });

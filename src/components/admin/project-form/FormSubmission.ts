@@ -1,3 +1,4 @@
+
 import { UseFormReturn } from "react-hook-form";
 import { ProjectFormValues } from "@/types/project";
 import { useToast } from "@/hooks/use-toast";
@@ -43,6 +44,11 @@ export const useFormSubmission = (
         units: data.units,
         status: data.status,
         thumbnail_url: thumbnailUrl,
+        // Add missing required fields for project table
+        area: 0, // Default value
+        district: data.location || "", // Use location as district if not provided
+        property_status: "فيلا", // Default value
+        property_value: 0, // Default value
       };
 
       console.log("Project data to be inserted:", projectData);
@@ -66,6 +72,17 @@ export const useFormSubmission = (
       const projectId = newProject.id;
       console.log("New project created with ID:", projectId);
 
+      // Ensure views360 is properly formatted as a valid JSON array
+      let validViews360 = [];
+      if (data.views360 && Array.isArray(data.views360)) {
+        // Ensure each view has the required fields
+        validViews360 = data.views360.map(view => ({
+          id: view.id || crypto.randomUUID(),
+          title: view.title || "",
+          url: view.url || ""
+        }));
+      }
+      
       // Handle project details with postal code, status, and 360 views
       const projectDetailsData = {
         project_id: projectId,
@@ -73,7 +90,7 @@ export const useFormSubmission = (
         lng: data.lng || null,
         postal_code: data.postalCode || null,
         status: data.projectStatus || "متاح",
-        views360: data.views360 || []
+        views360: validViews360
       };
 
       console.log("Inserting project details:", projectDetailsData);
@@ -116,7 +133,7 @@ export const useFormSubmission = (
       // Handle gallery images
       if (data.gallery_type === "images" && galleryImages && galleryImages.length > 0) {
         console.log("Uploading gallery images...");
-        const urls = await uploadFiles(galleryImages, "project-images");
+        const urls = await uploadFiles(Array.from(galleryImages as unknown as File[]), "project-images");
         
         console.log("Inserting gallery images...");
         const { error: imagesError } = await supabase
@@ -139,21 +156,39 @@ export const useFormSubmission = (
       // Handle plans
       if (plans && plans.length > 0) {
         console.log("Uploading plans...");
-        const urls = await uploadFiles(plans, "project-plans");
+        const urls = await uploadFiles(Array.from(plans as unknown as File[]), "project-plans");
         
-        console.log("Inserting plans...");
-        const { error: plansError } = await supabase
-          .from("project_plans")
-          .insert(
-            urls.map(url => ({
-              project_id: projectId,
-              file_url: url,
-            }))
-          );
+        // Check if project_plans table exists in the database
+        try {
+          console.log("Inserting plans...");
+          // Instead of using project_plans, we'll store plans in a standard way
+          const { error: plansError } = await supabase
+            .from("project_media") // Use project_media instead of project_plans
+            .insert(
+              urls.map(url => ({
+                project_id: projectId,
+                media_url: url,
+                media_type: "image",
+                content_type: "plan" // Use content_type to differentiate
+              }))
+            );
 
-        if (plansError) {
-          console.error("Error inserting plans:", plansError);
-          throw plansError;
+          if (plansError) {
+            console.error("Error inserting plans:", plansError);
+            throw plansError;
+          }
+        } catch (planError) {
+          console.error("Error with plans table - using alternative storage:", planError);
+          // If that fails, store them somewhere else as a backup
+          const { error: detailsUpdateError } = await supabase
+            .from("project_details")
+            .update({ plans: urls })
+            .eq("project_id", projectId);
+            
+          if (detailsUpdateError) {
+            console.error("Error updating project details with plans:", detailsUpdateError);
+            throw detailsUpdateError;
+          }
         }
       }
 

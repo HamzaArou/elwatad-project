@@ -18,14 +18,15 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
     form.setValue("views360", [
       ...currentViews,
       { id: crypto.randomUUID(), title: "", url: "" }
-    ]);
+    ], { shouldValidate: true });
   };
 
   const removeView = (index: number) => {
     const currentViews = form.getValues("views360") || [];
     form.setValue(
       "views360",
-      currentViews.filter((_, i) => i !== index)
+      currentViews.filter((_, i) => i !== index),
+      { shouldValidate: true }
     );
   };
 
@@ -41,6 +42,12 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
           إضافة جولة
         </Button>
       </div>
+
+      {views360.length === 0 && (
+        <div className="text-center p-6 bg-gray-50 rounded-lg">
+          <p className="text-gray-500">لا توجد جولات افتراضية. اضغط على "إضافة جولة" لإضافة جولة جديدة.</p>
+        </div>
+      )}
 
       {views360.map((_, index) => (
         <div key={index} className="space-y-4 p-4 border rounded-lg">
