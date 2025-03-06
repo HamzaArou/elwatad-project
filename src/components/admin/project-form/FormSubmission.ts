@@ -89,15 +89,17 @@ export const useFormSubmission = (
       
       console.log("Project ID:", projectId);
 
-      // Ensure views360 is properly formatted
-      // Always store as an array of objects with id, title, and url
-      let validViews360 = [];
-      if (data.views360 && Array.isArray(data.views360)) {
-        validViews360 = data.views360.map(view => ({
-          id: view.id || crypto.randomUUID(),
-          title: view.title || "جولة افتراضية",
-          url: view.url || ""
-        }));
+      // Handle views360 - now saving as a text field
+      let views360Value = null;
+      if (data.views360 && Array.isArray(data.views360) && data.views360.length > 0) {
+        // For multiple views, serialize to JSON string
+        if (data.views360.length > 1) {
+          views360Value = JSON.stringify(data.views360);
+        } 
+        // For a single view, just store the URL directly
+        else if (data.views360.length === 1) {
+          views360Value = data.views360[0].url;
+        }
       }
       
       // Handle project details with postal code, status, and 360 views
@@ -107,7 +109,7 @@ export const useFormSubmission = (
         lng: data.lng || null,
         postal_code: data.postalCode || null,
         status: data.projectStatus || "متاح",
-        views360: validViews360
+        views360: views360Value
       };
 
       // Check if project details already exist

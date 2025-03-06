@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { ProjectFormValues } from "@/types/project";
 import { useState } from "react";
 import { Info, Link } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 
 interface Project360ViewsProps {
   form: UseFormReturn<ProjectFormValues>;

@@ -37,38 +37,36 @@ export default function ProjectFormPage() {
       let formattedViews360 = [];
       if (projectDetails?.views360) {
         try {
-          // If it's already an array of objects
-          if (Array.isArray(projectDetails.views360)) {
-            formattedViews360 = projectDetails.views360.map((view: any) => ({
-              id: view.id || crypto.randomUUID(),
-              title: view.title || "جولة افتراضية",
-              url: view.url || ""
-            }));
-          } 
-          // If it's a string (could be a URL or JSON string)
-          else if (typeof projectDetails.views360 === 'string') {
-            try {
-              // Try parsing as JSON
-              const parsedViews = JSON.parse(projectDetails.views360);
-              if (Array.isArray(parsedViews)) {
-                formattedViews360 = parsedViews;
-              } else {
-                // Single URL - create with default title
-                formattedViews360 = [{
-                  id: crypto.randomUUID(),
-                  title: "جولة افتراضية 360°",
-                  url: projectDetails.views360
-                }];
+          // If it's already an array of objects (parsed from a JSON string)
+          if (typeof projectDetails.views360 === 'string') {
+            if (projectDetails.views360.startsWith('[')) {
+              // Try parsing as JSON array
+              try {
+                const parsedViews = JSON.parse(projectDetails.views360);
+                if (Array.isArray(parsedViews)) {
+                  formattedViews360 = parsedViews.map(view => ({
+                    id: view.id || crypto.randomUUID(),
+                    title: view.title || "جولة افتراضية",
+                    url: view.url || ""
+                  }));
+                }
+              } catch (e) {
+                console.error("Error parsing views360 JSON:", e);
               }
-            } catch (e) {
-              // Not valid JSON, assume it's a URL
-              if (projectDetails.views360.startsWith('http')) {
-                formattedViews360 = [{
-                  id: crypto.randomUUID(),
-                  title: "جولة افتراضية 360°",
-                  url: projectDetails.views360
-                }];
-              }
+            } else if (projectDetails.views360.startsWith('http')) {
+              // Single URL - create with default title
+              formattedViews360 = [{
+                id: crypto.randomUUID(),
+                title: "جولة افتراضية 360°",
+                url: projectDetails.views360
+              }];
+            } else {
+              // Plain text that's not a URL or JSON - just use as is
+              formattedViews360 = [{
+                id: crypto.randomUUID(),
+                title: "جولة افتراضية 360°",
+                url: projectDetails.views360
+              }];
             }
           }
         } catch (err) {

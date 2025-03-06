@@ -38,54 +38,33 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
 
         const views360Data = projectDetails.views360;
         
-        // Case 1: It's already an array of view objects
-        if (Array.isArray(views360Data) && views360Data.length > 0) {
-          return views360Data.map((view: any) => ({
-            id: view.id || crypto.randomUUID(),
-            title: view.title || "جولة افتراضية",
-            url: view.url || ""
-          }));
-        }
-        
-        // Case 2: It's a single URL string
-        if (typeof views360Data === 'string' && views360Data.trim() !== '') {
-          return [{
-            id: crypto.randomUUID(),
-            title: "جولة افتراضية 360°",
-            url: views360Data
-          }];
-        }
-        
-        // Case 3: Try to parse JSON string
+        // If it's a simple string URL, return a single view
         if (typeof views360Data === 'string') {
-          try {
-            const parsed = JSON.parse(views360Data);
-            
-            if (Array.isArray(parsed)) {
-              return parsed.map((view: any) => ({
-                id: view.id || crypto.randomUUID(),
-                title: view.title || "جولة افتراضية",
-                url: view.url || ""
-              }));
+          // Try to parse as JSON first
+          if (views360Data.startsWith('[')) {
+            try {
+              const parsed = JSON.parse(views360Data);
+              
+              if (Array.isArray(parsed)) {
+                return parsed.map((view: any) => ({
+                  id: view.id || crypto.randomUUID(),
+                  title: view.title || "جولة افتراضية",
+                  url: view.url || ""
+                }));
+              }
+            } catch (e) {
+              // Not valid JSON
+              console.error("Error parsing views360 JSON:", e);
             }
-            
-            // If it's a single object
-            if (parsed && typeof parsed === 'object') {
-              return [{
-                id: crypto.randomUUID(),
-                title: parsed.title || "جولة افتراضية 360°",
-                url: parsed.url || ""
-              }];
-            }
-          } catch (e) {
-            // Not valid JSON, but could be a URL
-            if (views360Data.startsWith('http')) {
-              return [{
-                id: crypto.randomUUID(),
-                title: "جولة افتراضية 360°",
-                url: views360Data
-              }];
-            }
+          }
+          
+          // If it starts with http, it's a direct URL
+          if (views360Data.includes('http')) {
+            return [{
+              id: crypto.randomUUID(),
+              title: "جولة افتراضية 360°",
+              url: views360Data
+            }];
           }
         }
         

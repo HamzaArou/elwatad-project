@@ -49,8 +49,9 @@ export const useFormValidation = (
       case "360views":
         // Validate each view has title and URL
         const views360 = form.getValues("views360") || [];
+        
+        // Allow empty views, not required
         if (views360.length === 0) {
-          // Allow empty views, not required
           return true;
         }
         
@@ -63,6 +64,26 @@ export const useFormValidation = (
           toast({
             title: "خطأ",
             description: "يجب إدخال عنوان ورابط لكل جولة افتراضية",
+            variant: "destructive",
+          });
+          return false;
+        }
+        
+        // Validate URLs
+        const invalidUrls = views360.filter(view => {
+          if (!view.url) return false;
+          try {
+            new URL(view.url);
+            return false;
+          } catch (e) {
+            return true;
+          }
+        });
+        
+        if (invalidUrls.length > 0) {
+          toast({
+            title: "خطأ",
+            description: "بعض روابط الجولات الافتراضية غير صالحة",
             variant: "destructive",
           });
           return false;
