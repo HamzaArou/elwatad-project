@@ -27,7 +27,7 @@ export default function ProjectFormPage() {
         .from("project_details")
         .select("*")
         .eq("project_id", id)
-        .single();
+        .maybeSingle();
 
       if (detailsError && detailsError.code !== 'PGRST116') {
         console.error("Error fetching project details:", detailsError);
@@ -36,43 +36,15 @@ export default function ProjectFormPage() {
       // Process views360 data to ensure it's in the correct format for the form
       let formattedViews360 = [];
       if (projectDetails?.views360) {
-        try {
-          // If it's already an array of objects
-          if (Array.isArray(projectDetails.views360)) {
-            formattedViews360 = projectDetails.views360.map((view: any) => ({
-              id: view.id || crypto.randomUUID(),
-              title: view.title || "جولة افتراضية",
-              url: view.url || ""
-            }));
-          } 
-          // If it's a string (could be a URL or JSON string)
-          else if (typeof projectDetails.views360 === 'string') {
-            try {
-              // Try parsing as JSON
-              const parsedViews = JSON.parse(projectDetails.views360);
-              if (Array.isArray(parsedViews)) {
-                formattedViews360 = parsedViews;
-              } else {
-                // Single URL - create with default title
-                formattedViews360 = [{
-                  id: crypto.randomUUID(),
-                  title: "جولة افتراضية 360°",
-                  url: projectDetails.views360
-                }];
-              }
-            } catch (e) {
-              // Not valid JSON, assume it's a URL
-              if (projectDetails.views360.startsWith('http')) {
-                formattedViews360 = [{
-                  id: crypto.randomUUID(),
-                  title: "جولة افتراضية 360°",
-                  url: projectDetails.views360
-                }];
-              }
-            }
-          }
-        } catch (err) {
-          console.error("Error processing views360 data:", err);
+        // With our new database trigger, views360 will always be an array
+        if (Array.isArray(projectDetails.views360)) {
+          formattedViews360 = projectDetails.views360.map((view: any) => ({
+            id: view.id || crypto.randomUUID(),
+            title: view.title || "جولة افتراضية",
+            url: view.url || ""
+          }));
+        } else {
+          console.warn("Unexpected format for views360:", projectDetails.views360);
           formattedViews360 = [];
         }
       }

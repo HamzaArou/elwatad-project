@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { ProjectFormValues } from "@/types/project";
 import { useState } from "react";
 import { Info, Link } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 
 interface Project360ViewsProps {
   form: UseFormReturn<ProjectFormValues>;
@@ -82,6 +81,7 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
           <div className="text-sm text-amber-800">
             <p className="font-medium">كيفية إضافة جولة افتراضية:</p>
             <p>يمكنك إضافة رابط جولة افتراضية مباشرة في حقل "أضف رابط مباشر" أدناه ثم الضغط على "إضافة" أو يمكنك إضافة جولة بالتفاصيل عبر زر "إضافة جولة".</p>
+            <p className="mt-1">الآن يتم حفظ جميع الروابط بتنسيق صحيح تلقائياً في قاعدة البيانات.</p>
           </div>
         </div>
       </div>
@@ -107,6 +107,7 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
         {jsonError && (
           <p className="text-sm text-red-500 mt-1">{jsonError}</p>
         )}
+        <p className="text-xs text-gray-500 mt-2">مثال: https://my.matterport.com/show/?m=xCZqkXZqaX2</p>
       </div>
 
       {views360.length === 0 && (

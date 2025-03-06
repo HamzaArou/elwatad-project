@@ -24,22 +24,24 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
           .from('project_details')
           .select('views360')
           .eq('project_id', projectId)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error("Error fetching views360:", error);
           return [];
         }
         
-        // If no data returned
-        if (!projectDetails || projectDetails.views360 === null) {
+        // If no data returned or views360 is null
+        if (!projectDetails || !projectDetails.views360) {
+          console.log("No views360 data found for project:", projectId);
           return [];
         }
 
         const views360Data = projectDetails.views360;
+        console.log("Raw views360 data:", views360Data);
         
-        // Case 1: It's already an array of view objects
-        if (Array.isArray(views360Data) && views360Data.length > 0) {
+        // Ensure we're working with an array
+        if (Array.isArray(views360Data)) {
           return views360Data.map((view: any) => ({
             id: view.id || crypto.randomUUID(),
             title: view.title || "جولة افتراضية",
@@ -47,48 +49,8 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
           }));
         }
         
-        // Case 2: It's a single URL string
-        if (typeof views360Data === 'string' && views360Data.trim() !== '') {
-          return [{
-            id: crypto.randomUUID(),
-            title: "جولة افتراضية 360°",
-            url: views360Data
-          }];
-        }
-        
-        // Case 3: Try to parse JSON string
-        if (typeof views360Data === 'string') {
-          try {
-            const parsed = JSON.parse(views360Data);
-            
-            if (Array.isArray(parsed)) {
-              return parsed.map((view: any) => ({
-                id: view.id || crypto.randomUUID(),
-                title: view.title || "جولة افتراضية",
-                url: view.url || ""
-              }));
-            }
-            
-            // If it's a single object
-            if (parsed && typeof parsed === 'object') {
-              return [{
-                id: crypto.randomUUID(),
-                title: parsed.title || "جولة افتراضية 360°",
-                url: parsed.url || ""
-              }];
-            }
-          } catch (e) {
-            // Not valid JSON, but could be a URL
-            if (views360Data.startsWith('http')) {
-              return [{
-                id: crypto.randomUUID(),
-                title: "جولة افتراضية 360°",
-                url: views360Data
-              }];
-            }
-          }
-        }
-        
+        // For legacy data - should no longer occur with the new trigger
+        console.warn("Unexpected views360 format:", typeof views360Data);
         return [];
       } catch (err) {
         console.error("Error processing views360 data:", err);
