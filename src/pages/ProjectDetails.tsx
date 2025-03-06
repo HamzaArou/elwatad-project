@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -286,6 +287,7 @@ export default function ProjectDetails() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
+        <h2 className="text-3xl font-bold text-right mb-6">معرض صور وفيديوهات المشروع</h2>
         <ProjectGallery gallery={galleryItems} />
       </div>
 
