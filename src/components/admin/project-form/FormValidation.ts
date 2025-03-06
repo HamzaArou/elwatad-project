@@ -49,9 +49,8 @@ export const useFormValidation = (
       case "360views":
         // Validate each view has title and URL
         const views360 = form.getValues("views360") || [];
-        
-        // Allow empty views, not required
         if (views360.length === 0) {
+          // Allow empty views, not required
           return true;
         }
         
@@ -69,8 +68,6 @@ export const useFormValidation = (
           return false;
         }
         
-        // Log valid views for debugging
-        console.log("Valid views360 found:", views360.length - invalidViews.length);
         isValid = true;
         break;
 

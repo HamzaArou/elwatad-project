@@ -16,10 +16,9 @@ import { useToast } from "@/components/ui/use-toast";
 interface Project {
   id: string;
   name: string;
-  thumbnail_url: string;
   location: string;
-  created_at: string;
   status: string;
+  created_at: string;
 }
 
 const ProjectList = () => {
@@ -40,10 +39,7 @@ const ProjectList = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProjects(data.map((project: any) => ({
-        ...project,
-        status: project.status || "قريباً"
-      })));
+      setProjects(data || []);
     } catch (error) {
       console.error('Error fetching projects:', error);
       toast({

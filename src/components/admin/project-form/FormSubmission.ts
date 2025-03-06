@@ -6,13 +6,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { uploadFile, uploadFiles } from "./FileUploadHandler";
 import { NavigateFunction } from "react-router-dom";
 
-// Create a utility function to convert File[] to FileList-like object
-function createFileListFromArray(files: File[]): FileList {
-  const dataTransfer = new DataTransfer();
-  files.forEach(file => dataTransfer.items.add(file));
-  return dataTransfer.files;
-}
-
 export const useFormSubmission = (
   form: UseFormReturn<ProjectFormValues>,
   thumbnail: File | null,
@@ -100,14 +93,12 @@ export const useFormSubmission = (
       // Always store as an array of objects with id, title, and url
       let validViews360 = [];
       if (data.views360 && Array.isArray(data.views360)) {
-        validViews360 = data.views360.filter(view => view.url && view.title).map(view => ({
+        validViews360 = data.views360.map(view => ({
           id: view.id || crypto.randomUUID(),
           title: view.title || "جولة افتراضية",
           url: view.url || ""
         }));
       }
-      
-      console.log("Validated views360 data for database:", validViews360);
       
       // Handle project details with postal code, status, and 360 views
       const projectDetailsData = {
@@ -116,7 +107,7 @@ export const useFormSubmission = (
         lng: data.lng || null,
         postal_code: data.postalCode || null,
         status: data.projectStatus || "متاح",
-        views360: validViews360.length > 0 ? validViews360 : null
+        views360: validViews360
       };
 
       // Check if project details already exist
@@ -191,9 +182,7 @@ export const useFormSubmission = (
       // Handle gallery images
       if (data.gallery_type === "images" && galleryImages && galleryImages.length > 0) {
         const filesArray = Array.from(galleryImages);
-        // Convert File[] to FileList for uploadFiles
-        const galleryFileList = createFileListFromArray(filesArray);
-        const urls = await uploadFiles(galleryFileList, "project-images");
+        const urls = await uploadFiles(filesArray, "project-images");
         
         const galleryData = urls.map(url => ({
           project_id: projectId,
@@ -215,9 +204,7 @@ export const useFormSubmission = (
       // Handle plans
       if (plans && plans.length > 0) {
         const filesArray = Array.from(plans);
-        // Convert File[] to FileList for uploadFiles
-        const plansFileList = createFileListFromArray(filesArray);
-        const urls = await uploadFiles(plansFileList, "project-plans");
+        const urls = await uploadFiles(filesArray, "project-plans");
         
         const plansData = urls.map(url => ({
           project_id: projectId,

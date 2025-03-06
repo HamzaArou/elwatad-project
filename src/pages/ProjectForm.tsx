@@ -27,7 +27,7 @@ export default function ProjectFormPage() {
         .from("project_details")
         .select("*")
         .eq("project_id", id)
-        .maybeSingle();
+        .single();
 
       if (detailsError && detailsError.code !== 'PGRST116') {
         console.error("Error fetching project details:", detailsError);
@@ -37,7 +37,7 @@ export default function ProjectFormPage() {
       let formattedViews360 = [];
       if (projectDetails?.views360) {
         try {
-          // Handle array format (from database)
+          // If it's already an array of objects
           if (Array.isArray(projectDetails.views360)) {
             formattedViews360 = projectDetails.views360.map((view: any) => ({
               id: view.id || crypto.randomUUID(),
@@ -45,34 +45,37 @@ export default function ProjectFormPage() {
               url: view.url || ""
             }));
           } 
-          // Handle string format (legacy case)
+          // If it's a string (could be a URL or JSON string)
           else if (typeof projectDetails.views360 === 'string') {
-            formattedViews360 = [
-              {
-                id: crypto.randomUUID(),
-                title: "جولة افتراضية",
-                url: projectDetails.views360
+            try {
+              // Try parsing as JSON
+              const parsedViews = JSON.parse(projectDetails.views360);
+              if (Array.isArray(parsedViews)) {
+                formattedViews360 = parsedViews;
+              } else {
+                // Single URL - create with default title
+                formattedViews360 = [{
+                  id: crypto.randomUUID(),
+                  title: "جولة افتراضية 360°",
+                  url: projectDetails.views360
+                }];
               }
-            ];
-          }
-          // Handle JSON string that might be parsed (very unlikely but handling just in case)
-          else if (typeof projectDetails.views360 === 'object') {
-            console.log("Object format views360:", projectDetails.views360);
-            formattedViews360 = [
-              {
-                id: crypto.randomUUID(),
-                title: "جولة افتراضية",
-                url: JSON.stringify(projectDetails.views360)
+            } catch (e) {
+              // Not valid JSON, assume it's a URL
+              if (projectDetails.views360.startsWith('http')) {
+                formattedViews360 = [{
+                  id: crypto.randomUUID(),
+                  title: "جولة افتراضية 360°",
+                  url: projectDetails.views360
+                }];
               }
-            ];
+            }
           }
         } catch (err) {
-          console.error("Error formatting views360:", err, projectDetails.views360);
+          console.error("Error processing views360 data:", err);
           formattedViews360 = [];
         }
       }
-
-      console.log("Formatted views360 data:", formattedViews360);
 
       // Combine project data with details, if available
       const combinedData = {
