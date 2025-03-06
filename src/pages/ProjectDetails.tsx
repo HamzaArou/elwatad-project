@@ -287,7 +287,13 @@ export default function ProjectDetails() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold text-right mb-6">معرض صور وفيديوهات المشروع</h2>
+        <div className="relative mb-8">
+          <div className="styled-title-container relative inline-block">
+            <h2 className="styled-title text-[#2F4447] font-bold text-2xl md:text-3xl px-10 py-3 text-right">
+              مشاريع وتد الكيان
+            </h2>
+          </div>
+        </div>
         <ProjectGallery gallery={galleryItems} />
       </div>
 
@@ -415,6 +421,26 @@ export default function ProjectDetails() {
         .phone-input-container .react-tel-input .country-list {
           left: 0 !important;
           right: auto !important;
+        }
+        
+        /* Styled title with curved border */
+        .styled-title-container {
+          position: relative;
+        }
+        .styled-title-container::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          border: 2px solid #B69665;
+          border-radius: 30px 0 30px 30px;
+          z-index: 0;
+        }
+        .styled-title {
+          position: relative;
+          z-index: 1;
         }
       `}</style>
     </div>;
