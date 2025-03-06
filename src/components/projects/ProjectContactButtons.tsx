@@ -1,3 +1,4 @@
+
 import { MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 interface ProjectContactButtonsProps {
@@ -7,8 +8,8 @@ export default function ProjectContactButtons({
   className
 }: ProjectContactButtonsProps) {
   // Contact information
-  const whatsappNumber = "+966500000000"; // Replace with actual number
-  const phoneNumber = "+966500000000"; // Replace with actual number
+  const whatsappNumber = "+966509840546"; // Updated to correct WhatsApp number
+  const phoneNumber = "+966509840546"; // Updated to correct phone number
 
   const handleWhatsAppClick = () => {
     // Format WhatsApp URL with predefined message
