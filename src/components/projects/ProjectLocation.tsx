@@ -1,33 +1,37 @@
-
 import { MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
 interface ProjectLocationProps {
   location: string;
   lat?: number | null;
   lng?: number | null;
   postalCode?: string | null;
 }
-
-export default function ProjectLocation({ location, lat, lng, postalCode }: ProjectLocationProps) {
+export default function ProjectLocation({
+  location,
+  lat,
+  lng,
+  postalCode
+}: ProjectLocationProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Google Maps URL for external navigation
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ", Saudi Arabia")}`;
-
   useEffect(() => {
-    console.log("ProjectLocation mounted with coordinates:", { lat, lng, postalCode });
-    
+    console.log("ProjectLocation mounted with coordinates:", {
+      lat,
+      lng,
+      postalCode
+    });
+
     // Wait for the DOM to be fully rendered
     const initTimer = setTimeout(() => {
       initializeMap();
     }, 500);
-    
     return () => {
       clearTimeout(initTimer);
       if (leafletMap.current) {
@@ -46,14 +50,13 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       setIsLoading(false);
       return;
     }
-
     try {
       console.log("Initializing map...");
       setIsLoading(true);
 
       // Default coordinates (Mecca)
       let mapCenter: [number, number] = [21.422510, 39.826168];
-      
+
       // Use provided coordinates if available
       if (typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng)) {
         console.log("Using provided coordinates:", lat, lng);
@@ -78,7 +81,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       // Add OpenStreetMap tile layer (more reliable than other providers)
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
+        maxZoom: 19
       }).addTo(leafletMap.current);
 
       // Create custom marker icon
@@ -91,11 +94,9 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       });
 
       // Add marker at the location
-      const marker = L.marker(mapCenter, { icon: markerIcon })
-        .addTo(leafletMap.current)
-        .bindPopup(`<div style="text-align: center; direction: rtl;">${location || 'الموقع'}</div>`)
-        .openPopup();
-
+      const marker = L.marker(mapCenter, {
+        icon: markerIcon
+      }).addTo(leafletMap.current).bindPopup(`<div style="text-align: center; direction: rtl;">${location || 'الموقع'}</div>`).openPopup();
       console.log("Map initialized successfully");
       setIsLoading(false);
       setError(null);
@@ -105,35 +106,21 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       setIsLoading(false);
     }
   };
-
-  return (
-    <div className="space-y-4">
+  return <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold">الموقع</h3>
-        <a
-          href={googleMapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-primary hover:underline"
-        >
-          <MapPin className="h-4 w-4" />
-          فتح في خريطة جوجل
-        </a>
+        
       </div>
       <p className="text-gray-600 mb-4">{location}</p>
       
       <div className="h-[400px] w-full rounded-lg overflow-hidden shadow-lg relative">
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
+        {isLoading && <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-          </div>
-        )}
+          </div>}
         
-        {error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-red-500 z-10">
+        {error && <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-red-500 z-10">
             {error}
-          </div>
-        )}
+          </div>}
         
         <div ref={mapRef} className="w-full h-full relative z-0" />
       </div>
@@ -175,6 +162,5 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
           position: absolute;
         }
       `}</style>
-    </div>
-  );
+    </div>;
 }
