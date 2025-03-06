@@ -80,8 +80,7 @@ const DISTRICT_POLYGONS: Record<string, { name: string; arabicName: string; coor
   }
 };
 
-// Expanded mapping of postal codes to district names
-// This is a simplified example, would need a more comprehensive database for production
+// Postal code to district mapping
 const POSTAL_CODE_TO_DISTRICT: Record<string, string> = {
   '21955': 'منى',
   '21912': 'العزيزية',
@@ -98,7 +97,8 @@ const POSTAL_CODE_TO_DISTRICT: Record<string, string> = {
   '12222': 'السليمانية',
   '23435': 'الروضة',
   '12345': 'النرجس',
-  '54321': 'الملز'
+  '54321': 'الملز',
+  '12411': 'منى'
 };
 
 // Add a default district for unknown postal codes
@@ -111,27 +111,83 @@ const DEFAULT_DISTRICT = {
   ] as [number, number][]
 };
 
+// Default coordinates to use as fallback (Mecca)
+const DEFAULT_COORDINATES = [21.422510, 39.826168] as [number, number];
+
 export default function ProjectLocation({ location, lat, lng, postalCode }: ProjectLocationProps) {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
   const polygonRef = useRef<L.Polygon | null>(null);
-  const [districtData, setDistrictData] = useState<{
-    name: string;
-    arabicName: string;
-    coords: [number, number][];
-  } | null>(null);
+  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showPostalCodeInput, setShowPostalCodeInput] = useState(false);
   const [inputPostalCode, setInputPostalCode] = useState(postalCode || '');
-  const [showPostalCodeInput, setShowPostalCodeInput] = useState(!lat && !lng && !postalCode);
   const [mapInitialized, setMapInitialized] = useState(false);
-
+  const [retryCount, setRetryCount] = useState(0);
+  
+  // Google Maps URL for the location
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ", Saudi Arabia")}`;
+
+  // Clear existing map instance
+  const clearMap = () => {
+    if (mapInstanceRef.current) {
+      console.log("Clearing existing map instance");
+      try {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+        if (mapContainerRef.current) {
+          mapContainerRef.current.innerHTML = '';
+        }
+      } catch (e) {
+        console.error("Error clearing map:", e);
+      }
+    }
+  };
+
+  // Create a marker at the given lat/lng
+  const createMarker = (map: L.Map, latLng: [number, number], popupContent: string) => {
+    if (!map) {
+      console.error("Cannot create marker: map is null");
+      return null;
+    }
+    
+    try {
+      // Create custom marker icon
+      const markerIcon = L.divIcon({
+        className: 'location-marker',
+        html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+        popupAnchor: [0, -36]
+      });
+
+      console.log("Creating marker at coordinates:", latLng);
+      
+      // Remove existing marker if there is one
+      if (markerRef.current) {
+        markerRef.current.remove();
+      }
+      
+      // Create and add new marker
+      const marker = L.marker(latLng, { icon: markerIcon })
+        .addTo(map)
+        .bindPopup(`<div style="text-align: center; direction: rtl;">${popupContent}</div>`)
+        .openPopup();
+      
+      console.log("Marker created successfully");
+      return marker;
+    } catch (err) {
+      console.error("Error creating marker:", err);
+      return null;
+    }
+  };
 
   // Find district based on postal code
   const findDistrictByPostalCode = (code: string) => {
     console.log("Finding district for postal code:", code);
+    
     // Try exact match first
     const districtKey = POSTAL_CODE_TO_DISTRICT[code];
     
@@ -141,7 +197,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
     }
     
     // If no exact match, try to find a postal code with the same prefix (first 3 digits)
-    if (code.length >= 3) {
+    if (code?.length >= 3) {
       const prefix = code.substring(0, 3);
       for (const [postalCode, district] of Object.entries(POSTAL_CODE_TO_DISTRICT)) {
         if (postalCode.startsWith(prefix) && DISTRICT_POLYGONS[district]) {
@@ -160,176 +216,40 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
     };
   };
 
-  // Function to find the nearest district based on lat/lng
-  const findNearestDistrict = async (latitude: number, longitude: number) => {
-    console.log("Finding nearest district for:", latitude, longitude);
-
-    try {
-      // First, try to get district from Nominatim API
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=14&accept-language=ar`
-      );
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch location data");
-      }
-      
-      const data = await response.json();
-      console.log("Nominatim data:", data);
-      
-      // Extract district name from address
-      const district = 
-        data.address.suburb || 
-        data.address.neighbourhood || 
-        data.address.quarter || 
-        data.address.city_district;
-      
-      console.log("Detected district:", district);
-      
-      // Check if we have predefined polygon for this district
-      if (district && DISTRICT_POLYGONS[district]) {
-        console.log("Using predefined polygon for:", district);
-        return DISTRICT_POLYGONS[district];
-      }
-      
-      // If predefined polygon not found, find closest predefined district
-      // Calculate distance to each predefined district center
-      let closestDistrict = null;
-      let minDistance = Infinity;
-      
-      for (const [districtName, districtInfo] of Object.entries(DISTRICT_POLYGONS)) {
-        // Calculate center of polygon
-        const centerLat = districtInfo.coords.reduce((sum, coord) => sum + coord[0], 0) / districtInfo.coords.length;
-        const centerLng = districtInfo.coords.reduce((sum, coord) => sum + coord[1], 0) / districtInfo.coords.length;
-        
-        // Simple distance calculation (Euclidean)
-        const distance = Math.sqrt(
-          Math.pow(latitude - centerLat, 2) + 
-          Math.pow(longitude - centerLng, 2)
-        );
-        
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestDistrict = districtInfo;
-        }
-      }
-      
-      console.log("Closest district:", closestDistrict?.name);
-      return closestDistrict;
-    } catch (error) {
-      console.error("Error finding district:", error);
-      
-      // Fallback: generate a district based on coordinates
-      return {
-        name: `Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-        arabicName: `الموقع (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-        coords: [
-          [latitude - 0.01, longitude - 0.01],
-          [latitude + 0.01, longitude - 0.01],
-          [latitude + 0.01, longitude + 0.01],
-          [latitude - 0.01, longitude + 0.01],
-          [latitude - 0.01, longitude - 0.01]
-        ] as [number, number][]
-      };
-    }
-  };
-
-  const handlePostalCodeSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  // Initialize the map with a district or coordinates
+  const initializeMap = (centerCoords: [number, number], district?: { name: string; arabicName: string; coords: [number, number][] }) => {
+    console.log("Initializing map with center:", centerCoords, "and district:", district?.name);
     
-    const district = findDistrictByPostalCode(inputPostalCode);
-    if (district) {
-      setDistrictData(district);
-      setShowPostalCodeInput(false);
-      
-      // Initialize map with the district
-      if (mapContainer.current) {
-        initializeMap(district);
-      }
-    } else {
-      setError("لم يتم العثور على منطقة لهذا الرمز البريدي");
-    }
-    
-    setIsLoading(false);
-  };
-
-  // Function to create a marker at the given lat/lng
-  const createMarker = (map: L.Map, latLng: [number, number], popupContent: string) => {
-    if (!map) {
-      console.error("Cannot create marker: map is null");
-      return null;
-    }
-    
-    // Create custom marker icon
-    const markerIcon = L.divIcon({
-      className: 'location-marker',
-      html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
-      iconSize: [36, 36],
-      iconAnchor: [18, 36],
-      popupAnchor: [0, -36]
-    });
-
-    console.log("Creating marker at coordinates:", latLng);
-    
-    try {
-      const marker = L.marker(latLng, { icon: markerIcon })
-        .addTo(map)
-        .bindPopup(`<div style="text-align: center; direction: rtl;">${popupContent}</div>`)
-        .openPopup();
-      
-      console.log("Marker created successfully");
-      return marker;
-    } catch (err) {
-      console.error("Error creating marker:", err);
-      return null;
-    }
-  };
-
-  const initializeMap = (district: { name: string; arabicName: string; coords: [number, number][] }) => {
-    if (!mapContainer.current) {
+    if (!mapContainerRef.current) {
       console.error("Map container not available");
-      return;
+      return false;
     }
     
-    console.log("Initializing map with:", { district, lat, lng });
-    
-    // Calculate center of district polygon
-    const centerLat = district.coords.reduce((sum, coord) => sum + coord[0], 0) / district.coords.length;
-    const centerLng = district.coords.reduce((sum, coord) => sum + coord[1], 0) / district.coords.length;
-    
-    // Use provided lat/lng as center if available
-    const mapCenter: [number, number] = (lat !== undefined && lng !== undefined && lat !== null && lng !== null) 
-      ? [lat, lng] 
-      : [centerLat, centerLng];
-    
     try {
-      // Initialize map if it doesn't exist
-      if (!mapInstance.current) {
-        console.log("Creating new map with center:", mapCenter);
+      // Clear any existing map
+      clearMap();
+      
+      // Create new map instance
+      const map = L.map(mapContainerRef.current, {
+        center: centerCoords,
+        zoom: 14,
+        scrollWheelZoom: false,
+        zoomControl: true
+      });
+      
+      // Add tile layer
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(map);
+      
+      mapInstanceRef.current = map;
+      
+      // Add district polygon if available
+      if (district && district.coords && district.coords.length > 0) {
+        console.log("Adding district polygon for:", district.arabicName);
         
-        // Clear any existing map elements
-        if (mapContainer.current.innerHTML) {
-          mapContainer.current.innerHTML = '';
-        }
-        
-        const map = L.map(mapContainer.current, {
-          center: mapCenter,
-          zoom: 14,
-          scrollWheelZoom: false,
-          zoomControl: true
-        });
-        
-        L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=0xThwp5hzLtXF2Nvi1LZ&language=ar', {
-          attribution: '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e',
-          maxZoom: 18,
-        }).addTo(map);
-        
-        mapInstance.current = map;
-        
-        // Add district polygon
-        if (district.coords && district.coords.length > 0) {
-          console.log("Adding district polygon");
+        try {
           polygonRef.current = L.polygon(district.coords, {
             color: '#B69665',
             weight: 3,
@@ -337,6 +257,10 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
             fillColor: '#B69665',
             fillOpacity: 0.3
           }).addTo(map);
+          
+          // Calculate center of polygon for label
+          const centerLat = district.coords.reduce((sum, coord) => sum + coord[0], 0) / district.coords.length;
+          const centerLng = district.coords.reduce((sum, coord) => sum + coord[1], 0) / district.coords.length;
           
           // Add text label for district name
           const labelIcon = L.divIcon({
@@ -347,209 +271,152 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
           });
           
           L.marker([centerLat, centerLng], { icon: labelIcon }).addTo(map);
-        }
-        
-        // Add marker pin for the exact location if lat/lng provided
-        if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
-          console.log("Creating marker for exact location:", lat, lng);
-          markerRef.current = createMarker(map, [lat, lng], location);
-          
-          // Center on exact location and adjust zoom
-          map.setView([lat, lng], 15);
-        } else if (polygonRef.current) {
-          // Fit bounds to polygon if no specific location
-          console.log("Fitting bounds to district polygon");
-          map.fitBounds(polygonRef.current.getBounds(), { padding: [50, 50] });
-        }
-        
-        setMapInitialized(true);
-      } else {
-        // If map already exists, update it
-        console.log("Map already exists, updating view");
-        const map = mapInstance.current;
-        
-        // Clear existing marker if any
-        if (markerRef.current) {
-          markerRef.current.remove();
-          markerRef.current = null;
-        }
-        
-        // Add marker for the exact location if lat/lng provided
-        if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
-          console.log("Updating marker for exact location:", lat, lng);
-          markerRef.current = createMarker(map, [lat, lng], location);
-          
-          // Center on exact location and adjust zoom
-          map.setView([lat, lng], 15);
-        } else if (polygonRef.current) {
-          // Fit bounds to polygon if no specific location
-          map.fitBounds(polygonRef.current.getBounds(), { padding: [50, 50] });
+        } catch (e) {
+          console.error("Error adding district polygon:", e);
         }
       }
+      
+      // Add marker for exact location
+      if (centerCoords) {
+        markerRef.current = createMarker(map, centerCoords, location || 'الموقع');
+      }
+      
+      // Set appropriate bounds
+      if (polygonRef.current && !centerCoords[0] && !centerCoords[1]) {
+        map.fitBounds(polygonRef.current.getBounds(), { padding: [50, 50] });
+      }
+      
+      console.log("Map initialization successful");
+      return true;
     } catch (err) {
       console.error("Error initializing map:", err);
-      setError("حدث خطأ أثناء تحميل الخريطة");
+      return false;
     }
   };
-  
-  // Delay map initialization until after component mount
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+
+  // Handle postal code form submission
+  const handlePostalCodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
     
-    if (!mapContainer.current) {
-      console.log("Map container ref is not ready, will retry");
+    const district = findDistrictByPostalCode(inputPostalCode);
+    if (district) {
+      setShowPostalCodeInput(false);
       
-      // Wait for the DOM to be fully rendered
-      timeoutId = setTimeout(() => {
-        console.log("Retrying map initialization");
-        
-        if (mapContainer.current) {
-          console.log("Map container is now available");
-          const initMap = async () => {
-            try {
-              setIsLoading(true);
-              
-              // If we have a postal code, use that
-              if (postalCode) {
-                console.log("Using postal code:", postalCode);
-                const district = findDistrictByPostalCode(postalCode);
-                if (district) {
-                  console.log("Found district for postal code:", district.arabicName);
-                  setDistrictData(district);
-                  initializeMap(district);
-                  setIsLoading(false);
-                  return;
-                } else {
-                  console.warn("No district found for postal code:", postalCode);
-                }
-              }
-              
-              // Otherwise use lat/lng if available
-              if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
-                console.log("Using coordinates for map:", lat, lng);
-                // Find nearest district
-                const district = await findNearestDistrict(lat, lng);
-                if (!district) {
-                  throw new Error("Could not determine district");
-                }
-                
-                console.log("Found district for coordinates:", district.arabicName);
-                setDistrictData(district);
-                initializeMap(district);
-              } else {
-                // If neither postal code nor coordinates are provided, show input form
-                console.log("No location data, showing postal code input");
-                setShowPostalCodeInput(true);
-              }
-              
-              setIsLoading(false);
-            } catch (err) {
-              console.error("Error initializing map:", err);
-              setError("حدث خطأ أثناء تحميل الخريطة");
-              setIsLoading(false);
-            }
-          };
-          
-          // Execute the async function
-          initMap();
-        } else {
-          console.error("Map container still not available after retry");
-          setIsLoading(false);
-          setError("تعذر تحميل الخريطة");
-        }
-      }, 500);
+      // Calculate center of district polygon
+      const centerLat = district.coords.reduce((sum, coord) => sum + coord[0], 0) / district.coords.length;
+      const centerLng = district.coords.reduce((sum, coord) => sum + coord[1], 0) / district.coords.length;
+      
+      // Initialize map with the district
+      const success = initializeMap([centerLat, centerLng], district);
+      if (!success) {
+        setError("حدث خطأ أثناء تحميل الخريطة");
+      }
     } else {
-      console.log("Map container is ready on first render");
-      
-      const initMap = async () => {
-        try {
-          setIsLoading(true);
-          
-          // If we have a postal code, use that
-          if (postalCode) {
-            console.log("Using postal code:", postalCode);
-            const district = findDistrictByPostalCode(postalCode);
-            if (district) {
-              console.log("Found district for postal code:", district.arabicName);
-              setDistrictData(district);
-              initializeMap(district);
-              setIsLoading(false);
-              return;
-            } else {
-              console.warn("No district found for postal code:", postalCode);
-            }
-          }
-          
-          // Otherwise use lat/lng if available
-          if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
-            console.log("Using coordinates for map:", lat, lng);
-            // Find nearest district
-            const district = await findNearestDistrict(lat, lng);
-            if (!district) {
-              throw new Error("Could not determine district");
-            }
-            
-            console.log("Found district for coordinates:", district.arabicName);
-            setDistrictData(district);
-            initializeMap(district);
-          } else {
-            // If neither postal code nor coordinates are provided, show input form
-            console.log("No location data, showing postal code input");
-            setShowPostalCodeInput(true);
-          }
-          
-          setIsLoading(false);
-        } catch (err) {
-          console.error("Error initializing map:", err);
-          setError("حدث خطأ أثناء تحميل الخريطة");
-          setIsLoading(false);
-        }
-      };
-      
-      // Execute the async function
-      initMap();
+      setError("لم يتم العثور على منطقة لهذا الرمز البريدي");
     }
     
-    // Cleanup function
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+    setIsLoading(false);
+  };
+
+  // Set up map when component mounts
+  useEffect(() => {
+    console.log("ProjectLocation mounting with coordinates:", { lat, lng, postalCode });
+    
+    // Only run this effect once on mount
+    const setupMap = async () => {
+      console.log("Setting up map...");
+      setIsLoading(true);
       
-      if (mapInstance.current) {
-        console.log("Cleaning up map instance");
-        mapInstance.current.remove();
-        mapInstance.current = null;
+      try {
+        // Determine coordinates to use
+        let centerCoords: [number, number] | null = null;
+        let district = null;
+        
+        // Option 1: Use lat/lng if available
+        if (typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng)) {
+          console.log("Using explicit coordinates:", lat, lng);
+          centerCoords = [lat, lng];
+        }
+        // Option 2: Use postal code if available
+        else if (postalCode) {
+          console.log("Using postal code:", postalCode);
+          district = findDistrictByPostalCode(postalCode);
+          
+          if (district) {
+            console.log("Found district for postal code:", district.arabicName);
+            const centerLat = district.coords.reduce((sum, coord) => sum + coord[0], 0) / district.coords.length;
+            const centerLng = district.coords.reduce((sum, coord) => sum + coord[1], 0) / district.coords.length;
+            centerCoords = [centerLat, centerLng];
+          }
+        }
+        
+        // If no coordinates or district found, use default
+        if (!centerCoords) {
+          console.log("No valid coordinates or postal code, using default");
+          centerCoords = DEFAULT_COORDINATES;
+          setShowPostalCodeInput(true);
+        }
+        
+        console.log("Final coordinates for map:", centerCoords);
+        
+        // Wait for DOM to be ready
+        setTimeout(() => {
+          const success = initializeMap(centerCoords!, district);
+          if (success) {
+            setMapInitialized(true);
+            setRetryCount(0);
+            console.log("Map successfully initialized");
+          } else if (retryCount < 3) {
+            // Retry a few times if initialization fails
+            console.log(`Map initialization failed, retrying (${retryCount + 1}/3)...`);
+            setRetryCount(retryCount + 1);
+            
+            // Try again after a delay
+            setTimeout(() => {
+              setupMap();
+            }, 1000);
+          } else {
+            console.error("Failed to initialize map after multiple attempts");
+            setError("تعذر تحميل الخريطة بعد عدة محاولات");
+          }
+          setIsLoading(false);
+        }, 100);
+      } catch (err) {
+        console.error("Error in map setup:", err);
+        setError("حدث خطأ أثناء تحميل الخريطة");
+        setIsLoading(false);
       }
+    };
+    
+    setupMap();
+    
+    // Clean up on unmount
+    return () => {
+      clearMap();
     };
   }, []);
 
-  // Update marker position if lat/lng changes after initial render
+  // Update map when coordinates change
   useEffect(() => {
+    // Skip if this is the initial render
+    if (!mapInitialized) return;
+    
     console.log("Coordinates changed, updating map:", { lat, lng });
     
-    if (!mapInstance.current) {
-      console.log("No map instance available yet");
-      return;
-    }
-    
-    if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
-      console.log("Updating marker position to:", lat, lng);
-      
-      // If we already have a marker, update its position
-      if (markerRef.current) {
-        console.log("Updating existing marker position");
-        markerRef.current.setLatLng([lat, lng]);
+    if (typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng)) {
+      if (mapInstanceRef.current) {
+        console.log("Updating map with new coordinates:", lat, lng);
+        mapInstanceRef.current.setView([lat, lng], 15);
+        
+        // Update marker
+        markerRef.current = createMarker(mapInstanceRef.current, [lat, lng], location || 'الموقع');
       } else {
-        // Create a new marker
-        console.log("Creating new marker for coordinates");
-        markerRef.current = createMarker(mapInstance.current, [lat, lng], location);
+        console.log("Map not initialized yet, creating new map with coordinates:", lat, lng);
+        initializeMap([lat, lng]);
       }
-      
-      // Center and zoom map on the marker
-      mapInstance.current.setView([lat, lng], 15);
     }
-  }, [lat, lng, location]);
+  }, [lat, lng, mapInitialized]);
 
   return (
     <div className="space-y-4">
@@ -597,11 +464,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       )}
       
       <div id="map-wrapper" className="h-[400px] w-full rounded-lg overflow-hidden shadow-lg relative">
-        {showPostalCodeInput && !districtData ? (
-          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500">
-            الرجاء إدخال الرمز البريدي للمنطقة
-          </div>
-        ) : isLoading ? (
+        {isLoading ? (
           <div className="w-full h-full flex items-center justify-center bg-gray-100">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
           </div>
@@ -610,7 +473,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
             {error}
           </div>
         ) : (
-          <div ref={mapContainer} id="map-container" className="w-full h-full" />
+          <div ref={mapContainerRef} id="map-container" className="w-full h-full" />
         )}
       </div>
       <style>{`
