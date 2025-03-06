@@ -6,6 +6,7 @@ import Project360Views from "./Project360Views";
 import ProjectUnits from "./ProjectUnits";
 import ProjectUpdates from "./ProjectUpdates";
 import { Building2, Bed, Bath, Square } from "lucide-react";
+import { useEffect } from "react";
 
 interface ProjectTabsSectionProps {
   details: string;
@@ -33,6 +34,11 @@ export default function ProjectTabsSection({
   projectId
 }: ProjectTabsSectionProps) {
   console.log("ProjectTabsSection received coordinates:", { lat, lng, postalCode });
+  
+  // Log coordinates on component mount and on coordinates change
+  useEffect(() => {
+    console.log("ProjectTabsSection coordinates updated:", { lat, lng, postalCode });
+  }, [lat, lng, postalCode]);
   
   return <div className="mt-12 mb-16">
       <Tabs defaultValue="details" dir="rtl">
