@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +26,23 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
   const [plans, setPlans] = useState<File[] | null>(null);
   const navigate = useNavigate();
 
+  // Create FileList-like objects for validation
+  const galleryFilesForValidation = galleryImages ? {
+    length: galleryImages.length,
+    item: (index: number) => galleryImages[index],
+    [Symbol.iterator]: function* () {
+      for (let i = 0; i < this.length; i++) yield this.item(i);
+    }
+  } as FileList : null;
+  
+  const plansFilesForValidation = plans ? {
+    length: plans.length,
+    item: (index: number) => plans[index],
+    [Symbol.iterator]: function* () {
+      for (let i = 0; i < this.length; i++) yield this.item(i);
+    }
+  } as FileList : null;
+
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectFormSchema),
     defaultValues: initialData || {
@@ -43,8 +61,8 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
     mode: "onChange",
   });
 
-  const { validateTab } = useFormValidation(form, thumbnail, initialData, galleryImages as unknown as FileList, plans as unknown as FileList);
-  const { submitForm } = useFormSubmission(form, thumbnail, galleryImages as unknown as FileList, plans as unknown as FileList, initialData, navigate, setIsLoading);
+  const { validateTab } = useFormValidation(form, thumbnail, initialData, galleryFilesForValidation, plansFilesForValidation);
+  const { submitForm } = useFormSubmission(form, thumbnail, galleryFilesForValidation, plansFilesForValidation, initialData, navigate, setIsLoading);
 
   const currentTabIndex = TABS.indexOf(currentTab);
   const isLastTab = currentTabIndex === TABS.length - 1;
@@ -85,6 +103,16 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
     }
   };
 
+  // Convert FileList to array for the onGalleryImagesChange handler
+  const handleGalleryImagesChange = (files: FileList | null) => {
+    setGalleryImages(files ? Array.from(files) : null);
+  };
+
+  // Convert FileList to array for the onPlansChange handler
+  const handlePlansChange = (files: FileList | null) => {
+    setPlans(files ? Array.from(files) : null);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -105,7 +133,7 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
             <ProjectGallery
               form={form}
               isLoading={isLoading}
-              onGalleryImagesChange={setGalleryImages}
+              onGalleryImagesChange={handleGalleryImagesChange}
               initialImages={initialData?.gallery_images}
             />
           </TabsContent>
@@ -154,7 +182,7 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
             <ProjectPlans
               form={form}
               isLoading={isLoading}
-              onPlansChange={setPlans}
+              onPlansChange={handlePlansChange}
               initialPlans={initialData?.plans}
             />
           </TabsContent>

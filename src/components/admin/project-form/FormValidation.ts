@@ -50,15 +50,15 @@ export const useFormValidation = (
         // Validate each view has title and URL
         const views360 = form.getValues("views360") || [];
         if (views360.length === 0) {
-          toast({
-            title: "معلومات",
-            description: "لا توجد جولات افتراضية مضافة بعد",
-          });
-          return true; // Allow empty views, not required
+          // Allow empty views, not required
+          return true;
         }
         
         // Check if any view is missing title or URL
-        const invalidViews = views360.filter(view => !view.title || !view.url);
+        const invalidViews = views360.filter(view => 
+          !view || typeof view !== 'object' || !view.title || !view.url
+        );
+        
         if (invalidViews.length > 0) {
           toast({
             title: "خطأ",
@@ -68,7 +68,7 @@ export const useFormValidation = (
           return false;
         }
         
-        isValid = await form.trigger("views360");
+        isValid = true;
         break;
 
       case "units":

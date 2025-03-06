@@ -18,25 +18,28 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
     queryKey: ['project-views360', projectId],
     queryFn: async () => {
       if (!projectId) return [];
-      const { data: projectDetails, error } = await supabase
-        .from('project_details')
-        .select('views360')
-        .eq('project_id', projectId)
-        .single();
-
-      if (error) throw error;
       
-      // Handle different possible data formats safely
-      const views360Data = projectDetails?.views360;
-      
-      // If data is null or undefined, return empty array
-      if (!views360Data) return [];
-      
-      // Handle different data formats
       try {
-        // If it's already a valid array of objects with title and url
+        const { data: projectDetails, error } = await supabase
+          .from('project_details')
+          .select('views360')
+          .eq('project_id', projectId)
+          .single();
+
+        if (error) {
+          console.error("Error fetching views360:", error);
+          return [];
+        }
+        
+        // If no data returned
+        if (!projectDetails || projectDetails.views360 === null) {
+          return [];
+        }
+
+        const views360Data = projectDetails.views360;
+        
+        // Case 1: It's already an array of view objects
         if (Array.isArray(views360Data) && views360Data.length > 0) {
-          // Make sure each item has the required properties
           return views360Data.map((view: any) => ({
             id: view.id || crypto.randomUUID(),
             title: view.title || "جولة افتراضية",
@@ -44,36 +47,48 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
           }));
         }
         
-        // If it's a string (which could be a URL or JSON string)
+        // Case 2: It's a single URL string
+        if (typeof views360Data === 'string' && views360Data.trim() !== '') {
+          return [{
+            id: crypto.randomUUID(),
+            title: "جولة افتراضية 360°",
+            url: views360Data
+          }];
+        }
+        
+        // Case 3: Try to parse JSON string
         if (typeof views360Data === 'string') {
           try {
-            // Try to parse it as JSON
             const parsed = JSON.parse(views360Data);
+            
             if (Array.isArray(parsed)) {
               return parsed.map((view: any) => ({
                 id: view.id || crypto.randomUUID(),
                 title: view.title || "جولة افتراضية",
                 url: view.url || ""
               }));
-            } else {
-              // Single URL string - create a default title
+            }
+            
+            // If it's a single object
+            if (parsed && typeof parsed === 'object') {
+              return [{
+                id: crypto.randomUUID(),
+                title: parsed.title || "جولة افتراضية 360°",
+                url: parsed.url || ""
+              }];
+            }
+          } catch (e) {
+            // Not valid JSON, but could be a URL
+            if (views360Data.startsWith('http')) {
               return [{
                 id: crypto.randomUUID(),
                 title: "جولة افتراضية 360°",
                 url: views360Data
               }];
             }
-          } catch (e) {
-            // If it's not valid JSON, assume it's a URL
-            return [{
-              id: crypto.randomUUID(),
-              title: "جولة افتراضية 360°",
-              url: views360Data
-            }];
           }
         }
         
-        // Return empty array for any other case
         return [];
       } catch (err) {
         console.error("Error processing views360 data:", err);

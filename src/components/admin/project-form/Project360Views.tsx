@@ -5,7 +5,8 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { ProjectFormValues } from "@/types/project";
 import { useState } from "react";
-import { Info } from "lucide-react";
+import { Info, Link } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Project360ViewsProps {
   form: UseFormReturn<ProjectFormValues>;
@@ -14,6 +15,7 @@ interface Project360ViewsProps {
 
 export default function Project360Views({ form, isLoading }: Project360ViewsProps) {
   const views360 = form.watch("views360") || [];
+  const [directUrl, setDirectUrl] = useState<string>("");
   const [jsonError, setJsonError] = useState<string | null>(null);
 
   const addView = () => {
@@ -23,6 +25,32 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
       { id: crypto.randomUUID(), title: "", url: "" }
     ], { shouldValidate: true });
     setJsonError(null);
+  };
+
+  const handleAddDirectUrl = () => {
+    if (!directUrl) {
+      setJsonError("الرجاء إدخال رابط الجولة");
+      return;
+    }
+
+    try {
+      // Add the direct URL as a new view with a default title
+      const currentViews = form.getValues("views360") || [];
+      form.setValue("views360", [
+        ...currentViews,
+        { 
+          id: crypto.randomUUID(), 
+          title: "جولة افتراضية " + (currentViews.length + 1), 
+          url: directUrl 
+        }
+      ], { shouldValidate: true });
+      
+      // Clear the input field and any errors
+      setDirectUrl("");
+      setJsonError(null);
+    } catch (error) {
+      setJsonError("حدث خطأ في إضافة الرابط");
+    }
   };
 
   const removeView = (index: number) => {
@@ -52,20 +80,43 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
         <div className="flex items-start gap-2">
           <Info className="h-5 w-5 text-amber-500 mt-0.5" />
           <div className="text-sm text-amber-800">
-            <p className="font-medium">ملاحظة مهمة:</p>
-            <p>كل جولة افتراضية تحتاج إلى عنوان ورابط. لا يمكن إدخال رابط فقط. يتم تخزين البيانات كمصفوفة JSON.</p>
+            <p className="font-medium">كيفية إضافة جولة افتراضية:</p>
+            <p>يمكنك إضافة رابط جولة افتراضية مباشرة في حقل "أضف رابط مباشر" أدناه ثم الضغط على "إضافة" أو يمكنك إضافة جولة بالتفاصيل عبر زر "إضافة جولة".</p>
           </div>
         </div>
       </div>
 
+      {/* Direct URL input section */}
+      <div className="p-4 border rounded-lg bg-gray-50">
+        <FormLabel className="mb-2 block">أضف رابط مباشر</FormLabel>
+        <div className="flex gap-2">
+          <Input
+            value={directUrl}
+            onChange={(e) => setDirectUrl(e.target.value)}
+            placeholder="أدخل رابط الجولة الافتراضية"
+            disabled={isLoading}
+          />
+          <Button 
+            type="button" 
+            onClick={handleAddDirectUrl}
+            disabled={isLoading || !directUrl}
+          >
+            إضافة
+          </Button>
+        </div>
+        {jsonError && (
+          <p className="text-sm text-red-500 mt-1">{jsonError}</p>
+        )}
+      </div>
+
       {views360.length === 0 && (
         <div className="text-center p-6 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">لا توجد جولات افتراضية. اضغط على "إضافة جولة" لإضافة جولة جديدة.</p>
+          <p className="text-gray-500">لا توجد جولات افتراضية. استخدم أحد الخيارين لإضافة جولة جديدة.</p>
         </div>
       )}
 
-      {views360.map((_, index) => (
-        <div key={index} className="space-y-4 p-4 border rounded-lg">
+      {views360.map((view, index) => (
+        <div key={view.id || index} className="space-y-4 p-4 border rounded-lg">
           <FormField
             control={form.control}
             name={`views360.${index}.title`}
@@ -94,22 +145,30 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
             )}
           />
 
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={() => removeView(index)}
-            disabled={isLoading}
-          >
-            حذف
-          </Button>
+          <div className="flex justify-between items-center">
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => removeView(index)}
+              disabled={isLoading}
+            >
+              حذف
+            </Button>
+            
+            {view.url && (
+              <a 
+                href={view.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center text-blue-600 hover:underline"
+              >
+                <Link className="h-4 w-4 mr-1" />
+                فتح الرابط
+              </a>
+            )}
+          </div>
         </div>
       ))}
-      
-      {jsonError && (
-        <div className="text-red-500 text-sm p-2 bg-red-50 rounded">
-          {jsonError}
-        </div>
-      )}
     </div>
   );
 }

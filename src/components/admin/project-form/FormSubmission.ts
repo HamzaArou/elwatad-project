@@ -53,32 +53,49 @@ export const useFormSubmission = (
 
       console.log("Project data to be inserted:", projectData);
 
-      // Create new project
-      const { data: newProject, error: insertError } = await supabase
-        .from("projects")
-        .insert(projectData)
-        .select()
-        .single();
+      // Create new project or update existing
+      let projectId = initialData?.id;
+      
+      if (projectId) {
+        // Update existing project
+        const { error: updateError } = await supabase
+          .from("projects")
+          .update(projectData)
+          .eq("id", projectId);
+          
+        if (updateError) {
+          console.error("Error updating project:", updateError);
+          throw updateError;
+        }
+      } else {
+        // Create new project
+        const { data: newProject, error: insertError } = await supabase
+          .from("projects")
+          .insert(projectData)
+          .select()
+          .single();
 
-      if (insertError) {
-        console.error("Error creating project:", insertError);
-        throw insertError;
+        if (insertError) {
+          console.error("Error creating project:", insertError);
+          throw insertError;
+        }
+
+        if (!newProject) {
+          throw new Error("Failed to create project - no data returned");
+        }
+
+        projectId = newProject.id;
       }
+      
+      console.log("Project ID:", projectId);
 
-      if (!newProject) {
-        throw new Error("Failed to create project - no data returned");
-      }
-
-      const projectId = newProject.id;
-      console.log("New project created with ID:", projectId);
-
-      // Ensure views360 is properly formatted as a valid JSON array
+      // Ensure views360 is properly formatted
+      // Always store as an array of objects with id, title, and url
       let validViews360 = [];
       if (data.views360 && Array.isArray(data.views360)) {
-        // Ensure each view has the required fields
         validViews360 = data.views360.map(view => ({
           id: view.id || crypto.randomUUID(),
-          title: view.title || "",
+          title: view.title || "جولة افتراضية",
           url: view.url || ""
         }));
       }
@@ -93,19 +110,51 @@ export const useFormSubmission = (
         views360: validViews360
       };
 
-      console.log("Inserting project details:", projectDetailsData);
-      const { error: detailsError } = await supabase
+      // Check if project details already exist
+      const { data: existingDetails } = await supabase
         .from("project_details")
-        .insert(projectDetailsData);
+        .select("id")
+        .eq("project_id", projectId)
+        .maybeSingle();
 
-      if (detailsError) {
-        console.error("Error inserting project details:", detailsError);
-        throw detailsError;
+      if (existingDetails) {
+        // Update existing details
+        const { error: detailsUpdateError } = await supabase
+          .from("project_details")
+          .update(projectDetailsData)
+          .eq("project_id", projectId);
+
+        if (detailsUpdateError) {
+          console.error("Error updating project details:", detailsUpdateError);
+          throw detailsUpdateError;
+        }
+      } else {
+        // Insert new details
+        const { error: detailsError } = await supabase
+          .from("project_details")
+          .insert(projectDetailsData);
+
+        if (detailsError) {
+          console.error("Error inserting project details:", detailsError);
+          throw detailsError;
+        }
       }
 
       // Handle units
       if (data.project_units && data.project_units.length > 0) {
-        console.log("Handling project units...");
+        // First, delete existing units for this project
+        if (initialData?.id) {
+          const { error: deleteUnitsError } = await supabase
+            .from("project_units")
+            .delete()
+            .eq("project_id", projectId);
+            
+          if (deleteUnitsError) {
+            console.error("Error deleting existing units:", deleteUnitsError);
+          }
+        }
+        
+        // Then add the new/updated units
         const unitsData = data.project_units.map(unit => ({
           project_id: projectId,
           name: unit.name,
@@ -117,9 +166,9 @@ export const useFormSubmission = (
           side: unit.side,
           rooms: unit.rooms,
           bathrooms: unit.bathrooms,
+          details: unit.details || {}
         }));
 
-        console.log("Inserting units:", unitsData);
         const { error: unitsError } = await supabase
           .from("project_units")
           .insert(unitsData);
@@ -132,20 +181,19 @@ export const useFormSubmission = (
 
       // Handle gallery images
       if (data.gallery_type === "images" && galleryImages && galleryImages.length > 0) {
-        console.log("Uploading gallery images...");
-        const urls = await uploadFiles(Array.from(galleryImages as unknown as File[]), "project-images");
+        const filesArray = Array.from(galleryImages);
+        const urls = await uploadFiles(filesArray, "project-images");
         
-        console.log("Inserting gallery images...");
+        const galleryData = urls.map(url => ({
+          project_id: projectId,
+          media_url: url,
+          content_type: "gallery",
+          media_type: "image"
+        }));
+
         const { error: imagesError } = await supabase
           .from("project_media")
-          .insert(
-            urls.map(url => ({
-              project_id: projectId,
-              media_url: url,
-              content_type: "gallery",
-              media_type: "image"
-            }))
-          );
+          .insert(galleryData);
 
         if (imagesError) {
           console.error("Error inserting gallery images:", imagesError);
@@ -155,46 +203,29 @@ export const useFormSubmission = (
 
       // Handle plans
       if (plans && plans.length > 0) {
-        console.log("Uploading plans...");
-        const urls = await uploadFiles(Array.from(plans as unknown as File[]), "project-plans");
+        const filesArray = Array.from(plans);
+        const urls = await uploadFiles(filesArray, "project-plans");
         
-        // Check if project_plans table exists in the database
-        try {
-          console.log("Inserting plans...");
-          // Instead of using project_plans, we'll store plans in a standard way
-          const { error: plansError } = await supabase
-            .from("project_media") // Use project_media instead of project_plans
-            .insert(
-              urls.map(url => ({
-                project_id: projectId,
-                media_url: url,
-                media_type: "image",
-                content_type: "plan" // Use content_type to differentiate
-              }))
-            );
+        const plansData = urls.map(url => ({
+          project_id: projectId,
+          media_url: url,
+          media_type: "image",
+          content_type: "plan"
+        }));
 
-          if (plansError) {
-            console.error("Error inserting plans:", plansError);
-            throw plansError;
-          }
-        } catch (planError) {
-          console.error("Error with plans table - using alternative storage:", planError);
-          // If that fails, store them somewhere else as a backup
-          const { error: detailsUpdateError } = await supabase
-            .from("project_details")
-            .update({ plans: urls })
-            .eq("project_id", projectId);
-            
-          if (detailsUpdateError) {
-            console.error("Error updating project details with plans:", detailsUpdateError);
-            throw detailsUpdateError;
-          }
+        const { error: plansError } = await supabase
+          .from("project_media")
+          .insert(plansData);
+
+        if (plansError) {
+          console.error("Error inserting plans:", plansError);
+          throw plansError;
         }
       }
 
       toast({
-        title: "تم الإنشاء",
-        description: "تم إنشاء المشروع بنجاح",
+        title: initialData?.id ? "تم التحديث" : "تم الإنشاء",
+        description: initialData?.id ? "تم تحديث المشروع بنجاح" : "تم إنشاء المشروع بنجاح",
       });
 
       console.log("Form submission completed successfully!");
