@@ -1,4 +1,3 @@
-
 import { MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
@@ -84,26 +83,22 @@ const DISTRICT_POLYGONS: Record<string, { name: string; arabicName: string; coor
 // Expanded mapping of postal codes to district names
 // This is a simplified example, would need a more comprehensive database for production
 const POSTAL_CODE_TO_DISTRICT: Record<string, string> = {
-  // Makkah postal codes
   '21955': 'منى',
   '21912': 'العزيزية',
   '21961': 'المسفلة',
   '21421': 'الحجاز',
-  // Riyadh postal codes
   '11564': 'النرجس',
   '12627': 'الملز',
   '12211': 'السليمانية',
-  // Jeddah postal codes
   '23434': 'الروضة',
-  // Additional postal codes - cover more areas
   '21411': 'العزيزية',
   '21442': 'منى',
   '21452': 'المسفلة',
   '11511': 'النرجس',
   '12222': 'السليمانية',
   '23435': 'الروضة',
-  '12345': 'النرجس',  // Fallback for testing
-  '54321': 'الملز',    // Fallback for testing
+  '12345': 'النرجس',
+  '54321': 'الملز'
 };
 
 // Add a default district for unknown postal codes
@@ -120,6 +115,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
+  const polygonRef = useRef<L.Polygon | null>(null);
   const [districtData, setDistrictData] = useState<{
     name: string;
     arabicName: string;
@@ -257,6 +253,25 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
     setIsLoading(false);
   };
 
+  // Function to create a marker at the given lat/lng
+  const createMarker = (map: L.Map, latLng: [number, number], popupContent: string) => {
+    // Create custom marker icon
+    const markerIcon = L.divIcon({
+      className: 'location-marker',
+      html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
+      iconSize: [36, 36],
+      iconAnchor: [18, 36],
+      popupAnchor: [0, -36]
+    });
+
+    const marker = L.marker(latLng, { icon: markerIcon })
+      .addTo(map)
+      .bindPopup(`<div style="text-align: center; direction: rtl;">${popupContent}</div>`)
+      .openPopup();
+      
+    return marker;
+  };
+
   const initializeMap = (district: { name: string; arabicName: string; coords: [number, number][] }) => {
     if (!mapContainer.current) return;
     
@@ -269,6 +284,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
     
     // Initialize map
     if (!mapInstance.current) {
+      console.log("Initializing map with center:", mapCenter);
       const map = L.map(mapContainer.current, {
         center: mapCenter,
         zoom: 14,
@@ -284,7 +300,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       mapInstance.current = map;
       
       // Add district polygon
-      const polygon = L.polygon(district.coords, {
+      polygonRef.current = L.polygon(district.coords, {
         color: '#B69665',
         weight: 3,
         opacity: 0.7,
@@ -304,25 +320,14 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       
       // Add marker pin for the exact location if lat/lng provided
       if (lat && lng) {
-        // Create custom marker icon
-        const markerIcon = L.divIcon({
-          className: 'location-marker',
-          html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
-          iconSize: [36, 36],
-          iconAnchor: [18, 36],
-          popupAnchor: [0, -36]
-        });
-
-        markerRef.current = L.marker([lat, lng], { icon: markerIcon })
-          .addTo(map)
-          .bindPopup(`<div style="text-align: center; direction: rtl;">${location}</div>`)
-          .openPopup();
+        console.log("Creating marker at:", lat, lng);
+        markerRef.current = createMarker(map, [lat, lng], location);
         
         // Center on exact location and adjust zoom
         map.setView([lat, lng], 15);
       } else {
         // Fit bounds to polygon if no specific location
-        map.fitBounds(polygon.getBounds(), { padding: [50, 50] });
+        map.fitBounds(polygonRef.current.getBounds(), { padding: [50, 50] });
       }
     }
   };
@@ -388,28 +393,19 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
         mapInstance.current = null;
       }
     };
-  }, [lat, lng, postalCode]);
+  }, []);
 
   // Update marker position if lat/lng changes after initial render
   useEffect(() => {
     if (mapInstance.current && lat && lng) {
+      console.log("Updating marker position to:", lat, lng);
+      
       // If we already have a marker, update its position
       if (markerRef.current) {
         markerRef.current.setLatLng([lat, lng]);
       } else {
         // Create a new marker
-        const markerIcon = L.divIcon({
-          className: 'location-marker',
-          html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
-          iconSize: [36, 36],
-          iconAnchor: [18, 36],
-          popupAnchor: [0, -36]
-        });
-
-        markerRef.current = L.marker([lat, lng], { icon: markerIcon })
-          .addTo(mapInstance.current)
-          .bindPopup(`<div style="text-align: center; direction: rtl;">${location}</div>`)
-          .openPopup();
+        markerRef.current = createMarker(mapInstance.current, [lat, lng], location);
       }
       
       // Center and zoom map on the marker
