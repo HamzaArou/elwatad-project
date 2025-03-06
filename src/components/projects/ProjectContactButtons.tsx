@@ -32,20 +32,20 @@ export default function ProjectContactButtons({ className }: ProjectContactButto
       <div className="grid grid-cols-2 gap-4 mt-4">
         <Button 
           onClick={handleWhatsAppClick}
-          className="bg-[#25D366] hover:bg-[#22c55e] text-white py-6 rounded-lg flex flex-col items-center justify-center gap-2 transition-all duration-200 hover:shadow-lg"
+          className="bg-[#25D366] hover:bg-[#22c55e] text-white py-6 rounded-lg flex flex-row-reverse items-center justify-center gap-3 transition-all duration-200 hover:shadow-lg"
           size="lg"
         >
-          <MessageCircle className="h-6 w-6" />
           <span className="font-semibold">واتس</span>
+          <MessageCircle className="h-6 w-6" />
         </Button>
         
         <Button 
           onClick={handleCallClick}
-          className="bg-[#B69665] hover:bg-[#9a7d53] text-white py-6 rounded-lg flex flex-col items-center justify-center gap-2 transition-all duration-200 hover:shadow-lg"
+          className="bg-[#B69665] hover:bg-[#9a7d53] text-white py-6 rounded-lg flex flex-row-reverse items-center justify-center gap-3 transition-all duration-200 hover:shadow-lg"
           size="lg"
         >
-          <Phone className="h-6 w-6" />
           <span className="font-semibold">اتصال</span>
+          <Phone className="h-6 w-6" />
         </Button>
       </div>
     </div>
