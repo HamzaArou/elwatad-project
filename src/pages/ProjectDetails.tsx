@@ -1,9 +1,9 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import ProjectTabsSection from "@/components/projects/ProjectTabsSection";
 import ProjectGallery from "@/components/projects/ProjectGallery";
+import ProjectContactButtons from "@/components/projects/ProjectContactButtons";
 import { Building2, Bed, Bath, Square, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -67,7 +67,6 @@ export default function ProjectDetails() {
       } = await supabase.from("project_features").select("*").eq("project_id", id);
       if (featuresError) throw featuresError;
       
-      // Get postal code if available
       const postalCode = details?.postal_code || null;
       
       return {
@@ -288,6 +287,10 @@ export default function ProjectDetails() {
 
       <div className="container mx-auto px-4 py-8">
         <ProjectGallery gallery={galleryItems} />
+      </div>
+
+      <div className="container mx-auto px-4 mb-8">
+        <ProjectContactButtons className="max-w-md mx-auto" />
       </div>
 
       <div className="container mx-auto px-4 pb-12">

@@ -127,7 +127,7 @@ export default function ProjectTabsSection({
         </TabsContent>
       </Tabs>
       
-      <style jsx global>{`
+      <style>{`
         /* Ensure the map stays within its container */
         .leaflet-map-pane,
         .leaflet-tile,
