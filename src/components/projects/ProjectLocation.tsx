@@ -135,7 +135,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
           </div>
         )}
         
-        <div ref={mapRef} className="w-full h-full" />
+        <div ref={mapRef} className="w-full h-full relative z-0" />
       </div>
       
       <style>{`
@@ -160,6 +160,19 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
         }
         .leaflet-container {
           font: 16px/1.5 "IBM Plex Sans Arabic", sans-serif !important;
+          z-index: 1 !important;
+        }
+        .leaflet-popup-content-wrapper, 
+        .leaflet-popup-tip {
+          z-index: 1 !important;
+        }
+        /* Fix for map container */
+        .leaflet-pane,
+        .leaflet-control,
+        .leaflet-top,
+        .leaflet-bottom {
+          z-index: 1 !important;
+          position: absolute;
         }
       `}</style>
     </div>

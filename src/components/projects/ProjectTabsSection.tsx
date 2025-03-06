@@ -103,8 +103,8 @@ export default function ProjectTabsSection({
           </Card>
         </TabsContent>
 
-        <TabsContent value="location" className="pt-2">
-          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
+        <TabsContent value="location" className="pt-2 relative">
+          <Card className="bg-white p-6 rounded-lg shadow-sm border-0 relative z-0 overflow-hidden">
             <ProjectLocation 
               location={location} 
               lat={lat} 
@@ -126,5 +126,36 @@ export default function ProjectTabsSection({
           </Card>
         </TabsContent>
       </Tabs>
+      
+      <style jsx global>{`
+        /* Ensure the map stays within its container */
+        .leaflet-map-pane,
+        .leaflet-tile,
+        .leaflet-marker-icon,
+        .leaflet-marker-shadow,
+        .leaflet-tile-pane,
+        .leaflet-overlay-pane,
+        .leaflet-shadow-pane,
+        .leaflet-marker-pane,
+        .leaflet-popup-pane,
+        .leaflet-overlay-pane svg,
+        .leaflet-zoom-box,
+        .leaflet-image-layer,
+        .leaflet-layer {
+          position: absolute;
+          z-index: 1 !important;
+        }
+        
+        /* Make sure controls are visible but don't overlap other content */
+        .leaflet-control {
+          z-index: 2 !important;
+          position: relative;
+        }
+        
+        /* Fix for popup layers */
+        .leaflet-popup {
+          z-index: 3 !important;
+        }
+      `}</style>
     </div>;
 }
