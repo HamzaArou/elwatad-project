@@ -18,7 +18,6 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-  const [mapPreviewSrc, setMapPreviewSrc] = useState<string | null>(null);
 
   useEffect(() => {
     if (scriptLoaded && inputRef.current) {
@@ -34,30 +33,12 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
           if (place.geometry?.location) {
             form.setValue("lat", place.geometry.location.lat());
             form.setValue("lng", place.geometry.location.lng());
-            
-            // Update map preview
-            updateMapPreview(
-              place.geometry.location.lat(),
-              place.geometry.location.lng(),
-              place.formatted_address
-            );
           }
           handleAddressChange(place.formatted_address);
         }
       });
     }
   }, [scriptLoaded, form]);
-
-  const updateMapPreview = (lat: number, lng: number, address: string) => {
-    // Create a static map preview with a circle instead of a pin
-    const circleParams = `&center=${lat},${lng}&zoom=15&size=640x300&scale=2&maptype=roadmap` +
-      `&markers=size:mid%7Ccolor:0xB69665%7C${lat},${lng}` +
-      `&path=fillcolor:0xB6966580%7Cstrokecolor:0xB69665%7Cstrokeweight:2%7Cfillweight:5%7C` +
-      `circle:${lat},${lng},150`;
-    
-    const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?${circleParams}&key=AIzaSyBLG_lVti0XFbrkusdGJC0HQnA5G9vHJqQ`;
-    setMapPreviewSrc(mapUrl);
-  };
 
   const handleAddressChange = (address: string) => {
     form.setValue("address", address);
@@ -66,17 +47,6 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
     )}`;
     setPreviewUrl(googleMapsUrl);
   };
-
-  // Update map preview when lat/lng are manually entered
-  useEffect(() => {
-    const lat = form.getValues("lat");
-    const lng = form.getValues("lng");
-    const address = form.getValues("address");
-    
-    if (lat && lng && address) {
-      updateMapPreview(lat, lng, address);
-    }
-  }, [form.watch("lat"), form.watch("lng")]);
 
   return (
     <div className="space-y-4">
@@ -208,16 +178,6 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
           </FormItem>
         )}
       />
-
-      {mapPreviewSrc && (
-        <div className="mt-4 border border-gray-200 rounded-lg overflow-hidden">
-          <img 
-            src={mapPreviewSrc} 
-            alt="موقع المشروع" 
-            className="w-full h-auto"
-          />
-        </div>
-      )}
 
       {previewUrl && (
         <div className="mt-4">

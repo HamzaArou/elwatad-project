@@ -1,3 +1,4 @@
+
 import { MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
@@ -77,7 +78,7 @@ const DISTRICT_POLYGONS: Record<string, { name: string; arabicName: string; coor
       [21.5320, 39.1780], [21.5370, 39.1850], [21.5310, 39.1900], 
       [21.5260, 39.1840], [21.5320, 39.1780]
     ]
-  },
+  }
 };
 
 // Expanded mapping of postal codes to district names
@@ -118,7 +119,7 @@ const DEFAULT_DISTRICT = {
 export default function ProjectLocation({ location, lat, lng, postalCode }: ProjectLocationProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
-  const circleRef = useRef<L.Circle | null>(null);
+  const markerRef = useRef<L.Marker | null>(null);
   const [districtData, setDistrictData] = useState<{
     name: string;
     arabicName: string;
@@ -218,8 +219,8 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       
       console.log("Closest district:", closestDistrict?.name);
       return closestDistrict;
-    } catch (err) {
-      console.error("Error finding district:", err);
+    } catch (error) {
+      console.error("Error finding district:", error);
       
       // Fallback: generate a district based on coordinates
       return {
@@ -231,7 +232,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
           [latitude + 0.01, longitude + 0.01],
           [latitude - 0.01, longitude + 0.01],
           [latitude - 0.01, longitude - 0.01]
-        ] as [number, number][]
+        ]
       };
     }
   };
@@ -285,10 +286,10 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       // Add district polygon
       const polygon = L.polygon(district.coords, {
         color: '#B69665',
-        weight: 2,
+        weight: 3,
         opacity: 0.7,
         fillColor: '#B69665',
-        fillOpacity: 0.2
+        fillOpacity: 0.3
       }).addTo(map);
       
       // Add text label for district name
@@ -301,16 +302,18 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       
       L.marker([centerLat, centerLng], { icon: labelIcon }).addTo(map);
       
-      // Add circle for the exact location if lat/lng provided
+      // Add marker pin for the exact location if lat/lng provided
       if (lat && lng) {
-        // Create circle marker
-        circleRef.current = L.circle([lat, lng], {
-          color: '#B69665',
-          fillColor: '#B69665',
-          fillOpacity: 0.5,
-          radius: 150, // 150 meters radius
-          weight: 2
-        })
+        // Create custom marker icon
+        const markerIcon = L.divIcon({
+          className: 'location-marker',
+          html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
+          iconSize: [36, 36],
+          iconAnchor: [18, 36],
+          popupAnchor: [0, -36]
+        });
+
+        markerRef.current = L.marker([lat, lng], { icon: markerIcon })
           .addTo(map)
           .bindPopup(`<div style="text-align: center; direction: rtl;">${location}</div>`)
           .openPopup();
@@ -387,28 +390,29 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
     };
   }, [lat, lng, postalCode]);
 
-  // Update circle position if lat/lng changes after initial render
+  // Update marker position if lat/lng changes after initial render
   useEffect(() => {
     if (mapInstance.current && lat && lng) {
-      // If we already have a circle, update its position
-      if (circleRef.current) {
-        circleRef.current.setLatLng([lat, lng]);
+      // If we already have a marker, update its position
+      if (markerRef.current) {
+        markerRef.current.setLatLng([lat, lng]);
       } else {
-        // Create a new circle
-        circleRef.current = L.circle([lat, lng], {
-          color: '#B69665',
-          fillColor: '#B69665',
-          fillOpacity: 0.5,
-          radius: 150, // 150 meters radius
-          weight: 2,
-          className: 'location-circle'
-        })
+        // Create a new marker
+        const markerIcon = L.divIcon({
+          className: 'location-marker',
+          html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
+          iconSize: [36, 36],
+          iconAnchor: [18, 36],
+          popupAnchor: [0, -36]
+        });
+
+        markerRef.current = L.marker([lat, lng], { icon: markerIcon })
           .addTo(mapInstance.current)
           .bindPopup(`<div style="text-align: center; direction: rtl;">${location}</div>`)
           .openPopup();
       }
       
-      // Center and zoom map on the circle
+      // Center and zoom map on the marker
       mapInstance.current.setView([lat, lng], 15);
     }
   }, [lat, lng, location]);
@@ -491,21 +495,23 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
         .leaflet-container {
           font: 16px/1.5 "IBM Plex Sans Arabic", sans-serif !important;
         }
-        .location-circle {
-          animation: pulse-circle 1.5s infinite ease-in-out;
+        .location-marker {
+          background: transparent;
+          border: none;
         }
-        @keyframes pulse-circle {
+        .marker-pin {
+          animation: pulse 1.5s infinite ease-in-out;
+          transform-origin: center bottom;
+        }
+        @keyframes pulse {
           0% {
-            opacity: 0.5;
-            transform: scale(0.95);
+            transform: scale(1);
           }
           50% {
-            opacity: 0.7;
-            transform: scale(1.05);
+            transform: scale(1.1);
           }
           100% {
-            opacity: 0.5;
-            transform: scale(0.95);
+            transform: scale(1);
           }
         }
       `}</style>
