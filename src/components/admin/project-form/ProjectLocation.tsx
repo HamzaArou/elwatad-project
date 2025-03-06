@@ -31,8 +31,11 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
         if (place && place.formatted_address) {
           form.setValue("address", place.formatted_address);
           if (place.geometry?.location) {
-            form.setValue("lat", place.geometry.location.lat());
-            form.setValue("lng", place.geometry.location.lng());
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            console.log("Setting coordinates from autocomplete:", lat, lng);
+            form.setValue("lat", lat);
+            form.setValue("lng", lng);
           }
           handleAddressChange(place.formatted_address);
         }
@@ -48,10 +51,19 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
     setPreviewUrl(googleMapsUrl);
   };
 
+  // Log the current lat/lng values when they change
+  useEffect(() => {
+    const lat = form.watch("lat");
+    const lng = form.watch("lng");
+    if (lat && lng) {
+      console.log("Current lat/lng in form:", lat, lng);
+    }
+  }, [form.watch("lat"), form.watch("lng")]);
+
   return (
     <div className="space-y-4">
       <Script
-        src="https://maps.googleapis.com/maps/api/js?libraries=places"
+        src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDAVuXJckyiKNxO9PFVUXjrOJ1-BGE_-JA"
         onLoad={() => setScriptLoaded(true)}
       />
 
@@ -93,7 +105,11 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
                   type="number"
                   step="any"
                   value={value || ''}
-                  onChange={(e) => onChange(parseFloat(e.target.value))}
+                  onChange={(e) => {
+                    const newValue = parseFloat(e.target.value);
+                    console.log("Setting lat to:", newValue);
+                    onChange(newValue);
+                  }}
                   disabled={isLoading}
                   placeholder="21.4225"
                   className="text-left ltr"
@@ -116,7 +132,11 @@ export default function ProjectLocation({ form, isLoading }: ProjectLocationProp
                   type="number"
                   step="any"
                   value={value || ''}
-                  onChange={(e) => onChange(parseFloat(e.target.value))}
+                  onChange={(e) => {
+                    const newValue = parseFloat(e.target.value);
+                    console.log("Setting lng to:", newValue);
+                    onChange(newValue);
+                  }}
                   disabled={isLoading}
                   placeholder="39.8256"
                   className="text-left ltr"

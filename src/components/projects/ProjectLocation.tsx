@@ -1,3 +1,4 @@
+
 import { MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
@@ -264,11 +265,13 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       popupAnchor: [0, -36]
     });
 
+    console.log("Creating marker at coordinates:", latLng);
+    
     const marker = L.marker(latLng, { icon: markerIcon })
       .addTo(map)
       .bindPopup(`<div style="text-align: center; direction: rtl;">${popupContent}</div>`)
       .openPopup();
-      
+    
     return marker;
   };
 

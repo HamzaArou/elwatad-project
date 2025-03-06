@@ -32,6 +32,8 @@ export default function ProjectTabsSection({
   postalCode,
   projectId
 }: ProjectTabsSectionProps) {
+  console.log("ProjectTabsSection received coordinates:", { lat, lng, postalCode });
+  
   return <div className="mt-12 mb-16">
       <Tabs defaultValue="details" dir="rtl">
         <TabsList className="w-full justify-start mb-6 bg-transparent border-b border-gray-200 p-0 h-auto overflow-x-auto no-scrollbar">
