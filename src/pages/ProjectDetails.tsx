@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -287,10 +286,10 @@ export default function ProjectDetails() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="relative mb-8">
+        <div className="relative mb-8 flex justify-center">
           <div className="styled-title-container relative inline-block">
-            <h2 className="styled-title text-[#2F4447] font-bold text-2xl md:text-3xl px-10 py-3 text-right">
-              مشاريع وتد الكيان
+            <h2 className="styled-title text-[#2F4447] font-bold text-2xl md:text-3xl px-10 py-3 text-center">
+              معرض صور وفيديوهات المشروع
             </h2>
           </div>
         </div>
