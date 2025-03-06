@@ -44,6 +44,7 @@ export type ProjectFeature = z.infer<typeof projectFeatureSchema>;
 export type ProjectDetails = z.infer<typeof projectDetailsSchema>;
 
 export const view360Schema = z.object({
+  id: z.string().optional(),
   title: z.string().min(1, "عنوان الجولة مطلوب"),
   url: z.string().url("الرجاء إدخال رابط صحيح")
 });
@@ -122,4 +123,5 @@ export interface ProjectFormProps {
   };
 }
 
-export type TabType = "basic" | "gallery" | "location" | "360views" | "units";
+export type TabType = "basic" | "gallery" | "location" | "360views" | "units" | "plans";
+

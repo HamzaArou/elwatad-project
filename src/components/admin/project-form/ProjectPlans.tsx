@@ -1,3 +1,4 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
@@ -39,7 +40,7 @@ export default function ProjectPlans({ form, isLoading, onPlansChange, initialPl
                   multiple
                   onChange={(e) => {
                     onPlansChange(e.target.files);
-                    field.onChange(e.target.files ? Array.from(e.target.files) : []);
+                    field.onChange(e.target.files ? Array.from(e.target.files as unknown as File[]) : []);
                   }}
                   disabled={isLoading}
                   className="cursor-pointer"

@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import ProjectLocation from "./ProjectLocation";
@@ -5,6 +6,7 @@ import Project360Views from "./Project360Views";
 import ProjectUnits from "./ProjectUnits";
 import ProjectUpdates from "./ProjectUpdates";
 import { Building2, Bed, Bath, Square } from "lucide-react";
+
 interface ProjectTabsSectionProps {
   details: string;
   rooms: number;
@@ -15,8 +17,9 @@ interface ProjectTabsSectionProps {
   lat?: number | null;
   lng?: number | null;
   postalCode?: string;
-  projectId: string; // Add projectId prop
+  projectId: string;
 }
+
 export default function ProjectTabsSection({
   details,
   rooms,
@@ -102,12 +105,6 @@ export default function ProjectTabsSection({
         <TabsContent value="360views" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
             <Project360Views projectId={projectId} />
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="units" className="pt-2">
-          <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectUnits projectId={projectId} />
           </Card>
         </TabsContent>
 

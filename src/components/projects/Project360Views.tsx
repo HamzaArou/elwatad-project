@@ -25,6 +25,8 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
         .single();
 
       if (error) throw error;
+      
+      // Cast the JSON data to the correct type
       return (projectDetails?.views360 || []) as Project360View[];
     },
     enabled: !!projectId,
