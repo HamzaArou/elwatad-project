@@ -100,7 +100,12 @@ export default function ProjectTabsSection({
 
         <TabsContent value="location" className="pt-2">
           <Card className="bg-white p-6 rounded-lg shadow-sm border-0">
-            <ProjectLocation location={location} lat={lat} lng={lng} postalCode={postalCode} />
+            <ProjectLocation 
+              location={location} 
+              lat={lat} 
+              lng={lng} 
+              postalCode={postalCode}
+            />
           </Card>
         </TabsContent>
 

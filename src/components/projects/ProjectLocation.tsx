@@ -1,4 +1,3 @@
-
 import { MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
@@ -256,6 +255,11 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
 
   // Function to create a marker at the given lat/lng
   const createMarker = (map: L.Map, latLng: [number, number], popupContent: string) => {
+    if (!map) {
+      console.error("Cannot create marker: map is null");
+      return null;
+    }
+    
     // Create custom marker icon
     const markerIcon = L.divIcon({
       className: 'location-marker',
@@ -267,16 +271,27 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
 
     console.log("Creating marker at coordinates:", latLng);
     
-    const marker = L.marker(latLng, { icon: markerIcon })
-      .addTo(map)
-      .bindPopup(`<div style="text-align: center; direction: rtl;">${popupContent}</div>`)
-      .openPopup();
-    
-    return marker;
+    try {
+      const marker = L.marker(latLng, { icon: markerIcon })
+        .addTo(map)
+        .bindPopup(`<div style="text-align: center; direction: rtl;">${popupContent}</div>`)
+        .openPopup();
+      
+      console.log("Marker created successfully");
+      return marker;
+    } catch (err) {
+      console.error("Error creating marker:", err);
+      return null;
+    }
   };
 
   const initializeMap = (district: { name: string; arabicName: string; coords: [number, number][] }) => {
-    if (!mapContainer.current) return;
+    if (!mapContainer.current) {
+      console.error("Map container not available");
+      return;
+    }
+    
+    console.log("Initializing map with:", { district, lat, lng });
     
     // Calculate center of district polygon
     const centerLat = district.coords.reduce((sum, coord) => sum + coord[0], 0) / district.coords.length;
@@ -285,66 +300,105 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
     // Use provided lat/lng as center if available
     const mapCenter: [number, number] = (lat && lng) ? [lat, lng] : [centerLat, centerLng];
     
-    // Initialize map
-    if (!mapInstance.current) {
-      console.log("Initializing map with center:", mapCenter);
-      const map = L.map(mapContainer.current, {
-        center: mapCenter,
-        zoom: 14,
-        scrollWheelZoom: false,
-        zoomControl: true
-      });
-      
-      L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=0xThwp5hzLtXF2Nvi1LZ&language=ar', {
-        attribution: '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e',
-        maxZoom: 18,
-      }).addTo(map);
-      
-      mapInstance.current = map;
-      
-      // Add district polygon
-      polygonRef.current = L.polygon(district.coords, {
-        color: '#B69665',
-        weight: 3,
-        opacity: 0.7,
-        fillColor: '#B69665',
-        fillOpacity: 0.3
-      }).addTo(map);
-      
-      // Add text label for district name
-      const labelIcon = L.divIcon({
-        className: 'district-label',
-        html: `<div class="district-name">${district.arabicName}</div>`,
-        iconSize: [120, 40],
-        iconAnchor: [60, 20]
-      });
-      
-      L.marker([centerLat, centerLng], { icon: labelIcon }).addTo(map);
-      
-      // Add marker pin for the exact location if lat/lng provided
-      if (lat && lng) {
-        console.log("Creating marker at:", lat, lng);
-        markerRef.current = createMarker(map, [lat, lng], location);
+    try {
+      // Initialize map if it doesn't exist
+      if (!mapInstance.current) {
+        console.log("Creating new map with center:", mapCenter);
         
-        // Center on exact location and adjust zoom
-        map.setView([lat, lng], 15);
+        // Clear any existing map elements
+        if (mapContainer.current.innerHTML) {
+          mapContainer.current.innerHTML = '';
+        }
+        
+        const map = L.map(mapContainer.current, {
+          center: mapCenter,
+          zoom: 14,
+          scrollWheelZoom: false,
+          zoomControl: true
+        });
+        
+        L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=0xThwp5hzLtXF2Nvi1LZ&language=ar', {
+          attribution: '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e',
+          maxZoom: 18,
+        }).addTo(map);
+        
+        mapInstance.current = map;
+        
+        // Add district polygon
+        if (district.coords && district.coords.length > 0) {
+          console.log("Adding district polygon");
+          polygonRef.current = L.polygon(district.coords, {
+            color: '#B69665',
+            weight: 3,
+            opacity: 0.7,
+            fillColor: '#B69665',
+            fillOpacity: 0.3
+          }).addTo(map);
+          
+          // Add text label for district name
+          const labelIcon = L.divIcon({
+            className: 'district-label',
+            html: `<div class="district-name">${district.arabicName}</div>`,
+            iconSize: [120, 40],
+            iconAnchor: [60, 20]
+          });
+          
+          L.marker([centerLat, centerLng], { icon: labelIcon }).addTo(map);
+        }
+        
+        // Add marker pin for the exact location if lat/lng provided
+        if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
+          console.log("Creating marker for exact location:", lat, lng);
+          markerRef.current = createMarker(map, [lat, lng], location);
+          
+          // Center on exact location and adjust zoom
+          map.setView([lat, lng], 15);
+        } else if (polygonRef.current) {
+          // Fit bounds to polygon if no specific location
+          console.log("Fitting bounds to district polygon");
+          map.fitBounds(polygonRef.current.getBounds(), { padding: [50, 50] });
+        }
       } else {
-        // Fit bounds to polygon if no specific location
-        map.fitBounds(polygonRef.current.getBounds(), { padding: [50, 50] });
+        // If map already exists, update it
+        console.log("Map already exists, updating view");
+        const map = mapInstance.current;
+        
+        // Clear existing marker if any
+        if (markerRef.current) {
+          markerRef.current.remove();
+          markerRef.current = null;
+        }
+        
+        // Add marker for the exact location if lat/lng provided
+        if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
+          console.log("Updating marker for exact location:", lat, lng);
+          markerRef.current = createMarker(map, [lat, lng], location);
+          
+          // Center on exact location and adjust zoom
+          map.setView([lat, lng], 15);
+        } else if (polygonRef.current) {
+          // Fit bounds to polygon if no specific location
+          map.fitBounds(polygonRef.current.getBounds(), { padding: [50, 50] });
+        }
       }
+    } catch (err) {
+      console.error("Error initializing map:", err);
+      setError("حدث خطأ أثناء تحميل الخريطة");
     }
   };
   
   useEffect(() => {
     if (!mapContainer.current) {
       setIsLoading(false);
+      console.error("Map container ref is null");
       return;
     }
+    
+    console.log("Starting map initialization with props:", { lat, lng, postalCode, location });
     
     const initMap = async () => {
       try {
         setIsLoading(true);
-        console.log("Initializing map with:", { postalCode, lat, lng });
         
         // If we have a postal code, use that
         if (postalCode) {
@@ -362,8 +416,8 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
         }
         
         // Otherwise use lat/lng if available
-        if (lat && lng) {
-          console.log("Using coordinates:", lat, lng);
+        if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
+          console.log("Using coordinates for map:", lat, lng);
           // Find nearest district
           const district = await findNearestDistrict(lat, lng);
           if (!district) {
@@ -387,11 +441,13 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       }
     };
     
+    // Execute the async function
     initMap();
     
     // Cleanup function
     return () => {
       if (mapInstance.current) {
+        console.log("Cleaning up map instance");
         mapInstance.current.remove();
         mapInstance.current = null;
       }
@@ -400,14 +456,23 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
 
   // Update marker position if lat/lng changes after initial render
   useEffect(() => {
-    if (mapInstance.current && lat && lng) {
+    console.log("Coordinates changed, updating map:", { lat, lng });
+    
+    if (!mapInstance.current) {
+      console.log("No map instance available yet");
+      return;
+    }
+    
+    if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
       console.log("Updating marker position to:", lat, lng);
       
       // If we already have a marker, update its position
       if (markerRef.current) {
+        console.log("Updating existing marker position");
         markerRef.current.setLatLng([lat, lng]);
       } else {
         // Create a new marker
+        console.log("Creating new marker for coordinates");
         markerRef.current = createMarker(mapInstance.current, [lat, lng], location);
       }
       
@@ -475,7 +540,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
             {error}
           </div>
         ) : (
-          <div ref={mapContainer} className="w-full h-full" />
+          <div ref={mapContainer} id="map-container" className="w-full h-full" />
         )}
       </div>
       <style>{`
