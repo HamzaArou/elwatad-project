@@ -47,9 +47,18 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
             title: view.title || "جولة افتراضية",
             url: view.url || ""
           }));
+        } 
+        
+        // If it's a string (direct URL), convert to our format
+        if (typeof views360Data === 'string') {
+          return [{
+            id: crypto.randomUUID(),
+            title: "جولة افتراضية",
+            url: views360Data
+          }];
         }
         
-        // For legacy data - should no longer occur with the new trigger
+        // For legacy data or unexpected format
         console.warn("Unexpected views360 format:", typeof views360Data);
         return [];
       } catch (err) {

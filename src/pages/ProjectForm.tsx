@@ -36,18 +36,43 @@ export default function ProjectFormPage() {
       // Process views360 data to ensure it's in the correct format for the form
       let formattedViews360 = [];
       if (projectDetails?.views360) {
-        // With our new database trigger, views360 will always be an array
-        if (Array.isArray(projectDetails.views360)) {
-          formattedViews360 = projectDetails.views360.map((view: any) => ({
-            id: view.id || crypto.randomUUID(),
-            title: view.title || "جولة افتراضية",
-            url: view.url || ""
-          }));
-        } else {
-          console.warn("Unexpected format for views360:", projectDetails.views360);
+        try {
+          // Handle array format (from database)
+          if (Array.isArray(projectDetails.views360)) {
+            formattedViews360 = projectDetails.views360.map((view: any) => ({
+              id: view.id || crypto.randomUUID(),
+              title: view.title || "جولة افتراضية",
+              url: view.url || ""
+            }));
+          } 
+          // Handle string format (legacy case)
+          else if (typeof projectDetails.views360 === 'string') {
+            formattedViews360 = [
+              {
+                id: crypto.randomUUID(),
+                title: "جولة افتراضية",
+                url: projectDetails.views360
+              }
+            ];
+          }
+          // Handle JSON string that might be parsed (very unlikely but handling just in case)
+          else if (typeof projectDetails.views360 === 'object') {
+            console.log("Object format views360:", projectDetails.views360);
+            formattedViews360 = [
+              {
+                id: crypto.randomUUID(),
+                title: "جولة افتراضية",
+                url: JSON.stringify(projectDetails.views360)
+              }
+            ];
+          }
+        } catch (err) {
+          console.error("Error formatting views360:", err, projectDetails.views360);
           formattedViews360 = [];
         }
       }
+
+      console.log("Formatted views360 data:", formattedViews360);
 
       // Combine project data with details, if available
       const combinedData = {

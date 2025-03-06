@@ -1,4 +1,3 @@
-
 import { MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
@@ -115,6 +114,42 @@ const DEFAULT_DISTRICT = {
     [24.7036, 46.6853], [24.7136, 46.6753]
   ]
 };
+
+// Fix the setJeddahArea state setter
+const [jeddahArea, setJeddahArea] = useState<{
+  name: string;
+  arabicName: string;
+  coords: [number, number][];
+}>({
+  name: "jeddah",
+  arabicName: "جدة",
+  coords: [[39.1, 21.3], [39.3, 21.6]] // Type-safe coords
+});
+
+// Fix the setMakkahArea state setter
+const [makkahArea, setMakkahArea] = useState<{
+  name: string;
+  arabicName: string;
+  coords: [number, number][];
+}>({
+  name: "makkah",
+  arabicName: "مكة",
+  coords: [[39.7, 21.3], [39.9, 21.5]] // Type-safe coords
+});
+
+// When setting jeddahArea, make sure to cast the coords to the correct type
+setJeddahArea({
+  name: "jeddah",
+  arabicName: "جدة",
+  coords: [[39.1, 21.3], [39.3, 21.6]] as [number, number][]
+});
+
+// When setting makkahArea, make sure to cast the coords to the correct type
+setMakkahArea({
+  name: "makkah",
+  arabicName: "مكة",
+  coords: [[39.7, 21.3], [39.9, 21.5]] as [number, number][]
+});
 
 export default function ProjectLocation({ location, lat, lng, postalCode }: ProjectLocationProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
