@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ProjectFormValues } from "@/types/project";
+import { useState } from "react";
+import { Info } from "lucide-react";
 
 interface Project360ViewsProps {
   form: UseFormReturn<ProjectFormValues>;
@@ -12,6 +14,7 @@ interface Project360ViewsProps {
 
 export default function Project360Views({ form, isLoading }: Project360ViewsProps) {
   const views360 = form.watch("views360") || [];
+  const [jsonError, setJsonError] = useState<string | null>(null);
 
   const addView = () => {
     const currentViews = form.getValues("views360") || [];
@@ -19,6 +22,7 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
       ...currentViews,
       { id: crypto.randomUUID(), title: "", url: "" }
     ], { shouldValidate: true });
+    setJsonError(null);
   };
 
   const removeView = (index: number) => {
@@ -28,6 +32,7 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
       currentViews.filter((_, i) => i !== index),
       { shouldValidate: true }
     );
+    setJsonError(null);
   };
 
   return (
@@ -41,6 +46,16 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
         >
           إضافة جولة
         </Button>
+      </div>
+      
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+        <div className="flex items-start gap-2">
+          <Info className="h-5 w-5 text-amber-500 mt-0.5" />
+          <div className="text-sm text-amber-800">
+            <p className="font-medium">ملاحظة مهمة:</p>
+            <p>كل جولة افتراضية تحتاج إلى عنوان ورابط. لا يمكن إدخال رابط فقط. يتم تخزين البيانات كمصفوفة JSON.</p>
+          </div>
+        </div>
       </div>
 
       {views360.length === 0 && (
@@ -89,6 +104,12 @@ export default function Project360Views({ form, isLoading }: Project360ViewsProp
           </Button>
         </div>
       ))}
+      
+      {jsonError && (
+        <div className="text-red-500 text-sm p-2 bg-red-50 rounded">
+          {jsonError}
+        </div>
+      )}
     </div>
   );
 }

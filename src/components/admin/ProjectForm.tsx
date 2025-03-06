@@ -21,8 +21,8 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [currentTab, setCurrentTab] = useState<TabType>("basic");
   const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [galleryImages, setGalleryImages] = useState<FileList | null>(null);
-  const [plans, setPlans] = useState<FileList | null>(null);
+  const [galleryImages, setGalleryImages] = useState<File[] | null>(null);
+  const [plans, setPlans] = useState<File[] | null>(null);
   const navigate = useNavigate();
 
   const form = useForm<ProjectFormValues>({
@@ -43,8 +43,8 @@ export default function ProjectForm({ initialData }: ProjectFormProps) {
     mode: "onChange",
   });
 
-  const { validateTab } = useFormValidation(form, thumbnail, initialData, galleryImages, plans);
-  const { submitForm } = useFormSubmission(form, thumbnail, galleryImages, plans, initialData, navigate, setIsLoading);
+  const { validateTab } = useFormValidation(form, thumbnail, initialData, galleryImages as unknown as FileList, plans as unknown as FileList);
+  const { submitForm } = useFormSubmission(form, thumbnail, galleryImages as unknown as FileList, plans as unknown as FileList, initialData, navigate, setIsLoading);
 
   const currentTabIndex = TABS.indexOf(currentTab);
   const isLastTab = currentTabIndex === TABS.length - 1;

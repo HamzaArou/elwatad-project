@@ -47,7 +47,7 @@ export const useFormSubmission = (
         // Add missing required fields for project table
         area: 0, // Default value
         district: data.location || "", // Use location as district if not provided
-        property_status: "فيلا", // Default value
+        property_status: "فيلا" as "فيلا", // Default value with type assertion
         property_value: 0, // Default value
       };
 

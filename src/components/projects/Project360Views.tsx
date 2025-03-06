@@ -32,21 +32,51 @@ export default function Project360Views({ projectId }: Project360ViewsProps) {
       // If data is null or undefined, return empty array
       if (!views360Data) return [];
       
+      // Handle different data formats
       try {
-        // If the data is a string (which would be invalid), try to parse it
+        // If it's already a valid array of objects with title and url
+        if (Array.isArray(views360Data) && views360Data.length > 0) {
+          // Make sure each item has the required properties
+          return views360Data.map((view: any) => ({
+            id: view.id || crypto.randomUUID(),
+            title: view.title || "جولة افتراضية",
+            url: view.url || ""
+          }));
+        }
+        
+        // If it's a string (which could be a URL or JSON string)
         if (typeof views360Data === 'string') {
-          return JSON.parse(views360Data) as Project360View[];
+          try {
+            // Try to parse it as JSON
+            const parsed = JSON.parse(views360Data);
+            if (Array.isArray(parsed)) {
+              return parsed.map((view: any) => ({
+                id: view.id || crypto.randomUUID(),
+                title: view.title || "جولة افتراضية",
+                url: view.url || ""
+              }));
+            } else {
+              // Single URL string - create a default title
+              return [{
+                id: crypto.randomUUID(),
+                title: "جولة افتراضية 360°",
+                url: views360Data
+              }];
+            }
+          } catch (e) {
+            // If it's not valid JSON, assume it's a URL
+            return [{
+              id: crypto.randomUUID(),
+              title: "جولة افتراضية 360°",
+              url: views360Data
+            }];
+          }
         }
         
-        // If the data is already an array, return it
-        if (Array.isArray(views360Data)) {
-          return views360Data as Project360View[];
-        }
-        
-        // For any other case, return empty array
+        // Return empty array for any other case
         return [];
       } catch (err) {
-        console.error("Error parsing views360 data:", err);
+        console.error("Error processing views360 data:", err);
         return [];
       }
     },
