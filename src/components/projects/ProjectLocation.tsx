@@ -1,4 +1,3 @@
-
 import { MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
@@ -78,7 +77,7 @@ const DISTRICT_POLYGONS: Record<string, { name: string; arabicName: string; coor
       [21.5320, 39.1780], [21.5370, 39.1850], [21.5310, 39.1900], 
       [21.5260, 39.1840], [21.5320, 39.1780]
     ]
-  }
+  },
 };
 
 // Expanded mapping of postal codes to district names
@@ -219,21 +218,6 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       
       console.log("Closest district:", closestDistrict?.name);
       return closestDistrict;
-    } catch (error) {
-      console.error("Error finding district:", error);
-      
-      // Fallback: generate a district based on coordinates
-      return {
-        name: `Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-        arabicName: `الموقع (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-        coords: [
-          [latitude - 0.01, longitude - 0.01],
-          [latitude + 0.01, longitude - 0.01],
-          [latitude + 0.01, longitude + 0.01],
-          [latitude - 0.01, longitude + 0.01],
-          [latitude - 0.01, longitude - 0.01]
-        ] as [number, number][]
-      };
     } catch (err) {
       console.error("Error finding district:", err);
       
