@@ -13,21 +13,25 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useToast } from "@/hooks/use-toast";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-
 export default function ProjectDetails() {
-  const { id } = useParams<{ id: string; }>();
+  const {
+    id
+  } = useParams<{
+    id: string;
+  }>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(true);
   const stickyWrapperRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    message: "",
+    message: ""
   });
-
   const {
     data: projectData,
     isLoading: isLoadingProject
@@ -66,9 +70,7 @@ export default function ProjectDetails() {
         error: featuresError
       } = await supabase.from("project_features").select("*").eq("project_id", id);
       if (featuresError) throw featuresError;
-      
       const postalCode = details?.postal_code || null;
-      
       return {
         ...project,
         details: details?.details,
@@ -80,35 +82,28 @@ export default function ProjectDetails() {
       };
     }
   });
-
   useEffect(() => {
     const checkPosition = () => {
       if (!stickyWrapperRef.current || !footerRef.current) return;
-
       const footerTop = footerRef.current.getBoundingClientRect().top;
       const viewportHeight = window.innerHeight;
-      
       if (footerTop <= viewportHeight) {
         setIsSticky(false);
       } else {
         setIsSticky(true);
       }
     };
-
     checkPosition();
     window.addEventListener('scroll', checkPosition);
     window.addEventListener('resize', checkPosition);
-
     return () => {
       window.removeEventListener('scroll', checkPosition);
       window.removeEventListener('resize', checkPosition);
     };
   }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
       const content = `
 نوع الطلب: استفسار عن مشروع
@@ -117,7 +112,6 @@ export default function ProjectDetails() {
 المشروع: ${projectData?.name || ""}
 الرسالة: ${formData.message || "لا يوجد رسالة"}
       `.trim();
-
       const requestBody = {
         service_id: 'service_vsb08u9',
         template_id: 'template_6akmr1f',
@@ -127,9 +121,7 @@ export default function ProjectDetails() {
           content: content
         }
       };
-
       console.log('Project Details - Final request:', JSON.stringify(requestBody, null, 2));
-
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
@@ -137,22 +129,18 @@ export default function ProjectDetails() {
         },
         body: JSON.stringify(requestBody)
       });
-
       if (!response.ok) {
         throw new Error(`EmailJS error: ${response.status}`);
       }
-
       toast({
         title: "تم إرسال الطلب بنجاح",
         description: "سنقوم بالتواصل معك قريباً"
       });
-
       setFormData({
         name: "",
         phone: "",
-        message: "",
+        message: ""
       });
-
       setDialogOpen(false);
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -165,10 +153,8 @@ export default function ProjectDetails() {
       setIsSubmitting(false);
     }
   };
-
   if (isLoadingProject) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-[140px]">
+    return <div className="min-h-screen bg-gray-50 pt-[140px]">
         <div className="max-w-[400px] mx-auto px-4">
           <Card className="overflow-hidden rounded-[24px] shadow-lg">
             <div className="relative h-[400px]">
@@ -182,15 +168,13 @@ export default function ProjectDetails() {
             </div>
             
             <div className="grid grid-cols-2 gap-4 p-6 bg-white">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+              {[1, 2, 3, 4].map(item => <div key={item} className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
                   <Skeleton className="h-5 w-5" />
                   <div className="space-y-2">
                     <Skeleton className="h-4 w-20" />
                     <Skeleton className="h-4 w-16" />
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </Card>
         </div>
@@ -198,9 +182,7 @@ export default function ProjectDetails() {
         <div className="container mx-auto px-4 py-8">
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[1, 2, 3].map((item) => (
-                <Skeleton key={item} className="h-[200px] rounded-lg" />
-              ))}
+              {[1, 2, 3].map(item => <Skeleton key={item} className="h-[200px] rounded-lg" />)}
             </div>
           </div>
         </div>
@@ -211,26 +193,21 @@ export default function ProjectDetails() {
             <Skeleton className="h-[400px] rounded-lg" />
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   if (!projectData) {
     return <div>Project not found</div>;
   }
-
   const galleryItems = projectData.media.map(item => ({
     id: item.id,
     url: item.media_url,
     type: item.media_type as 'image' | 'video',
     content_type: 'gallery'
   }));
-
   const formatPrice = (price?: number) => {
     if (!price) return "السعر عند الطلب";
     return `${price.toLocaleString('ar-SA')} ريال`;
   };
-
   return <div className="min-h-screen bg-gray-50">
       <div className="pt-[140px] pb-8">
         <div className="max-w-[400px] mx-auto px-4">
@@ -285,7 +262,7 @@ export default function ProjectDetails() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-[23px]">
         <div className="relative mb-8 flex justify-center">
           <div className="styled-title-container relative inline-block">
             <h2 className="styled-title text-[#2F4447] font-bold text-2xl md:text-3xl px-10 py-3 text-center">
@@ -301,35 +278,15 @@ export default function ProjectDetails() {
       </div>
 
       <div className="container mx-auto px-4 pb-12">
-        <ProjectTabsSection 
-          details={projectData.details} 
-          rooms={projectData.rooms} 
-          bathrooms={projectData.bathrooms} 
-          area={projectData.area} 
-          features={projectData.features.map(f => `${f.feature_type} (${f.amount})`)} 
-          location={projectData.location || ""} 
-          lat={projectData.lat} 
-          lng={projectData.lng} 
-          postalCode={projectData.postalCode}
-          projectId={id || ""}
-        />
+        <ProjectTabsSection details={projectData.details} rooms={projectData.rooms} bathrooms={projectData.bathrooms} area={projectData.area} features={projectData.features.map(f => `${f.feature_type} (${f.amount})`)} location={projectData.location || ""} lat={projectData.lat} lng={projectData.lng} postalCode={projectData.postalCode} projectId={id || ""} />
       </div>
 
       <div ref={stickyWrapperRef} className="relative">
         <div className={`h-24 ${isSticky ? 'block' : 'hidden'}`} />
-        <div 
-          className={`${
-            isSticky 
-              ? 'fixed bottom-0 left-0 right-0' 
-              : 'relative'
-          } z-50 bg-[#222222] transition-all duration-200`}
-        >
+        <div className={`${isSticky ? 'fixed bottom-0 left-0 right-0' : 'relative'} z-50 bg-[#222222] transition-all duration-200`}>
           <div className="py-4">
             <div className="container mx-auto px-4 flex justify-between items-center">
-              <Button 
-                onClick={() => setDialogOpen(true)}
-                className="bg-[#B69665] hover:bg-[#B69665]/90 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2"
-              >
+              <Button onClick={() => setDialogOpen(true)} className="bg-[#B69665] hover:bg-[#B69665]/90 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2">
                 قدم الآن
                 <ArrowUpRight className="h-5 w-5" />
               </Button>
@@ -352,48 +309,30 @@ export default function ProjectDetails() {
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <input
-                type="text"
-                placeholder="الاسم الكامل *"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg bg-gray-100 border-0 text-right"
-                required
-              />
+              <input type="text" placeholder="الاسم الكامل *" value={formData.name} onChange={e => setFormData({
+              ...formData,
+              name: e.target.value
+            })} className="w-full px-4 py-3 rounded-lg bg-gray-100 border-0 text-right" required />
             </div>
             
             <div className="phone-input-container">
-              <PhoneInput
-                country={'sa'}
-                value={formData.phone}
-                onChange={(phone) => setFormData({ ...formData, phone })}
-                inputClass="!w-full !px-4 !py-3 !rounded-lg !bg-gray-100 !border-0 !text-right"
-                containerClass="!w-full !dir-ltr"
-                buttonClass="!bg-gray-100 !border-0 !rounded-lg !left-0 !right-auto"
-                dropdownClass="!bg-white !left-0 !right-auto"
-                enableSearch={false}
-                disableSearchIcon
-                inputProps={{
-                  required: true,
-                  placeholder: "رقم الجوال *",
-                }}
-              />
+              <PhoneInput country={'sa'} value={formData.phone} onChange={phone => setFormData({
+              ...formData,
+              phone
+            })} inputClass="!w-full !px-4 !py-3 !rounded-lg !bg-gray-100 !border-0 !text-right" containerClass="!w-full !dir-ltr" buttonClass="!bg-gray-100 !border-0 !rounded-lg !left-0 !right-auto" dropdownClass="!bg-white !left-0 !right-auto" enableSearch={false} disableSearchIcon inputProps={{
+              required: true,
+              placeholder: "رقم الجوال *"
+            }} />
             </div>
 
             <div>
-              <textarea
-                placeholder="الطلب"
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg bg-gray-100 border-0 text-right min-h-[120px] resize-none"
-              />
+              <textarea placeholder="الطلب" value={formData.message} onChange={e => setFormData({
+              ...formData,
+              message: e.target.value
+            })} className="w-full px-4 py-3 rounded-lg bg-gray-100 border-0 text-right min-h-[120px] resize-none" />
             </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3 px-6 rounded-lg bg-[#222222] text-white font-semibold hover:bg-[#222222]/90 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+            <button type="submit" disabled={isSubmitting} className="w-full py-3 px-6 rounded-lg bg-[#222222] text-white font-semibold hover:bg-[#222222]/90 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
               {isSubmitting ? "جاري الإرسال..." : "إرسال"}
             </button>
           </form>
