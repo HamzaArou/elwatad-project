@@ -113,7 +113,7 @@ const DEFAULT_DISTRICT = {
   coords: [
     [24.7136, 46.6753], [24.7236, 46.6853], [24.7136, 46.6953], 
     [24.7036, 46.6853], [24.7136, 46.6753]
-  ]
+  ] as [number, number][]
 };
 
 export default function ProjectLocation({ location, lat, lng, postalCode }: ProjectLocationProps) {
@@ -232,7 +232,7 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
           [latitude + 0.01, longitude + 0.01],
           [latitude - 0.01, longitude + 0.01],
           [latitude - 0.01, longitude - 0.01]
-        ]
+        ] as [number, number][]
       };
     }
   };
