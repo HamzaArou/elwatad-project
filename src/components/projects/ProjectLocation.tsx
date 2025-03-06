@@ -119,6 +119,7 @@ const DEFAULT_DISTRICT = {
 export default function ProjectLocation({ location, lat, lng, postalCode }: ProjectLocationProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
+  const markerRef = useRef<L.Marker | null>(null);
   const [districtData, setDistrictData] = useState<{
     name: string;
     arabicName: string;
@@ -263,10 +264,13 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
     const centerLat = district.coords.reduce((sum, coord) => sum + coord[0], 0) / district.coords.length;
     const centerLng = district.coords.reduce((sum, coord) => sum + coord[1], 0) / district.coords.length;
     
+    // Use provided lat/lng as center if available
+    const mapCenter: [number, number] = (lat && lng) ? [lat, lng] : [centerLat, centerLng];
+    
     // Initialize map
     if (!mapInstance.current) {
       const map = L.map(mapContainer.current, {
-        center: [centerLat, centerLng],
+        center: mapCenter,
         zoom: 14,
         scrollWheelZoom: false,
         zoomControl: true
@@ -298,8 +302,28 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       
       L.marker([centerLat, centerLng], { icon: labelIcon }).addTo(map);
       
-      // Fit bounds to polygon
-      map.fitBounds(polygon.getBounds(), { padding: [50, 50] });
+      // Add marker pin for the exact location if lat/lng provided
+      if (lat && lng) {
+        // Create custom marker icon
+        const markerIcon = L.divIcon({
+          className: 'location-marker',
+          html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
+          iconSize: [36, 36],
+          iconAnchor: [18, 36],
+          popupAnchor: [0, -36]
+        });
+
+        markerRef.current = L.marker([lat, lng], { icon: markerIcon })
+          .addTo(map)
+          .bindPopup(`<div style="text-align: center; direction: rtl;">${location}</div>`)
+          .openPopup();
+        
+        // Center on exact location and adjust zoom
+        map.setView([lat, lng], 15);
+      } else {
+        // Fit bounds to polygon if no specific location
+        map.fitBounds(polygon.getBounds(), { padding: [50, 50] });
+      }
     }
   };
   
@@ -365,6 +389,33 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
       }
     };
   }, [lat, lng, postalCode]);
+
+  // Update marker position if lat/lng changes after initial render
+  useEffect(() => {
+    if (mapInstance.current && lat && lng) {
+      // If we already have a marker, update its position
+      if (markerRef.current) {
+        markerRef.current.setLatLng([lat, lng]);
+      } else {
+        // Create a new marker
+        const markerIcon = L.divIcon({
+          className: 'location-marker',
+          html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#B69665" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
+          iconSize: [36, 36],
+          iconAnchor: [18, 36],
+          popupAnchor: [0, -36]
+        });
+
+        markerRef.current = L.marker([lat, lng], { icon: markerIcon })
+          .addTo(mapInstance.current)
+          .bindPopup(`<div style="text-align: center; direction: rtl;">${location}</div>`)
+          .openPopup();
+      }
+      
+      // Center and zoom map on the marker
+      mapInstance.current.setView([lat, lng], 15);
+    }
+  }, [lat, lng, location]);
 
   return (
     <div className="space-y-4">
@@ -443,6 +494,25 @@ export default function ProjectLocation({ location, lat, lng, postalCode }: Proj
         }
         .leaflet-container {
           font: 16px/1.5 "IBM Plex Sans Arabic", sans-serif !important;
+        }
+        .location-marker {
+          background: transparent;
+          border: none;
+        }
+        .marker-pin {
+          animation: pulse 1.5s infinite ease-in-out;
+          transform-origin: center bottom;
+        }
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+          100% {
+            transform: scale(1);
+          }
         }
       `}</style>
     </div>
