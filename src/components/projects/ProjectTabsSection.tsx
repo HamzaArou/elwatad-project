@@ -35,7 +35,6 @@ export default function ProjectTabsSection({
 }: ProjectTabsSectionProps) {
   console.log("ProjectTabsSection received coordinates:", { lat, lng, postalCode });
   
-  // Log coordinates on component mount and on coordinates change
   useEffect(() => {
     console.log("ProjectTabsSection coordinates updated:", { lat, lng, postalCode });
   }, [lat, lng, postalCode]);
