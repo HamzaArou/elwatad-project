@@ -1,29 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 import { Ruler, Building2, Building, PencilRuler } from "lucide-react";
+
 const stats = [{
   icon: Ruler,
-  value: "136K",
+  value: "188K",
   label: "متر مربع",
   color: "text-darkBlue"
 }, {
   icon: Building2,
-  value: "600",
+  value: "4500",
   label: "وحدة سكنية",
   color: "text-darkBlue"
 }, {
   icon: Building,
-  value: "40",
+  value: "1120",
   label: "مبــــنى",
   color: "text-darkBlue"
 }, {
   icon: PencilRuler,
-  value: "25",
+  value: "80",
   label: "مشــــروع",
   color: "text-darkBlue"
 }];
+
 const Stats = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -32,11 +35,14 @@ const Stats = () => {
     }, {
       threshold: 0.1
     });
+
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
+
     return () => observer.disconnect();
   }, []);
+
   return <section ref={sectionRef} className="pt-12 pb-24 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="mb-8 text-right">
@@ -63,4 +69,5 @@ const Stats = () => {
       </div>
     </section>;
 };
+
 export default Stats;
